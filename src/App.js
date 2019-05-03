@@ -11,6 +11,8 @@ import {
   Button,
   CardActions
 } from "@material-ui/core";
+import firebase from 'firebase/app'
+import 'firebase/firestore'
 
 const styles = theme => ({
   layout: {
@@ -43,7 +45,7 @@ export default withStyles(styles)(
     }
 
     async componentDidMount () {
-      let db = this.props.firebase.firestore()
+      let db = firebase.firestore()
       let dbGames = db.collection('games');
       await dbGames.get().then(snapshot => {
         snapshot.forEach(doc => {
@@ -53,7 +55,7 @@ export default withStyles(styles)(
     }
 
     createRoom = async game => {
-      let db = this.props.firebase.firestore()
+      let db = firebase.firestore()
       let roomNumber = Math.floor(1000 + Math.random() * 9000)
       const selection = db.collection('games').doc(`${game}`)
       selection.collection('rooms').doc(`${roomNumber}`).set({
@@ -63,7 +65,7 @@ export default withStyles(styles)(
 
     render() {
       const { games } = this.state;
-      const { classes } = this.props;
+      const { classes } = this.props
 
       return (
         <div className="App">

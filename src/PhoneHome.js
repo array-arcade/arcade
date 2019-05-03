@@ -1,5 +1,4 @@
 import React from 'react';
-import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Face from '@material-ui/icons/Face';
 import DialPad from '@material-ui/icons/Dialpad';
@@ -22,13 +21,13 @@ const PhoneHome = () => {
           transform: 'translate(-50%, -50%)',
         }}
       >
-        <Card alignItems="center" justify="center">
+        <Card alignitems="center" justify="center">
           <CardContent>
             <div
               style={{
                 display: 'flex',
                 justifyContent: 'center',
-                alignItems: 'center',
+                alignitems: 'center',
                 padding: '7px',
               }}
             >
@@ -38,7 +37,7 @@ const PhoneHome = () => {
               style={{
                 display: 'flex',
                 justifyContent: 'center',
-                alignItems: 'center',
+                alignitems: 'center',
                 padding: '7px',
               }}
             >
@@ -49,7 +48,7 @@ const PhoneHome = () => {
               style={{
                 display: 'flex',
                 justifyContent: 'center',
-                alignItems: 'center',
+                alignitems: 'center',
                 padding: '7px',
               }}
             >
@@ -59,7 +58,7 @@ const PhoneHome = () => {
               style={{
                 display: 'flex',
                 justifyContent: 'center',
-                alignItems: 'center',
+                alignitems: 'center',
                 padding: '7px',
               }}
             >
@@ -67,7 +66,7 @@ const PhoneHome = () => {
             </div>
           </CardContent>
           <CardActions>
-            <Button size="medium" color="primary" fullWidth="true">
+            <Button size="medium" color="primary" fullWidth={true}>
               Submit
             </Button>
           </CardActions>
