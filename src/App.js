@@ -7,7 +7,9 @@ import {
   CardMedia,
   CardContent,
   withStyles,
-  Typography
+  Typography,
+  Button,
+  CardActions
 } from "@material-ui/core";
 
 const styles = theme => ({
@@ -36,26 +38,28 @@ export default withStyles(styles)(
     constructor() {
       super();
       this.state = {
-        games: [
-          {
-            name: "Game",
-            description: "This is a description",
-            players: "1-4",
-            image: "https://img.fireden.net/v/image/1448/84/1448846792467.jpg",
-            id: 1
-          },
-          {
-            name: "Game2",
-            description: "This is a description",
-            players: "2-6",
-            image: "https://img.fireden.net/v/image/1448/84/1448846792467.jpg",
-            id: 2
-          }
-        ]
+        games: []
       };
     }
 
-    componentDidMount() {}
+    async componentDidMount () {
+      let db = this.props.firebase.firestore()
+      let dbGames = db.collection('games');
+      await dbGames.get().then(snapshot => {
+        snapshot.forEach(doc => {
+          this.setState({ games: [...this.state.games, doc.data()] })
+        })
+      })
+    }
+
+    createRoom = async game => {
+      let db = this.props.firebase.firestore()
+      let roomNumber = Math.floor(1000 + Math.random() * 9000)
+      const selection = db.collection('games').doc(`${game}`)
+      selection.collection('rooms').doc(`${roomNumber}`).set({
+        roomNumber: `${roomNumber}`
+      })
+    }
 
     render() {
       const { games } = this.state;
@@ -70,22 +74,27 @@ export default withStyles(styles)(
             <Grid container spacing={40} alignItems='center' justify='center'>
               {games.map(game => {
                 return (
-                  <Grid item key={game.id} sm={6} md={4} lg={3}>
+                  <Grid item key={game.name} sm={6} md={4} lg={3}>
                     <Card className={classes.card} raised={true}>
                       <CardMedia
                         className={classes.cardMedia}
                         image={game.image}
                         title={game.name}
                       />
-                      <CardContent className="game-description">
+                      <CardContent>
                         <Typography variant="h6">{game.name}</Typography>
                         <Typography variant="body1" gutterBottom>
                           {game.description}
                         </Typography>
                         <Typography variant="caption">
-                          {game.players}
+                          Player: {game.players}
                         </Typography>
                       </CardContent>
+                      <CardActions>
+                        <Button size='medium' color='primary' onClick={() => this.createRoom(game.name)}>
+                          Create Room
+                        </Button>
+                      </CardActions>
                     </Card>
                   </Grid>
                 );
