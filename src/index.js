@@ -1,21 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
 import * as serviceWorker from './serviceWorker';
-import PhoneHome from './PhoneHome';
 import firebase from 'firebase/app'
-import 'firebase/firestore'
 import {config} from './secrets'
+import { BrowserRouter as Router } from 'react-router-dom'
+import { Start } from './Start';
+
 
 firebase.initializeApp(config)
 
-
-if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-    ReactDOM.render(<PhoneHome firebase={firebase} />, document.getElementById('root'))
-} else {
-    ReactDOM.render(<App firebase={firebase} />, document.getElementById('root'));
-}
+ReactDOM.render(
+    <Router>
+        <Start />
+    </Router>,
+    document.getElementById('root')
+)
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
