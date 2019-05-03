@@ -4,7 +4,8 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import PhoneHome from './PhoneHome';
-import firebase from 'firebase'
+import firebase from 'firebase/app'
+import 'firebase/firestore'
 import {config} from './secrets'
 
 firebase.initializeApp(config)
