@@ -6,16 +6,38 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Button from '@material-ui/core/Button';
+import {withStyles} from '@material-ui/core'
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 
+const styles = theme => ({
+  cardItem: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignitems: 'center',
+    padding: '7px',
+  }
+})
+
+export default withStyles(styles)(
 class PhoneHome extends React.Component {
   constructor() {
     super();
     this.state = {
       user: '',
       roomNum: '',
+      games: []
     };
+  }
+
+  async componentDidMount() {
+    let db = firebase.firestore()
+    let dbGames = db.collection('games');
+    await dbGames.get().then(snapshot => {
+      snapshot.forEach(doc => {
+        this.setState({ games: [...this.state.games, doc.data()] })
+      })
+    })
   }
 
   handleChange = evt => {
@@ -31,7 +53,8 @@ class PhoneHome extends React.Component {
 
   render() {
     const { user } = this.state;
-
+    const { classes } = this.props 
+    
     return (
       <div>
         <header className="header">
@@ -47,25 +70,10 @@ class PhoneHome extends React.Component {
         >
           <Card alignitems="center" justify="center">
             <CardContent>
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignitems: 'center',
-                  padding: '7px',
-                }}
-              >
+              <div className={classes.cardItem}>
                 <Face />
               </div>
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignitems: 'center',
-                  border: '75px',
-                  padding: '7px',
-                }}
-              >
+              <div className={classes.cardItem}>
                 <TextField
                   id="input-with-icon-grid"
                   label="Name"
@@ -74,27 +82,10 @@ class PhoneHome extends React.Component {
                   onChange={this.handleChange}
                 />
               </div>
-              {/* <Divider variant="middle" align="vertically" /> */}
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignitems: 'center',
-                  border: '75px',
-                  padding: '7px',
-                }}
-              >
+              <div className={classes.cardItem}>
                 <DialPad />
               </div>
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignitems: 'center',
-                  border: '75px',
-                  padding: '7px',
-                }}
-              >
+              <div className={classes.cardItem}>
                 <TextField
                   id="input-with-icon-grid"
                   label="Room Code"
@@ -120,6 +111,4 @@ class PhoneHome extends React.Component {
       </div>
     );
   }
-}
-
-export default PhoneHome;
+})
