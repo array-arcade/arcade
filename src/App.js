@@ -14,8 +14,6 @@ import {
 import firebase from "firebase/app";
 import "firebase/firestore";
 
-import { Redirect } from "react-router-dom";
-
 const styles = theme => ({
   layout: {
     width: "auto",
@@ -45,24 +43,7 @@ export default withStyles(styles)(
         games: []
       };
     }
-    /*
-games: {
-  Like What You See?: {
-    description: ...
-    image: ...
-    name: ...
-    players: ...
-    rooms: {
-      3444: {
-        roomNumber: 3444
-      }
-      8810: {
-        roomNumber: 8810
-      }
-    }
-  }
-}
-*/
+
     async componentDidMount() {
       let db = firebase.firestore();
       let dbGames = db.collection("games");
@@ -83,28 +64,16 @@ games: {
         .set({
           roomNumber: `${roomNumber}`
         });
-
+      console.log("About to redirect");
       //redirect to game home, passing selection and room number as properties
-      {
-        <Redirect
-          to={{
-            pathname: "/game",
-            state: { roomNumber, game }
-          }}
-        />;
-      }
+      return this.props.history.push({
+        pathname: "/game",
+        state: { roomNumber, game }
+      });
+
       //from game home, see how many players have joined the room
       //redirect to game screen after user has started the game
     };
-
-    //     You can pass data with Redirect like this:
-    // <Redirect to={{
-    //             pathname: '/order',
-    //             state: { id: '123' }
-    //         }}
-    // />
-    // and this is how you can access it:
-    // this.props.location.state.id
 
     render() {
       const { games } = this.state;

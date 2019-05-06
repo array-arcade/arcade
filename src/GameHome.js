@@ -1,5 +1,5 @@
 import React from "react";
-import firebase from "firebase/app";
+// import firebase from "firebase/app";
 
 class GameHome extends React.Component {
   constructor() {
@@ -8,7 +8,7 @@ class GameHome extends React.Component {
   }
 
   async componentDidMount() {
-    let db = firebase.firestore();
+    // let db = firebase.firestore();
     this.setState({
       game: this.props.location.state.game,
       roomNumber: this.props.location.state.roomNumber
@@ -25,3 +25,22 @@ class GameHome extends React.Component {
 }
 
 export default GameHome;
+
+/*
+games: {
+  Like What You See?: {
+    description: ...
+    image: ...
+    name: ...
+    players: ...
+    rooms: {
+      3444: {
+        roomNumber: 3444
+      }
+      8810: {
+        roomNumber: 8810
+      }
+    }
+  }
+}
+*/
