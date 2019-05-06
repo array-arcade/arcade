@@ -70,9 +70,6 @@ export default withStyles(styles)(
         pathname: "/game",
         state: { roomNumber, game }
       });
-
-      //from game home, see how many players have joined the room
-      //redirect to game screen after user has started the game
     };
 
     render() {
