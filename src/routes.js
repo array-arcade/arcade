@@ -20,7 +20,7 @@ export default class Routes extends Component {
     } else {
       return (
         <Switch>
-          <Route path="/game" component={GameHome} />
+          <Route path="/:game/:roomNumber" component={GameHome} />
           <Route path="/browse" component={App} />
           <Redirect from="/" to="browse" />
         </Switch>
