@@ -13,7 +13,6 @@ import {
 } from "@material-ui/core";
 import firebase from "firebase/app";
 import "firebase/firestore";
-import CanvasDraw from 'react-canvas-draw'
 
 const styles = theme => ({
   layout: {
@@ -82,7 +81,6 @@ export default withStyles(styles)(
           <header className="header">
             <img src={require("./logo.png")} alt="logo" />
           </header>
-          <CanvasDraw brushColor="#444" brushRadius={12} />
           <div className={classNames(classes.layout, classes.cardGrid)}>
             <Grid container spacing={40} alignItems="center" justify="center">
               {games.map(game => {
