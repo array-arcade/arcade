@@ -11,8 +11,8 @@ import {
   Button,
   CardActions
 } from "@material-ui/core";
-import firebase from 'firebase/app'
-import 'firebase/firestore'
+import firebase from "firebase/app";
+import "firebase/firestore";
 
 const styles = theme => ({
   layout: {
@@ -29,7 +29,7 @@ const styles = theme => ({
     flexDirection: "column"
   },
   cardMedia: {
-    marginTop: '30px',
+    marginTop: "30px",
     paddingTop: "50%",
     height: "100%"
   }
@@ -44,28 +44,40 @@ export default withStyles(styles)(
       };
     }
 
-    async componentDidMount () {
-      let db = firebase.firestore()
-      let dbGames = db.collection('games');
+    async componentDidMount() {
+      let db = firebase.firestore();
+      let dbGames = db.collection("games");
       await dbGames.get().then(snapshot => {
         snapshot.forEach(doc => {
-          this.setState({ games: [...this.state.games, doc.data()] })
-        })
-      })
+          this.setState({ games: [...this.state.games, doc.data()] });
+        });
+      });
     }
 
     createRoom = async game => {
-      let db = firebase.firestore()
-      let roomNumber = Math.floor(1000 + Math.random() * 9000)
-      const selection = db.collection('games').doc(`${game}`)
-      selection.collection('rooms').doc(`${roomNumber}`).set({
-        roomNumber: `${roomNumber}`
-      })
-    }
+      let db = firebase.firestore();
+      let roomNumber = Math.floor(1000 + Math.random() * 9000);
+      const selection = db.collection("games").doc(`${game}`);
+      selection
+        .collection("rooms")
+        .doc(`${roomNumber}`)
+        .set({
+          roomNumber: `${roomNumber}`
+        });
+      console.log("About to redirect");
+      //redirect to game home, passing selection and room number as properties
+      return this.props.history.push({
+        pathname: "/game",
+        state: { roomNumber, game }
+      });
+
+      //from game home, see how many players have joined the room
+      //redirect to game screen after user has started the game
+    };
 
     render() {
       const { games } = this.state;
-      const { classes } = this.props
+      const { classes } = this.props;
 
       return (
         <div className="App">
@@ -73,7 +85,7 @@ export default withStyles(styles)(
             <img src={require("./logo.png")} alt="logo" />
           </header>
           <div className={classNames(classes.layout, classes.cardGrid)}>
-            <Grid container spacing={40} alignItems='center' justify='center'>
+            <Grid container spacing={40} alignItems="center" justify="center">
               {games.map(game => {
                 return (
                   <Grid item key={game.name} sm={6} md={4} lg={3}>
@@ -93,7 +105,11 @@ export default withStyles(styles)(
                         </Typography>
                       </CardContent>
                       <CardActions>
-                        <Button size='medium' color='primary' onClick={() => this.createRoom(game.name)}>
+                        <Button
+                          size="medium"
+                          color="primary"
+                          onClick={() => this.createRoom(game.name)}
+                        >
                           Create Room
                         </Button>
                       </CardActions>
