@@ -1,7 +1,8 @@
-import React, { Component } from "react";
-import { Route, Switch, Redirect } from "react-router";
-import PhoneHome from "./PhoneHome";
-import App from "./App";
+import React, { Component } from 'react';
+import { Route, Switch, Redirect } from 'react-router';
+import PhoneHome from './PhoneHome';
+import App from './App';
+import PictionaryHome from './Game-Pic';
 import GameHome from "./GameHome";
 
 export default class Routes extends Component {
@@ -13,6 +14,7 @@ export default class Routes extends Component {
     ) {
       return (
         <Switch>
+          <Route path="/room" component={PictionaryHome} />
           <Route path="/join" component={PhoneHome} />
           <Redirect from="/" to="join" />
         </Switch>
