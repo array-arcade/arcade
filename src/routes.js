@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import { Route, Switch, Redirect } from 'react-router';
-import PhoneHome from './PhoneHome';
-import App from './App';
-import PictionaryHome from './Game-Pic';
+import React, { Component } from "react";
+import { Route, Switch, Redirect } from "react-router";
+import PhoneHome from "./PhoneHome";
+import App from "./App";
+import PictionaryHome from "./Game-Pic";
 import GameHome from "./GameHome";
 
 export default class Routes extends Component {
@@ -22,7 +22,7 @@ export default class Routes extends Component {
     } else {
       return (
         <Switch>
-          <Route path="/game" component={GameHome} />
+          <Route path="/lobby" component={GameHome} />
           <Route path="/browse" component={App} />
           <Redirect from="/" to="browse" />
         </Switch>
