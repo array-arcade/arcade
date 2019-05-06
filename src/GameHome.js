@@ -59,6 +59,20 @@ export default withStyles(styles)(
       });
     }
 
+    startGame = () => {
+      const firstJudge = this.state.players[0].name;
+      const { currentGame, roomNumber } = this.state;
+      const db = firebase.firestore();
+      db.collection("games")
+        .doc(`${currentGame.name}`)
+        .collection("rooms")
+        .doc(`${roomNumber}`)
+        .collection("users")
+        .doc(`${firstJudge}`).set({
+          isJudge: true
+        }, { merge: true });
+    };
+
     render() {
       //from game home, see how many players have joined the room
       //redirect to game screen after user has started the game
@@ -74,12 +88,11 @@ export default withStyles(styles)(
               {players.map(player => {
                 return <p>{player.name}</p>;
               })}
+              <Button onClick={this.startGame}>Start the Game!</Button>
             </div>
           );
         } else {
-          return (
-            <h1>Please Hold.</h1>
-          )
+          return <h1>Please Hold.</h1>;
         }
       };
 
