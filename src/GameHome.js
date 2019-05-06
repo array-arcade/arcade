@@ -36,37 +36,54 @@ export default withStyles(styles)(
   class GameHome extends React.Component {
     constructor() {
       super();
-      this.state = {};
+      this.state = {
+        currentGame: {},
+        roomNumber: 0,
+        players: []
+      };
     }
 
     async componentDidMount() {
+      const { game, roomNumber } = this.props.location.state;
+      this.setState({ currentGame: game, roomNumber });
       let db = firebase.firestore();
-      let game = db.collection("games");
-      await game
-        .where("name", "==", this.props.location.state.game)
-        .get()
-        .then(snapshot => {
-          snapshot.forEach(doc => {
-            this.setState({
-              game: this.props.location.state.game,
-              gameInfo: doc.data(),
-              roomNumber: this.props.location.state.roomNumber
-            });
-          });
-        });
+      let users = db
+        .collection("games")
+        .doc(`${game.name}`)
+        .collection("rooms")
+        .doc(`${roomNumber}`)
+        .collection("users");
+      users.onSnapshot(snapshot => {
+        let players = snapshot.docs.map(doc => doc.data());
+        this.setState({ players: players });
+      });
     }
 
     render() {
       //from game home, see how many players have joined the room
       //redirect to game screen after user has started the game
 
-      const { game, roomNumber, gameInfo } = this.state;
-      console.log(`Game:`, game);
-      console.log(`Game Info:`, gameInfo);
+      const { currentGame, roomNumber, players } = this.state;
 
-      console.log(`Room:`, roomNumber);
+      const renderer = () => {
+        if (currentGame.name) {
+          return (
+            <div>
+              <h1>{currentGame.name}</h1>
+              <h2>{roomNumber}</h2>
+              {players.map(player => {
+                return <p>{player.name}</p>;
+              })}
+            </div>
+          );
+        } else {
+          return (
+            <h1>Please Hold.</h1>
+          )
+        }
+      };
 
-      return <h1> {game} Lobby</h1>;
+      return <div>{renderer()}</div>;
     }
   }
 );
