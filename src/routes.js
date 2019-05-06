@@ -4,6 +4,7 @@ import PhoneHome from './PhoneHome';
 import App from './App';
 import PictionaryHome from './Game-Pic';
 import GameHome from "./GameHome";
+import WordPick from './Like What You See/Phone/JudgeWordPick'
 
 export default class Routes extends Component {
   render() {
@@ -16,6 +17,7 @@ export default class Routes extends Component {
         <Switch>
           <Route path="/room" component={PictionaryHome} />
           <Route path="/join" component={PhoneHome} />
+          <Route path='/word-pick' component={WordPick} />
           <Redirect from="/" to="join" />
         </Switch>
       );
