@@ -1,9 +1,25 @@
 import React from 'react';
 import CanvasDraw from 'react-canvas-draw';
 import Button from '@material-ui/core/Button';
-import { clear } from 'google-auth-library/build/src/auth/envDetect';
+import firebase from 'firebase/app';
 
 class PictionaryHome extends React.Component {
+  handleClick = () => {
+    let db = firebase.firestore();
+    let dbGames = db
+      .collection('games')
+      .doc('Like What You See?')
+      .collection('rooms')
+      .doc('5589')
+      .collection('users')
+      .doc('Tim');
+    dbGames.set(
+      {
+        image: this.saveableCanvas.getSaveData(),
+      },
+      { merge: true }
+    );
+  };
   render() {
     return (
       <div>
@@ -28,7 +44,21 @@ class PictionaryHome extends React.Component {
         >
           Clear
         </Button>
-        <Button size="medium" color="primary" fullWidth={true}>
+        <Button
+          onClick={() => {
+            this.saveableCanvas.undo();
+          }}
+        >
+          Undo
+        </Button>
+        <Button
+          size="medium"
+          color="primary"
+          fullWidth={true}
+          onClick={() => {
+            this.handleClick();
+          }}
+        >
           Submit
         </Button>
       </div>
