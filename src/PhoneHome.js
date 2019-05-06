@@ -11,7 +11,10 @@ import {
   Select,
   MenuItem,
   InputLabel,
-  FormHelperText
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText
 } from "@material-ui/core";
 import firebase from "firebase/app";
 import "firebase/firestore";
@@ -39,8 +42,9 @@ export default withStyles(styles)(
       this.state = {
         user: "",
         roomNum: "",
-        selectedGame: "",
-        games: []
+        selectedGame: "none",
+        games: [],
+        error: false
       };
     }
 
@@ -63,11 +67,25 @@ export default withStyles(styles)(
     addUser = () => {
       const db = firebase.firestore();
       const { roomNum, user, selectedGame } = this.state;
-      const game = db.collection('games').doc(`${selectedGame}`)
-      let room = game.collection('rooms').doc(`${roomNum}`)
-      room.collection('users').doc(`${user}`).set({
-        name: `${user}`
-      })
+      if (selectedGame === "none" || user === "") {
+        this.setState({ error: true });
+        return;
+      }
+      const game = db.collection("games").doc(`${selectedGame}`);
+      const roomRef = game.collection("rooms").doc(`${roomNum}`);
+      roomRef.get().then(room => {
+        if (room.exists) {
+          let room = game.collection("rooms").doc(`${roomNum}`);
+          room
+            .collection("users")
+            .doc(`${user}`)
+            .set({
+              name: `${user}`
+            });
+        } else {
+          this.setState({ error: true });
+        }
+      }).catch(err => console.log('Something went wrong!', err));
     };
 
     render() {
@@ -120,7 +138,7 @@ export default withStyles(styles)(
                   className={classes.selections}
                 >
                   <InputLabel>Choose Game</InputLabel>
-                  <MenuItem value="">
+                  <MenuItem value="none">
                     <em>Choose a game</em>
                   </MenuItem>
                   {games.map(game => (
@@ -139,6 +157,22 @@ export default withStyles(styles)(
                 >
                   Submit
                 </Button>
+                <Dialog
+                  open={this.state.error}
+                  onClose={() => this.setState({ error: false })}
+                >
+                  <DialogContent>
+                    <DialogContentText>
+                      An error has occured. Make sure you have a name and a
+                      valid room number for the game you are trying to play.
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={() => this.setState({ error: false })}>
+                      Close
+                    </Button>
+                  </DialogActions>
+                </Dialog>
               </CardActions>
             </Card>
           </div>
