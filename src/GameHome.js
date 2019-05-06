@@ -64,7 +64,6 @@ export default withStyles(styles)(
       //redirect to game screen after user has started the game
 
       const { currentGame, roomNumber, players } = this.state;
-      console.log(`Game:`, currentGame, roomNumber, players);
 
       const renderer = () => {
         if (currentGame.name) {

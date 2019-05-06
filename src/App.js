@@ -64,7 +64,6 @@ export default withStyles(styles)(
         .set({
           roomNumber: `${roomNumber}`
         });
-      console.log("GAME", game);
       //redirect to game home, passing selection and room number as properties
       return this.props.history.push({
         pathname: "/game",
