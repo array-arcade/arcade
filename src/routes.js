@@ -3,6 +3,7 @@ import { Route, Switch, Redirect } from 'react-router';
 import PhoneHome from './PhoneHome';
 import App from './App';
 import PictionaryHome from './Game-Pic';
+import GameHome from "./GameHome";
 
 export default class Routes extends Component {
   render() {
@@ -14,7 +15,6 @@ export default class Routes extends Component {
       return (
         <Switch>
           <Route path="/room" component={PictionaryHome} />
-          <Redirect from="/" to="room" />
           <Route path="/join" component={PhoneHome} />
           <Redirect from="/" to="join" />
         </Switch>
@@ -22,6 +22,7 @@ export default class Routes extends Component {
     } else {
       return (
         <Switch>
+          <Route path="/game" component={GameHome} />
           <Route path="/browse" component={App} />
           <Redirect from="/" to="browse" />
         </Switch>
