@@ -60,7 +60,7 @@ export default withStyles(styles)(
       });
     };
 
-    addUser = async () => {
+    addUser = () => {
       const db = firebase.firestore();
       const { roomNum, user, selectedGame } = this.state;
       const game = db.collection('games').doc(`${selectedGame}`)
