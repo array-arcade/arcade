@@ -77,6 +77,10 @@ export default withStyles(styles)(
               })}
             </div>
           );
+        } else {
+          return (
+            <h1>Please Hold.</h1>
+          )
         }
       };
 
