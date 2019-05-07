@@ -67,7 +67,7 @@ export default withStyles(styles)(
         });
       //redirect to game home, passing selection and room number as properties
       return this.props.history.push({
-        pathname: "/lobby",
+        pathname: `/${game.name}/${roomNumber}/lobby`,
         state: { roomNumber, game }
 
       });

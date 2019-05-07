@@ -73,7 +73,7 @@ export default withStyles(styles)(
 
     addUser = () => {
       const db = firebase.firestore();
-      const { roomNum, user, selectedGame } = this.state;
+      let { roomNum, user, selectedGame } = this.state;
       if (selectedGame === "none" || user === "") {
         this.setState({ error: true });
         return;
@@ -116,6 +116,10 @@ export default withStyles(styles)(
           } else {
             this.setState({ error: true });
           }
+          return this.props.history.push({
+            pathname: `/${roomNum}/waitingroom`,
+            state: { roomNum, game, user }
+          });
         })
         .catch(err => console.log('Something went wrong!', err));
     };

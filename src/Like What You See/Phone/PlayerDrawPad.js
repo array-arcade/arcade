@@ -10,7 +10,7 @@ import Undo from '@material-ui/icons/Undo';
 import Check from '@material-ui/icons/Check';
 import { disableBodyScroll } from 'body-scroll-lock';
 
-class PictionaryHome extends React.Component {
+class DrawPad extends React.Component {
   targetElement = null;
 
   componentDidMount() {
@@ -99,4 +99,4 @@ class PictionaryHome extends React.Component {
   }
 }
 
-export default PictionaryHome;
+export default DrawPad;
