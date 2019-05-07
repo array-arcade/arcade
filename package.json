@@ -9,6 +9,7 @@
     "create-react-app": "^3.0.0",
     "firebase": "^5.11.0",
     "firebase-admin": "^7.3.0",
+    "history": "^4.9.0",
     "http2": "^3.3.7",
     "react": "^16.8.6",
     "react-canvas-draw": "1.0.0-alpha.11",
