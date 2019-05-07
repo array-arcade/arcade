@@ -1,12 +1,12 @@
-import React from "react";
-import TextField from "@material-ui/core/TextField";
-import Face from "@material-ui/icons/Face";
-import DialPad from "@material-ui/icons/Dialpad";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import CardActions from "@material-ui/core/CardActions";
-import Button from "@material-ui/core/Button";
-import SnackBar from "./SnackBar";
+import React from 'react';
+import TextField from '@material-ui/core/TextField';
+import Face from '@material-ui/icons/Face';
+import DialPad from '@material-ui/icons/Dialpad';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardActions from '@material-ui/core/CardActions';
+import Button from '@material-ui/core/Button';
+import SnackBar from './SnackBar';
 
 import {
   withStyles,
@@ -50,6 +50,7 @@ export default withStyles(styles)(
         error: false,
       };
     }
+    targetElement = null;
 
     async componentDidMount() {
       const db = firebase.firestore();
@@ -59,6 +60,8 @@ export default withStyles(styles)(
           this.setState({ games: [...this.state.games, doc.data()] });
         });
       });
+      this.targetElement = document.querySelector('Mobile');
+      disableBodyScroll(this.targetElement);
     }
 
     handleChange = evt => {
@@ -74,27 +77,27 @@ export default withStyles(styles)(
         this.setState({ error: true });
         return;
       }
-      const game = db.collection("games").doc(`${selectedGame}`);
+      const game = db.collection('games').doc(`${selectedGame}`);
       let size, max;
       game.get().then(snap => {
         max = snap.max;
       });
-      const roomRef = game.collection("rooms").doc(`${roomNum}`);
+      const roomRef = game.collection('rooms').doc(`${roomNum}`);
       roomRef
         .get()
         .then(room => {
           if (room.exists) {
             //here's where you check for max players reached
-            let room = game.collection("rooms").doc(`${roomNum}`);
+            let room = game.collection('rooms').doc(`${roomNum}`);
             room.get().then(snap => {
               size = snap.size; // will return the room size
             });
             if (size <= max) {
               room
-                .collection("users")
+                .collection('users')
                 .doc(`${user}`)
                 .set({
-                  name: `${user}`
+                  name: `${user}`,
                 });
             } else {
               //render code indicating room is full
@@ -110,7 +113,7 @@ export default withStyles(styles)(
             this.setState({ error: true });
           }
         })
-        .catch(err => console.log("Something went wrong!", err));
+        .catch(err => console.log('Something went wrong!', err));
     };
 
     render() {
