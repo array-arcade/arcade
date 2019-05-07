@@ -1,6 +1,6 @@
-import React from 'react';
-import './App.css';
-import classNames from 'classnames';
+import React from "react";
+import "./App.css";
+import classNames from "classnames";
 import {
   Card,
   Grid,
@@ -9,30 +9,31 @@ import {
   withStyles,
   Typography,
   Button,
-  CardActions,
-} from '@material-ui/core';
-import firebase from 'firebase/app';
-import 'firebase/firestore';
+  CardActions
+} from "@material-ui/core";
+import firebase from "firebase/app";
+import "firebase/firestore";
+
 
 const styles = theme => ({
   layout: {
-    width: 'auto',
+    width: "auto",
     marginLeft: theme.spacing.unit * 3,
-    marginRight: theme.spacing.unit * 3,
+    marginRight: theme.spacing.unit * 3
   },
   cardGrid: {
-    padding: `${theme.spacing.unit * 8}px 0`,
+    padding: `${theme.spacing.unit * 8}px 0`
   },
   card: {
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
+    height: "100%",
+    display: "flex",
+    flexDirection: "column"
   },
   cardMedia: {
-    marginTop: '30px',
-    paddingTop: '50%',
-    height: '100%',
-  },
+    marginTop: "30px",
+    paddingTop: "50%",
+    height: "100%"
+  }
 });
 
 export default withStyles(styles)(
@@ -40,13 +41,13 @@ export default withStyles(styles)(
     constructor() {
       super();
       this.state = {
-        games: [],
+        games: []
       };
     }
 
     async componentDidMount() {
       let db = firebase.firestore();
-      let dbGames = db.collection('games');
+      let dbGames = db.collection("games");
       await dbGames.get().then(snapshot => {
         snapshot.forEach(doc => {
           this.setState({ games: [...this.state.games, doc.data()] });
@@ -66,8 +67,9 @@ export default withStyles(styles)(
         });
       //redirect to game home, passing selection and room number as properties
       return this.props.history.push({
-        pathname: '/game',
-        state: { roomNumber, game },
+        pathname: "/lobby",
+        state: { roomNumber, game }
+
       });
     };
 
@@ -78,7 +80,7 @@ export default withStyles(styles)(
       return (
         <div className="App">
           <header className="header">
-            <img src={require('./logo.png')} alt="logo" />
+            <img src={require("./logo.png")} alt="logo" />
           </header>
           <div className={classNames(classes.layout, classes.cardGrid)}>
             <Grid container spacing={40} alignItems="center" justify="center">
