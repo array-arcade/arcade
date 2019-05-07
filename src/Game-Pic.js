@@ -8,8 +8,15 @@ import Typography from '@material-ui/core/Typography';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Undo from '@material-ui/icons/Undo';
 import Check from '@material-ui/icons/Check';
+import { disableBodyScroll } from 'body-scroll-lock';
 
 class PictionaryHome extends React.Component {
+  targetElement = null;
+
+  componentDidMount() {
+    this.targetElement = document.querySelector('canvas');
+    disableBodyScroll(this.targetElement);
+  }
   handleClick = () => {
     let db = firebase.firestore();
     let dbGames = db
@@ -36,32 +43,32 @@ class PictionaryHome extends React.Component {
             </Typography>
           </Toolbar>
         </AppBar>
-        <CanvasDraw
-          ref={canvasDraw => (this.saveableCanvas = canvasDraw)}
-          hideGrid={true}
-          brushRadius={3}
-          lazyRadius={10}
-          canvasHeight={500}
-          brushColor="#000000"
-          style={{
-            boxShadow:
-              '0 13px 27px -5px rgba(20, 20, 63, 0.1),    0 2px 3px -2px rgba(1, 200, 1, 0.3)',
-          }}
-        />
-        <div>
-          <Button
-            variant="contained"
-            color="primary"
-            size="large"
-            fullWidth={true}
-            onClick={() => {
-              this.saveableCanvas.clear();
+        <div id="canvas">
+          <CanvasDraw
+            ref={canvasDraw => (this.saveableCanvas = canvasDraw)}
+            hideGrid={true}
+            brushRadius={3}
+            lazyRadius={10}
+            canvasHeight={350}
+            brushColor="#000000"
+            style={{
+              boxShadow:
+                '0 13px 27px -5px rgba(20, 20, 63, 0.1),    0 2px 3px -2px rgba(1, 200, 1, 0.3)',
             }}
-          >
-            <DeleteIcon />
-            Clear
-          </Button>
+          />
         </div>
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          fullWidth={true}
+          onClick={() => {
+            this.saveableCanvas.clear();
+          }}
+        >
+          <DeleteIcon />
+          Clear
+        </Button>
         <Button
           variant="contained"
           color="primary"

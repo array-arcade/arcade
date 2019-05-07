@@ -18,6 +18,7 @@ import {
 } from '@material-ui/core';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
+import { disableBodyScroll } from 'body-scroll-lock';
 
 const styles = theme => ({
   cardItem: {
@@ -102,8 +103,8 @@ export default withStyles(styles)(
           </header>
           <div
             style={{
-              position: 'fixed',
-              top: '50%',
+              position: 'absolute',
+              top: '60%',
               left: '50%',
               transform: 'translate(-50%, -50%)',
             }}
