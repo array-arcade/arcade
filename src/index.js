@@ -4,14 +4,17 @@ import './index.css';
 import * as serviceWorker from './serviceWorker';
 import firebase from 'firebase/app'
 import {config} from './secrets'
-import { BrowserRouter as Router } from 'react-router-dom'
+import { Router } from 'react-router-dom'
 import { Start } from './Start';
+import {createMemoryHistory} from 'history'
+
+const history = createMemoryHistory()
 
 
 firebase.initializeApp(config)
 
 ReactDOM.render(
-    <Router>
+    <Router history={history}>
         <Start />
     </Router>,
     document.getElementById('root')

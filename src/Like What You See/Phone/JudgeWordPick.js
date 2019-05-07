@@ -70,7 +70,7 @@ class WordPick extends Component {
       <div>
         <Paper elevation={4} className={classes.root}>
           {displayWords.map(word => {
-            return <Typography variant="h3" onClick={this.selectWord}>{word}</Typography>;
+            return <Typography variant="h3" onClick={this.selectWord} key={word}>{word}</Typography>;
           })}
         </Paper>
       </div>
