@@ -28,6 +28,7 @@
 
 .Mobile {
   min-height: 100vh;
+  min-width: 100vw;
   background-color: #08aeea;
   background-image: linear-gradient(0deg, #08aeea 0%, #6ccc88 100%);
 }
