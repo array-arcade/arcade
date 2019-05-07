@@ -13,6 +13,8 @@ const history = createMemoryHistory()
 
 firebase.initializeApp(config)
 
+export const db = firebase.firestore()
+
 ReactDOM.render(
     <Router history={history}>
         <Start />
