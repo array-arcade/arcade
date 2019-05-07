@@ -1,11 +1,11 @@
-import React from "react";
-import TextField from "@material-ui/core/TextField";
-import Face from "@material-ui/icons/Face";
-import DialPad from "@material-ui/icons/Dialpad";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import CardActions from "@material-ui/core/CardActions";
-import Button from "@material-ui/core/Button";
+import React from 'react';
+import TextField from '@material-ui/core/TextField';
+import Face from '@material-ui/icons/Face';
+import DialPad from '@material-ui/icons/Dialpad';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardActions from '@material-ui/core/CardActions';
+import Button from '@material-ui/core/Button';
 import {
   withStyles,
   Select,
@@ -14,25 +14,25 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText
-} from "@material-ui/core";
-import firebase from "firebase/app";
-import "firebase/firestore";
+  DialogContentText,
+} from '@material-ui/core';
+import firebase from 'firebase/app';
+import 'firebase/firestore';
 
 const styles = theme => ({
   cardItem: {
-    display: "flex",
-    justifyContent: "center",
-    alignitems: "center",
-    padding: "7px"
+    display: 'flex',
+    justifyContent: 'center',
+    alignitems: 'center',
+    padding: '7px',
   },
   selections: {
     minWidth: 120,
     margin: theme.spacing.unit,
-    dislay: "flex",
-    justifyContent: "center",
-    alignitems: "center"
-  }
+    dislay: 'flex',
+    justifyContent: 'center',
+    alignitems: 'center',
+  },
 });
 
 export default withStyles(styles)(
@@ -40,17 +40,17 @@ export default withStyles(styles)(
     constructor() {
       super();
       this.state = {
-        user: "",
-        roomNum: "",
-        selectedGame: "none",
+        user: '',
+        roomNum: '',
+        selectedGame: 'none',
         games: [],
-        error: false
+        error: false,
       };
     }
 
     async componentDidMount() {
       const db = firebase.firestore();
-      const dbGames = db.collection("games");
+      const dbGames = db.collection('games');
       await dbGames.get().then(snapshot => {
         snapshot.forEach(doc => {
           this.setState({ games: [...this.state.games, doc.data()] });
@@ -60,32 +60,35 @@ export default withStyles(styles)(
 
     handleChange = evt => {
       this.setState({
-        [evt.target.name]: evt.target.value
+        [evt.target.name]: evt.target.value,
       });
     };
 
     addUser = () => {
       const db = firebase.firestore();
       const { roomNum, user, selectedGame } = this.state;
-      if (selectedGame === "none" || user === "") {
+      if (selectedGame === 'none' || user === '') {
         this.setState({ error: true });
         return;
       }
-      const game = db.collection("games").doc(`${selectedGame}`);
-      const roomRef = game.collection("rooms").doc(`${roomNum}`);
-      roomRef.get().then(room => {
-        if (room.exists) {
-          let room = game.collection("rooms").doc(`${roomNum}`);
-          room
-            .collection("users")
-            .doc(`${user}`)
-            .set({
-              name: `${user}`
-            });
-        } else {
-          this.setState({ error: true });
-        }
-      }).catch(err => console.log('Something went wrong!', err));
+      const game = db.collection('games').doc(`${selectedGame}`);
+      const roomRef = game.collection('rooms').doc(`${roomNum}`);
+      roomRef
+        .get()
+        .then(room => {
+          if (room.exists) {
+            let room = game.collection('rooms').doc(`${roomNum}`);
+            room
+              .collection('users')
+              .doc(`${user}`)
+              .set({
+                name: `${user}`,
+              });
+          } else {
+            this.setState({ error: true });
+          }
+        })
+        .catch(err => console.log('Something went wrong!', err));
     };
 
     render() {
@@ -93,16 +96,16 @@ export default withStyles(styles)(
       const { classes } = this.props;
 
       return (
-        <div>
+        <div className="Mobile">
           <header className="header">
-            <img src={require("./logo.png")} alt="logo" />
+            <img src={require('./logo.png')} alt="logo" />
           </header>
           <div
             style={{
-              position: "fixed",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)"
+              position: 'fixed',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
             }}
           >
             <Card alignitems="center" justify="center">
@@ -134,7 +137,7 @@ export default withStyles(styles)(
                 <Select
                   onChange={this.handleChange}
                   value={this.state.selectedGame}
-                  inputProps={{ name: "selectedGame" }}
+                  inputProps={{ name: 'selectedGame' }}
                   className={classes.selections}
                 >
                   <InputLabel>Choose Game</InputLabel>

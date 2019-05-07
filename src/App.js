@@ -9,12 +9,10 @@ import {
   withStyles,
   Typography,
   Button,
-
-  CardActions
-} from "@material-ui/core";
-import firebase from "firebase/app";
-import "firebase/firestore";
-
+  CardActions,
+} from '@material-ui/core';
+import firebase from 'firebase/app';
+import 'firebase/firestore';
 
 const styles = theme => ({
   layout: {
@@ -59,17 +57,17 @@ export default withStyles(styles)(
     createRoom = async game => {
       let db = firebase.firestore();
       let roomNumber = Math.floor(1000 + Math.random() * 9000);
-      const selection = db.collection("games").doc(`${game.name}`);
+      const selection = db.collection('games').doc(`${game.name}`);
       selection
-        .collection("rooms")
+        .collection('rooms')
         .doc(`${roomNumber}`)
         .set({
-          roomNumber: `${roomNumber}`
+          roomNumber: `${roomNumber}`,
         });
       //redirect to game home, passing selection and room number as properties
       return this.props.history.push({
-        pathname: "/game",
-        state: { roomNumber, game }
+        pathname: '/game',
+        state: { roomNumber, game },
       });
     };
 
