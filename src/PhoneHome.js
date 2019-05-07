@@ -82,7 +82,7 @@ export default withStyles(styles)(
         .get()
         .then(room => {
           if (room.exists) {
-            //here's where you check for max players reached?
+            //here's where you check for max players reached
             let room = game.collection("rooms").doc(`${roomNum}`);
             room.get().then(snap => {
               size = snap.size; // will return the room size
@@ -95,9 +95,9 @@ export default withStyles(styles)(
                   name: `${user}`
                 });
             } else {
-              console.log("Room is full code goes here");
+              //render code indicating room is full
               return <SnackBar message="Room is full!" />;
-            } //render code indicating room is full
+            }
           } else {
             this.setState({ error: true });
           }
