@@ -10,17 +10,13 @@ import Undo from '@material-ui/icons/Undo';
 import Check from '@material-ui/icons/Check';
 import { disableBodyScroll } from 'body-scroll-lock';
 
-<<<<<<< HEAD:src/Like What You See/Phone/PlayerDrawPad.js
 class DrawPad extends React.Component {
-=======
-class PictionaryHome extends React.Component {
   targetElement = null;
 
   componentDidMount() {
     this.targetElement = document.querySelector('canvas');
     disableBodyScroll(this.targetElement);
   }
->>>>>>> master:src/Game-Pic.js
   handleClick = () => {
     let db = firebase.firestore();
     let dbGames = db
