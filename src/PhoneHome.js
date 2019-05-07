@@ -99,7 +99,6 @@ export default withStyles(styles)(
               //render code indicating room is full
               return <SnackBar message="Room is full!" />;
             }
-            let room = game.collection('rooms').doc(`${roomNum}`);
             room
               .collection('users')
               .doc(`${user}`)
