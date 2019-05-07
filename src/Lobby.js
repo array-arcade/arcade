@@ -1,6 +1,4 @@
 import React from "react";
-import classNames from "classnames";
-
 import {
   Card,
   //Grid,
@@ -12,7 +10,6 @@ import {
   CardActions
 } from "@material-ui/core";
 import firebase from "firebase/app";
-import "firebase/firestore";
 
 const styles = theme => ({
   layout: {
@@ -39,59 +36,52 @@ export default withStyles(styles)(
   class Lobby extends React.Component {
     constructor() {
       super();
-      this.state = {};
+      this.state = {
+        currentGame: {},
+        roomNumber: 0,
+        players: []
+      };
     }
 
     async componentDidMount() {
+      const { game, roomNumber } = this.props.location.state;
+      this.setState({ currentGame: game, roomNumber });
       let db = firebase.firestore();
-      let game = db.collection("games");
-      await game
-        .where("name", "==", this.props.location.state.game)
-        .get()
-        .then(snapshot => {
-          snapshot.forEach(doc => {
-            this.setState({
-              game: doc.data(),
-              room: this.props.location.state.roomNumber
-            });
-          });
-        });
+      let users = db
+        .collection("games")
+        .doc(`${game.name}`)
+        .collection("rooms")
+        .doc(`${roomNumber}`)
+        .collection("users");
+      users.onSnapshot(snapshot => {
+        let players = snapshot.docs.map(doc => doc.data());
+        this.setState({ players: players });
+      });
     }
 
     render() {
-      //from game home, see how many players have joined the room & render start button when minimum has been reached
+      //from game home, see how many players have joined the room
       //redirect to game screen after user has started the game
 
-      const { game, room } = this.state;
-      const { classes } = this.props;
+      const { currentGame, roomNumber, players } = this.state;
 
-      console.log(game);
+      const renderer = () => {
+        if (currentGame.name) {
+          return (
+            <div>
+              <h1>{currentGame.name}</h1>
+              <h2>{roomNumber}</h2>
+              {players.map(player => {
+                return <p>{player.name}</p>;
+              })}
+            </div>
+          );
+        } else {
+          return <h1>Please Hold.</h1>;
+        }
+      };
 
-      return (
-        <Card className={classes.card} raised={true}>
-          <CardMedia
-            className={classes.cardMedia}
-            image={game.image}
-            title={game.name}
-          />
-          <CardContent>
-            <Typography variant="h6">{game.name}</Typography>
-            <Typography variant="body1" gutterBottom>
-              {game.description}
-            </Typography>
-            <Typography variant="caption">Player: {game.players}</Typography>
-          </CardContent>
-          <CardActions>
-            <Button
-              size="medium"
-              color="primary"
-              onClick={() => this.createRoom(game.name)}
-            >
-              Create Room
-            </Button>
-          </CardActions>
-        </Card>
-      );
+      return <div>{renderer()}</div>;
     }
   }
 );
