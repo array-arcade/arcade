@@ -5,9 +5,9 @@ import {
   CardMedia,
   CardContent,
   withStyles,
-  Typography,
-  Button,
-  CardActions
+  Typography
+  // Button,
+  // CardActions
 } from "@material-ui/core";
 import firebase from "firebase/app";
 
@@ -55,7 +55,15 @@ export default withStyles(styles)(
         .collection("users");
       users.onSnapshot(snapshot => {
         let players = snapshot.docs.map(doc => doc.data());
+        if (this.state.players.length >= this.state.currentGame.max) {
+          //too many players code goes here? look into ejecting last added player and sending a room is full message? should this be handled on the mobile screen before player is added to collection?
+          console.log("too many players");
+        }
+
         this.setState({ players: players });
+        if (this.state.players.length >= this.state.currentGame.min) {
+          console.log("render button visible here");
+        }
       });
     }
 
@@ -64,11 +72,23 @@ export default withStyles(styles)(
       //redirect to game screen after user has started the game
 
       const { currentGame, roomNumber, players } = this.state;
-
+      console.log(currentGame);
       const renderer = () => {
         if (currentGame.name) {
           return (
             <div>
+              <Card raised={true}>
+                <CardMedia image={currentGame.image} title={currentGame.name} />
+                <CardContent>
+                  <Typography variant="h6">{currentGame.name}</Typography>
+                  <Typography variant="body1" gutterBottom>
+                    {currentGame.description}
+                  </Typography>
+                  <Typography variant="caption">
+                    Player: {currentGame.players}
+                  </Typography>
+                </CardContent>
+              </Card>
               <h1>{currentGame.name}</h1>
               <h2>{roomNumber}</h2>
               {players.map(player => {
