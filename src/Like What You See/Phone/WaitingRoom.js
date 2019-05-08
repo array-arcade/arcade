@@ -1,4 +1,6 @@
 import React from "react";
+import DrawPad from "./PlayerDrawPad";
+import WordPick from "./JudgeWordPick";
 import { db } from "../../index";
 
 export class WaitingRoom extends React.Component {
@@ -7,33 +9,59 @@ export class WaitingRoom extends React.Component {
     this.state = {
       roomNum: 0,
       game: {},
-      user: {}
+      user: {},
+      pageChange: false
     };
   }
 
   componentDidMount() {
-    const { roomNum, game, user } = this.props.location.state;
-    let currentPlayer = db
+    const { roomNum, currentGame, user } = this.props.location.state;
+    let currentPlayer;
+    const room = db
       .collection("games")
-      .doc(`${game.name}`)
+      .doc(`${currentGame.name}`)
       .collection("rooms")
-      .doc(`${roomNum}`)
+      .doc(`${roomNum}`);
+    this.playerUnsub = room
       .collection("users")
-      .doc(`${user}`);
-    this.setState({ roomNum, game, user: currentPlayer });
+      .doc(`${user}`)
+      .onSnapshot(snapshot => {
+        currentPlayer = snapshot.data();
+        this.setState({ user: currentPlayer });
+      });
+    this.setState({ roomNum, game: currentGame });
+    this.roomUnsub = room.onSnapshot(snapshot => {
+      if (snapshot.data().judge) {
+        this.setState({ pageChange: true });
+      }
+    });
   }
 
-  componentWillUpdate() {
-    console.log(this.state, this.props);
+  componentWillUnmount() {
+    this.playerUnsub()
+    this.roomUnsub()
   }
 
   render() {
-    console.log(this.state)
-    const { roomNum, game, user } = this.state;
-    return (
-      <div>
-        <h1>inside the waiting room!</h1>
-      </div>
-    );
+    const { roomNum, game, user, pageChange } = this.state;
+    console.log(roomNum, game, user);
+    const roomRender = () => {
+      if (user.isJudge && pageChange) {
+        return this.props.history.push({
+          pathname: `/word-pick`,
+          state: { roomNum, game, user }
+        });
+      } else if (pageChange) {
+        return this.props.history.push({
+          pathname: `/draw`,
+          state: { roomNum, game, user }
+        });
+      } else {
+        return (
+          <h1>Welcome to the waiting room.</h1>
+        )
+      }
+    };
+    return <div>{roomRender()}</div>;
   }
 }

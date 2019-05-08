@@ -76,7 +76,6 @@ export default withStyles(styles)(
     render() {
       const { games } = this.state;
       const { classes } = this.props;
-
       return (
         <div className="App">
           <header className="header">
