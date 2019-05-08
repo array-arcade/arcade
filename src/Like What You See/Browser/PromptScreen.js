@@ -51,7 +51,8 @@ export default class PromptScreen extends Component {
     }
     return (
       <div>
-        <h1>Inside prompt screen</h1>
+        <h1>{prompt}</h1>
+        <h3>Get Drawing!!!</h3>
       </div>
     );
   }
