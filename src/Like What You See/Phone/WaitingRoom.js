@@ -1,4 +1,6 @@
 import React from "react";
+import DrawPad from './PlayerDrawPad'
+import WordPick from './JudgeWordPick'
 
 export class WaitingRoom extends React.Component {
     constructor() {
@@ -13,10 +15,6 @@ export class WaitingRoom extends React.Component {
     componentDidMount() {
         const {roomNum, game, user} = this.props.location.state
         this.setState({ roomNum, game, user})
-    }
-
-    componentWillUpdate() {
-        console.log(this.state, this.props)
     }
 
   render() {
