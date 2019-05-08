@@ -16,7 +16,29 @@ import React, { Component } from "react";
 export default class PromptScreen extends Component {
   constructor() {
     super();
-    this.state = {};
+    this.state = {
+      game: {},
+      roomNumber: "",
+      judge: "",
+      players: [],
+      prompt: ""
+    };
+  }
+
+  async componentDidMount() {
+    const { game, roomNumber, judge } = this.props.location.state;
+    this.setState({ game, roomNumber, judge });
+    let db = firebase.firestore();
+    let users = db
+      .collection("games")
+      .doc(`${game.name}`)
+      .collection("rooms")
+      .doc(`${roomNumber}`)
+      .collection("users");
+    users.onSnapshot(snapshot => {
+      let players = snapshot.docs.map(doc => doc.data());
+      this.setState({ players: players });
+    });
   }
 
   render() {

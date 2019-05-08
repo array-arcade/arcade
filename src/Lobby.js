@@ -54,9 +54,6 @@ export default withStyles(styles)(
       this.unsubscribe = users.onSnapshot(snapshot => {
         let players = snapshot.docs.map(doc => doc.data());
         this.setState({ players: players });
-        if (this.state.players.length >= this.state.currentGame.min) {
-          console.log("render button visible here");
-        }
       });
     }
 
@@ -91,7 +88,7 @@ export default withStyles(styles)(
 
       return this.props.history.push({
         pathname: `/${currentGame.name}/${roomNumber}/prompt`,
-        state: { judge: firstJudge, roomNumber, players }
+        state: { judge: firstJudge, roomNumber, players, game: currentGame }
       });
     };
 
