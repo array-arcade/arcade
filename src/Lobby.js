@@ -1,13 +1,10 @@
 import React from "react";
 import {
   Card,
-  //Grid,
   CardMedia,
   CardContent,
   withStyles,
-  Typography,
-  Button,
-  CardActions
+  Typography
 } from "@material-ui/core";
 import firebase from "firebase/app";
 
@@ -33,7 +30,7 @@ const styles = theme => ({
 });
 
 export default withStyles(styles)(
-  class GameHome extends React.Component {
+  class Lobby extends React.Component {
     constructor() {
       super();
       this.state = {
@@ -56,6 +53,9 @@ export default withStyles(styles)(
       users.onSnapshot(snapshot => {
         let players = snapshot.docs.map(doc => doc.data());
         this.setState({ players: players });
+        if (this.state.players.length >= this.state.currentGame.min) {
+          console.log("render button visible here");
+        }
       });
     }
 
@@ -74,15 +74,24 @@ export default withStyles(styles)(
     };
 
     render() {
-      //from game home, see how many players have joined the room
-      //redirect to game screen after user has started the game
-
       const { currentGame, roomNumber, players } = this.state;
-
+      console.log(currentGame);
       const renderer = () => {
         if (currentGame.name) {
           return (
             <div>
+              <Card raised={true}>
+                <CardMedia image={currentGame.image} title={currentGame.name} />
+                <CardContent>
+                  <Typography variant="h6">{currentGame.name}</Typography>
+                  <Typography variant="body1" gutterBottom>
+                    {currentGame.description}
+                  </Typography>
+                  <Typography variant="caption">
+                    Player: {currentGame.players}
+                  </Typography>
+                </CardContent>
+              </Card>
               <h1>{currentGame.name}</h1>
               <h2>{roomNumber}</h2>
               {players.map(player => {
@@ -100,48 +109,3 @@ export default withStyles(styles)(
     }
   }
 );
-
-/*
-games: {
-  Like What You See?: {
-    description: ...
-    image: ...
-    name: ...
-    players: ...
-    rooms: {
-      3444: {
-        roomNumber: 3444
-      }
-      8810: {
-        roomNumber: 8810
-      }
-    }
-  }
-}
-
-<Card className={classes.card} raised={true}>
-                      <CardMedia
-                        className={classes.cardMedia}
-                        image={game.image}
-                        title={game.name}
-                      />
-                      <CardContent>
-                        <Typography variant="h6">{game.name}</Typography>
-                        <Typography variant="body1" gutterBottom>
-                          {game.description}
-                        </Typography>
-                        <Typography variant="caption">
-                          Player: {game.players}
-                        </Typography>
-                      </CardContent>
-                      <CardActions>
-                        <Button
-                          size="medium"
-                          color="primary"
-                          onClick={() => this.createRoom(game.name)}
-                        >
-                          Create Room
-                        </Button>
-                      </CardActions>
-                    </Card>
-*/

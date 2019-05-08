@@ -1,11 +1,12 @@
-import React from "react";
-import TextField from "@material-ui/core/TextField";
-import Face from "@material-ui/icons/Face";
-import DialPad from "@material-ui/icons/Dialpad";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import CardActions from "@material-ui/core/CardActions";
-import Button from "@material-ui/core/Button";
+import React from 'react';
+import TextField from '@material-ui/core/TextField';
+import Face from '@material-ui/icons/Face';
+import DialPad from '@material-ui/icons/Dialpad';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardActions from '@material-ui/core/CardActions';
+import Button from '@material-ui/core/Button';
+import SnackBar from './SnackBar';
 import {
   withStyles,
   Select,
@@ -14,10 +15,12 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText
-} from "@material-ui/core";
-import firebase from "firebase/app";
-import "firebase/firestore";
+  DialogContentText,
+} from '@material-ui/core';
+import firebase from 'firebase/app';
+import 'firebase/firestore';
+import { disableBodyScroll } from 'body-scroll-lock';
+
 
 const styles = theme => ({
   cardItem: {
@@ -47,6 +50,7 @@ export default withStyles(styles)(
         error: false
       };
     }
+    targetElement = null;
 
     async componentDidMount() {
       const db = firebase.firestore();
@@ -56,6 +60,8 @@ export default withStyles(styles)(
           this.setState({ games: [...this.state.games, doc.data()] });
         });
       });
+      this.targetElement = document.querySelector('Mobile');
+      disableBodyScroll(this.targetElement);
     }
 
     handleChange = evt => {
@@ -66,26 +72,55 @@ export default withStyles(styles)(
 
     addUser = () => {
       const db = firebase.firestore();
-      const { roomNum, user, selectedGame } = this.state;
+      let { roomNum, user, selectedGame } = this.state;
       if (selectedGame === "none" || user === "") {
         this.setState({ error: true });
         return;
       }
-      const game = db.collection("games").doc(`${selectedGame}`);
-      const roomRef = game.collection("rooms").doc(`${roomNum}`);
-      roomRef.get().then(room => {
-        if (room.exists) {
-          let room = game.collection("rooms").doc(`${roomNum}`);
-          room
-            .collection("users")
-            .doc(`${user}`)
-            .set({
-              name: `${user}`
+      const game = db.collection('games').doc(`${selectedGame}`);
+      let size, max;
+      game.get().then(snap => {
+        max = snap.max;
+      });
+      const roomRef = game.collection('rooms').doc(`${roomNum}`);
+      roomRef
+        .get()
+        .then(room => {
+          if (room.exists) {
+            //here's where you check for max players reached
+            let room = game.collection('rooms').doc(`${roomNum}`);
+            room.get().then(snap => {
+              size = snap.size; // will return the room size
             });
-        } else {
-          this.setState({ error: true });
-        }
-      }).catch(err => console.log('Something went wrong!', err));
+            if (size <= max) {
+              room
+                .collection('users')
+                .doc(`${user}`)
+                .set({
+                  name: `${user}`,
+                });
+            } else {
+              //render code indicating room is full
+              // *** This is getting executed no matter what and it shouldn't be.
+              //Returning the Snack Bar omponent to display an error when room is full breaks adding users
+              // return <SnackBar message="Room is full!" />;
+              console.log("removing snack bar");
+            }
+            room
+              .collection("users")
+              .doc(`${user}`)
+              .set({
+                name: `${user}`
+              });
+          } else {
+            this.setState({ error: true });
+          }
+          return this.props.history.push({
+            pathname: `/${roomNum}/waitingroom`,
+            state: { roomNum, game, user }
+          });
+        })
+        .catch(err => console.log('Something went wrong!', err));
     };
 
     render() {
@@ -93,16 +128,16 @@ export default withStyles(styles)(
       const { classes } = this.props;
 
       return (
-        <div>
+        <div className="Mobile">
           <header className="header">
             <img src={require("./logo.png")} alt="logo" />
           </header>
           <div
             style={{
-              position: "fixed",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)"
+              position: 'absolute',
+              top: '60%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
             }}
           >
             <Card alignitems="center" justify="center">
