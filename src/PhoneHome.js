@@ -78,8 +78,9 @@ export default withStyles(styles)(
         return;
       }
       const game = db.collection('games').doc(`${selectedGame}`);
-      let size, max;
+      let size, max, currentGame;
       game.get().then(snap => {
+        currentGame = snap.data()
         max = snap.max;
       });
       const roomRef = game.collection('rooms').doc(`${roomNum}`);
@@ -117,7 +118,7 @@ export default withStyles(styles)(
           }
           return this.props.history.push({
             pathname: `/${roomNum}/waitingroom`,
-            state: { roomNum, game, user }
+            state: { roomNum, currentGame, user }
           });
         })
         .catch(err => console.log('Something went wrong!', err));

@@ -4,9 +4,11 @@ import {
   CardMedia,
   CardContent,
   withStyles,
-  Typography
+  Typography,
+  Button
 } from "@material-ui/core";
 import firebase from "firebase/app";
+import { db } from "./index";
 
 const styles = theme => ({
   layout: {
@@ -43,13 +45,12 @@ export default withStyles(styles)(
     async componentDidMount() {
       const { game, roomNumber } = this.props.location.state;
       this.setState({ currentGame: game, roomNumber });
-      let db = firebase.firestore();
-      let users = db
+      const room = db
         .collection("games")
         .doc(`${game.name}`)
         .collection("rooms")
-        .doc(`${roomNumber}`)
-        .collection("users");
+        .doc(`${roomNumber}`);
+      let users = room.collection("users");
       this.unsubscribe = users.onSnapshot(snapshot => {
         let players = snapshot.docs.map(doc => doc.data());
         this.setState({ players: players });
@@ -60,8 +61,30 @@ export default withStyles(styles)(
     }
 
     componentWillUnmount() {
-      this.unsubscribe()
+      this.unsubscribe();
     }
+
+    startGame = () => {
+      const firstJudge = this.state.players[0].name;
+      const { currentGame, roomNumber } = this.state;
+      const room = db
+        .collection("games")
+        .doc(`${currentGame.name}`)
+        .collection("rooms")
+        .doc(`${roomNumber}`);
+      room
+        .collection("users")
+        .doc(`${firstJudge}`)
+        .set(
+          {
+            isJudge: true
+          },
+          { merge: true }
+        );
+        room.set({
+          judge: firstJudge
+        }, { merge: true })
+    };
 
     render() {
       const { currentGame, roomNumber, players } = this.state;
@@ -87,6 +110,12 @@ export default withStyles(styles)(
               {players.map(player => {
                 return <p>{player.name}</p>;
               })}
+              <Button
+                onClick={this.startGame}
+                disabled={players.length > 2 ? false : true}
+              >
+                Start the Game!
+              </Button>
             </div>
           );
         } else {

@@ -14,18 +14,23 @@ export class WaitingRoom extends React.Component {
   }
 
   componentDidMount() {
-    const { roomNum, game, user } = this.props.location.state;
+    const { roomNum, currentGame, user } = this.props.location.state;
+    let currentPlayer = {}
     const room = db
       .collection("games")
-      .doc(`${game.name}`)
+      .doc(`${currentGame.name}`)
       .collection("rooms")
       .doc(`${roomNum}`);
-    let currentPlayer = room.collection("users").doc(`${user}`);
-    this.setState({ roomNum, game, user: currentPlayer });
+    this.playerUnsub = room.collection("users").doc(`${user}`).onSnapshot(snapshot => {
+      currentPlayer = snapshot.data()
+    });
+    this.setState({ roomNum, game: currentGame, user: currentPlayer });
+    
   }
 
   render() {
     const { roomNum, game, user } = this.state;
+    console.log(roomNum, game.name, user)
     return (
       <div>
         <h1>inside the waiting room!</h1>
