@@ -1,12 +1,12 @@
-import React from 'react';
-import TextField from '@material-ui/core/TextField';
-import Face from '@material-ui/icons/Face';
-import DialPad from '@material-ui/icons/Dialpad';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
-import Button from '@material-ui/core/Button';
-import SnackBar from './SnackBar';
+import React from "react";
+import TextField from "@material-ui/core/TextField";
+import Face from "@material-ui/icons/Face";
+import DialPad from "@material-ui/icons/Dialpad";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import CardActions from "@material-ui/core/CardActions";
+import Button from "@material-ui/core/Button";
+
 import {
   withStyles,
   Select,
@@ -15,12 +15,11 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
-} from '@material-ui/core';
-import firebase from 'firebase/app';
-import 'firebase/firestore';
-import { disableBodyScroll } from 'body-scroll-lock';
-
+  DialogContentText
+} from "@material-ui/core";
+import firebase from "firebase/app";
+import "firebase/firestore";
+import { disableBodyScroll } from "body-scroll-lock";
 
 const styles = theme => ({
   cardItem: {
@@ -47,7 +46,8 @@ export default withStyles(styles)(
         roomNum: "",
         selectedGame: "none",
         games: [],
-        error: false
+        error: false,
+        message: ""
       };
     }
     targetElement = null;
@@ -60,7 +60,7 @@ export default withStyles(styles)(
           this.setState({ games: [...this.state.games, doc.data()] });
         });
       });
-      this.targetElement = document.querySelector('Mobile');
+      this.targetElement = document.querySelector("Mobile");
       disableBodyScroll(this.targetElement);
     }
 
@@ -71,57 +71,61 @@ export default withStyles(styles)(
     };
 
     addUser = () => {
-      const db = firebase.firestore();
-      let { roomNum, user, selectedGame } = this.state;
+      const db = firebase.firestore(); //create ref to firestore
+      let { roomNum, user, selectedGame } = this.state; //put state in local var
       if (selectedGame === "none" || user === "") {
+        //validate fields
         this.setState({ error: true });
         return;
       }
-      const game = db.collection('games').doc(`${selectedGame}`);
-      let size, max, currentGame;
+      const game = db.collection("games").doc(`${selectedGame}`); //get game doc for selected game
+      let size, max; //vars to check for full room
       game.get().then(snap => {
-        currentGame = snap.data()
-        max = snap.max;
+        max = snap.max; //gets a snapshot of game doc and sets max players to max
       });
-      const roomRef = game.collection('rooms').doc(`${roomNum}`);
+      const roomRef = game.collection("rooms").doc(`${roomNum}`); //gets ref to room collection from game
       roomRef
         .get()
         .then(room => {
           if (room.exists) {
             //here's where you check for max players reached
-            let room = game.collection('rooms').doc(`${roomNum}`);
-            room.get().then(snap => {
-              size = snap.size; // will return the room size
-            });
-            if (size <= max) {
+
+            roomRef
+              .collection("users")
+              .get()
+              .then(snapshot => {
+                size = snapshot.size; // will return the room size
+              });
+            if (size < max) {
+              //add the user (and redirect)
               room
-                .collection('users')
+                .collection("users")
                 .doc(`${user}`)
                 .set({
-                  name: `${user}`,
+                  name: `${user}`
                 });
+
+              return this.props.history.push({
+                pathname: `/${roomNum}/waitingroom`,
+                state: { roomNum, game, user }
+              });
             } else {
               //render code indicating room is full
-              // *** This is getting executed no matter what and it shouldn't be.
-              //Returning the Snack Bar omponent to display an error when room is full breaks adding users
-              // return <SnackBar message="Room is full!" />;
-              console.log("removing snack bar");
-            }
-            room
-              .collection("users")
-              .doc(`${user}`)
-              .set({
-                name: `${user}`
+              this.setState({
+                error: true,
+                message:
+                  "The selected room is full currently and you will not be able to join."
               });
+            }
           } else {
-            this.setState({ error: true });
+            this.setState({
+              error: true,
+              message:
+                "An error has occured. Make sure you have a name and a valid room number for the game you are trying to play."
+            });
           }
-          return this.props.history.push({
-            pathname: `/${roomNum}/waitingroom`,
-            state: { roomNum, currentGame, user }
-          });
         })
-        .catch(err => console.log('Something went wrong!', err));
+        .catch(err => console.log("Something went wrong!", err));
     };
 
     render() {
@@ -135,10 +139,10 @@ export default withStyles(styles)(
           </header>
           <div
             style={{
-              position: 'absolute',
-              top: '60%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
+              position: "absolute",
+              top: "60%",
+              left: "50%",
+              transform: "translate(-50%, -50%)"
             }}
           >
             <Card alignitems="center" justify="center">
@@ -199,8 +203,9 @@ export default withStyles(styles)(
                 >
                   <DialogContent>
                     <DialogContentText>
-                      An error has occured. Make sure you have a name and a
-                      valid room number for the game you are trying to play.
+                      <DialogContentText>
+                        {this.state.message}
+                      </DialogContentText>
                     </DialogContentText>
                   </DialogContent>
                   <DialogActions>
