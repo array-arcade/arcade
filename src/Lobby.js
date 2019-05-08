@@ -69,9 +69,18 @@ export default withStyles(styles)(
         .collection("rooms")
         .doc(`${roomNumber}`)
         .collection("users")
-        .doc(`${firstJudge}`).set({
-          isJudge: true
-        }, { merge: true });
+        .doc(`${firstJudge}`)
+        .set(
+          {
+            isJudge: true
+          },
+          { merge: true }
+        );
+
+      return this.props.history.push({
+        pathname: `/${currentGame.name}/${roomNumber}/prompt`,
+        state: { judge: firstJudge, roomNumber }
+      });
     };
 
     render() {
