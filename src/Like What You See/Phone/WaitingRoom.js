@@ -44,7 +44,6 @@ export class WaitingRoom extends React.Component {
 
   render() {
     const { roomNum, game, user, pageChange } = this.state;
-    console.log(roomNum, game, user);
     const roomRender = () => {
       if (user.isJudge && pageChange) {
         return this.props.history.push({

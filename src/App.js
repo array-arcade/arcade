@@ -64,6 +64,7 @@ export default withStyles(styles)(
         .doc(`${roomNumber}`)
         .set({
           roomNumber: `${roomNumber}`,
+          timesUp: false
         });
       //redirect to game home, passing selection and room number as properties
       return this.props.history.push({

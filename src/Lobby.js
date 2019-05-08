@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Card,
   CardMedia,
@@ -12,23 +12,23 @@ import { db } from "./index";
 
 const styles = theme => ({
   layout: {
-    width: 'auto',
+    width: "auto",
     marginLeft: theme.spacing.unit * 3,
-    marginRight: theme.spacing.unit * 3,
+    marginRight: theme.spacing.unit * 3
   },
   cardGrid: {
-    padding: `${theme.spacing.unit * 8}px 0`,
+    padding: `${theme.spacing.unit * 8}px 0`
   },
   card: {
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
+    height: "100%",
+    display: "flex",
+    flexDirection: "column"
   },
   cardMedia: {
-    marginTop: '30px',
-    paddingTop: '50%',
-    height: '100%',
-  },
+    marginTop: "30px",
+    paddingTop: "50%",
+    height: "100%"
+  }
 });
 
 export default withStyles(styles)(
@@ -38,7 +38,7 @@ export default withStyles(styles)(
       this.state = {
         currentGame: {},
         roomNumber: 0,
-        players: [],
+        players: []
       };
     }
 
@@ -55,7 +55,7 @@ export default withStyles(styles)(
         let players = snapshot.docs.map(doc => doc.data());
         this.setState({ players: players });
         if (this.state.players.length >= this.state.currentGame.min) {
-          console.log('render button visible here');
+          console.log("render button visible here");
         }
       });
     }
@@ -81,9 +81,12 @@ export default withStyles(styles)(
           },
           { merge: true }
         );
-        room.set({
+      room.set(
+        {
           judge: firstJudge
-        }, { merge: true })
+        },
+        { merge: true }
+      );
     };
 
     render() {
@@ -112,7 +115,7 @@ export default withStyles(styles)(
               })}
               <Button
                 onClick={this.startGame}
-                disabled={players.length > 2 ? false : true}
+                //disabled={players.length > 2 ? false : true}
               >
                 Start the Game!
               </Button>

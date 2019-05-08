@@ -9,6 +9,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import Undo from '@material-ui/icons/Undo';
 import Check from '@material-ui/icons/Check';
 import { disableBodyScroll } from 'body-scroll-lock';
+import { db } from '../../index';
 
 class DrawPad extends React.Component {
   targetElement = null;
