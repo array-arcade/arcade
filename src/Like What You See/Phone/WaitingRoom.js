@@ -30,7 +30,7 @@ export class WaitingRoom extends React.Component {
 
   render() {
     const { roomNum, game, user } = this.state;
-    console.log(roomNum, game.name, user)
+    console.log(roomNum, game, user)
     return (
       <div>
         <h1>inside the waiting room!</h1>
