@@ -1,33 +1,33 @@
-import React from "react";
+import React from 'react';
 import {
   Card,
   CardMedia,
   CardContent,
   withStyles,
   Typography,
-  Button
-} from "@material-ui/core";
-import firebase from "firebase/app";
+  Button,
+} from '@material-ui/core';
+import firebase from 'firebase/app';
 
 const styles = theme => ({
   layout: {
-    width: "auto",
+    width: 'auto',
     marginLeft: theme.spacing.unit * 3,
-    marginRight: theme.spacing.unit * 3
+    marginRight: theme.spacing.unit * 3,
   },
   cardGrid: {
-    padding: `${theme.spacing.unit * 8}px 0`
+    padding: `${theme.spacing.unit * 8}px 0`,
   },
   card: {
-    height: "100%",
-    display: "flex",
-    flexDirection: "column"
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
   },
   cardMedia: {
-    marginTop: "30px",
-    paddingTop: "50%",
-    height: "100%"
-  }
+    marginTop: '30px',
+    paddingTop: '50%',
+    height: '100%',
+  },
 });
 
 export default withStyles(styles)(
@@ -37,7 +37,7 @@ export default withStyles(styles)(
       this.state = {
         currentGame: {},
         roomNumber: 0,
-        players: []
+        players: [],
       };
     }
 
@@ -46,16 +46,16 @@ export default withStyles(styles)(
       this.setState({ currentGame: game, roomNumber });
       let db = firebase.firestore();
       let users = db
-        .collection("games")
+        .collection('games')
         .doc(`${game.name}`)
-        .collection("rooms")
+        .collection('rooms')
         .doc(`${roomNumber}`)
-        .collection("users");
+        .collection('users');
       users.onSnapshot(snapshot => {
         let players = snapshot.docs.map(doc => doc.data());
         this.setState({ players: players });
         if (this.state.players.length >= this.state.currentGame.min) {
-          console.log("render button visible here");
+          console.log('render button visible here');
         }
       });
     }
@@ -64,14 +64,21 @@ export default withStyles(styles)(
       const firstJudge = this.state.players[0].name;
       const { currentGame, roomNumber } = this.state;
       const db = firebase.firestore();
-      db.collection("games")
+      db.collection('games')
         .doc(`${currentGame.name}`)
-        .collection("rooms")
+        .collection('rooms')
         .doc(`${roomNumber}`)
-        .collection("users")
-        .doc(`${firstJudge}`).set({
-          isJudge: true
-        }, { merge: true });
+        .collection('users')
+        .doc(`${firstJudge}`)
+        .set(
+          {
+            isJudge: true,
+          },
+          { merge: true }
+        );
+      return this.props.history.push({
+        pathname: `/${currentGame.name}/${roomNumber}/prompt`,
+      });
     };
 
     render() {

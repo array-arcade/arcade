@@ -1,16 +1,15 @@
-import React, { Component } from "react";
-import { Route, Switch, Redirect } from "react-router";
-import PhoneHome from "./PhoneHome";
-import App from "./App";
-import DrawPad from "./Like What You See/Phone/PlayerDrawPad";
-import Lobby from "./Lobby";
-import WordPick from './Like What You See/Phone/JudgeWordPick'
-import {WaitingRoom} from './Like What You See/Phone/WaitingRoom'
-import PromptScreen from './Like What You See/Browser/PromptScreen'
-import VictoryScreen from './Like What You See/Browser/VictoryScreen'
-import PictureDisplays from './Like What You See/Browser/PictureDisplays'
-import JudgeVote from './Like What You See/Phone/JudgeVote'
-
+import React, { Component } from 'react';
+import { Route, Switch, Redirect } from 'react-router';
+import PhoneHome from './PhoneHome';
+import App from './App';
+import DrawPad from './Like What You See/Phone/PlayerDrawPad';
+import Lobby from './Lobby';
+import WordPick from './Like What You See/Phone/JudgeWordPick';
+import { WaitingRoom } from './Like What You See/Phone/WaitingRoom';
+import PromptScreen from './Like What You See/Browser/PromptScreen';
+import VictoryScreen from './Like What You See/Browser/VictoryScreen';
+import PictureDisplays from './Like What You See/Browser/PictureDisplays';
+import JudgeVote from './Like What You See/Phone/JudgeVote';
 
 export default class Routes extends Component {
   render() {
@@ -21,11 +20,11 @@ export default class Routes extends Component {
     ) {
       return (
         <Switch>
-          <Route path='/vote' component={JudgeVote} />
+          <Route path="/vote" component={JudgeVote} />
           <Route path="/:roomNum/waitingroom" component={WaitingRoom} />
           <Route path="/draw" component={DrawPad} />
           <Route path="/join" component={PhoneHome} />
-          <Route path='/word-pick' component={WordPick} />
+          <Route path="/word-pick" component={WordPick} />
           <Redirect from="/" to="join" />
         </Switch>
       );
