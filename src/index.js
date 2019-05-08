@@ -12,6 +12,8 @@ import { createMemoryHistory } from "history";
 const history = createMemoryHistory();
 firebase.initializeApp(config);
 
+export const db = firebase.firestore()
+
 if (
   /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
     navigator.userAgent
