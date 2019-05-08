@@ -1,6 +1,6 @@
 //This will be rendered through JudgeWordPick and
 //will redirect to the WaitingRoom
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
 export default class JudgeVote extends Component {
   constructor() {
@@ -10,7 +10,7 @@ export default class JudgeVote extends Component {
 
   render() {
     return (
-      <div>
+      <div className="Mobile">
         <h1>Inside judge voting screen</h1>
       </div>
     );

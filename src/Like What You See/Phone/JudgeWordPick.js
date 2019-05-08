@@ -70,7 +70,7 @@ class WordPick extends Component {
     const { classes } = this.props
 
     return (
-      <div>
+      <div className="Mobile">
         <Paper elevation={4} className={classes.root}>
           {displayWords.map(word => {
             return <Typography variant="h3" onClick={this.selectWord} key={word}>{word}</Typography>;

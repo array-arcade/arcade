@@ -32,7 +32,7 @@ export default class VictoryScreen extends Component {
 
   render() {
     return (
-      <div>
+      <div className="App">
         <h1>Inside victory screen</h1>
         <Button
           variant="contained"

@@ -60,7 +60,7 @@ class PictureDisplays extends Component {
     let { classes } = this.props;
 
     return (
-      <div>
+      <div className="App">
         <div>
           <header>judge name choose wisely is what should be rendered!</header>
         </div>

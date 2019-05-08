@@ -1,7 +1,7 @@
-import React from "react";
-import DrawPad from "./PlayerDrawPad";
-import WordPick from "./JudgeWordPick";
-import { db } from "../../index";
+import React from 'react';
+import DrawPad from './PlayerDrawPad';
+import WordPick from './JudgeWordPick';
+import { db } from '../../index';
 
 export class WaitingRoom extends React.Component {
   constructor() {
@@ -10,7 +10,7 @@ export class WaitingRoom extends React.Component {
       roomNum: 0,
       game: {},
       user: {},
-      pageChange: false
+      pageChange: false,
     };
   }
 
@@ -18,12 +18,12 @@ export class WaitingRoom extends React.Component {
     const { roomNum, currentGame, user } = this.props.location.state;
     let currentPlayer;
     const room = db
-      .collection("games")
+      .collection('games')
       .doc(`${currentGame.name}`)
-      .collection("rooms")
+      .collection('rooms')
       .doc(`${roomNum}`);
     this.playerUnsub = room
-      .collection("users")
+      .collection('users')
       .doc(`${user}`)
       .onSnapshot(snapshot => {
         currentPlayer = snapshot.data();
@@ -38,8 +38,8 @@ export class WaitingRoom extends React.Component {
   }
 
   componentWillUnmount() {
-    this.playerUnsub()
-    this.roomUnsub()
+    this.playerUnsub();
+    this.roomUnsub();
   }
 
   render() {
@@ -49,19 +49,17 @@ export class WaitingRoom extends React.Component {
       if (user.isJudge && pageChange) {
         return this.props.history.push({
           pathname: `/word-pick`,
-          state: { roomNum, game, user }
+          state: { roomNum, game, user },
         });
       } else if (pageChange) {
         return this.props.history.push({
           pathname: `/draw`,
-          state: { roomNum, game, user }
+          state: { roomNum, game, user },
         });
       } else {
-        return (
-          <h1>Welcome to the waiting room.</h1>
-        )
+        return <h1>Welcome to the waiting room.</h1>;
       }
     };
-    return <div>{roomRender()}</div>;
+    return <div className="Mobile">{roomRender()}</div>;
   }
 }
