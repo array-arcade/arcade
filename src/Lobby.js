@@ -5,9 +5,10 @@ import {
   CardContent,
   withStyles,
   Typography,
-  Button,
-} from '@material-ui/core';
-import firebase from 'firebase/app';
+  Button
+} from "@material-ui/core";
+import firebase from "firebase/app";
+import { db } from "./index";
 
 const styles = theme => ({
   layout: {
@@ -44,14 +45,13 @@ export default withStyles(styles)(
     async componentDidMount() {
       const { game, roomNumber } = this.props.location.state;
       this.setState({ currentGame: game, roomNumber });
-      let db = firebase.firestore();
-      let users = db
-        .collection('games')
+      const room = db
+        .collection("games")
         .doc(`${game.name}`)
-        .collection('rooms')
-        .doc(`${roomNumber}`)
-        .collection('users');
-      users.onSnapshot(snapshot => {
+        .collection("rooms")
+        .doc(`${roomNumber}`);
+      let users = room.collection("users");
+      this.unsubscribe = users.onSnapshot(snapshot => {
         let players = snapshot.docs.map(doc => doc.data());
         this.setState({ players: players });
         if (this.state.players.length >= this.state.currentGame.min) {
@@ -60,25 +60,30 @@ export default withStyles(styles)(
       });
     }
 
+    componentWillUnmount() {
+      this.unsubscribe();
+    }
+
     startGame = () => {
       const firstJudge = this.state.players[0].name;
       const { currentGame, roomNumber } = this.state;
-      const db = firebase.firestore();
-      db.collection('games')
+      const room = db
+        .collection("games")
         .doc(`${currentGame.name}`)
-        .collection('rooms')
-        .doc(`${roomNumber}`)
-        .collection('users')
+        .collection("rooms")
+        .doc(`${roomNumber}`);
+      room
+        .collection("users")
         .doc(`${firstJudge}`)
         .set(
           {
-            isJudge: true,
+            isJudge: true
           },
           { merge: true }
         );
-      return this.props.history.push({
-        pathname: `/${currentGame.name}/${roomNumber}/prompt`,
-      });
+        room.set({
+          judge: firstJudge
+        }, { merge: true })
     };
 
     render() {
@@ -105,7 +110,12 @@ export default withStyles(styles)(
               {players.map(player => {
                 return <p>{player.name}</p>;
               })}
-              <Button onClick={this.startGame}>Start the Game!</Button>
+              <Button
+                onClick={this.startGame}
+                disabled={players.length > 2 ? false : true}
+              >
+                Start the Game!
+              </Button>
             </div>
           );
         } else {
