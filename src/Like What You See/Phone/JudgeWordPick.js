@@ -7,6 +7,9 @@ const styles = theme => ({
         paddingBottom: theme.spacing.unit * 2
     }
 })
+
+//This will be rendered through the waiting room 
+//and will redirect to JudgeVote
 export default withStyles(styles)(
 class WordPick extends Component {
   constructor() {
