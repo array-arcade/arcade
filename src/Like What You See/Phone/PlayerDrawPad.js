@@ -28,6 +28,16 @@ class DrawPad extends React.Component {
     disableBodyScroll(this.targetElement);
     const { user, roomNum, game } = this.props.location.state;
     this.setState({ user, roomNum, game });
+    const room = db
+    .collection("games")
+    .doc(`${game.name}`)
+    .collection("rooms")
+    .doc(`${roomNum}`);
+    this.unSub = room.onSnapshot(snapshot => {
+      if(snapshot.data().timesUp) {
+        this.handleClick()
+      }
+    })
   }
   handleClick = () => {
     const { user, roomNum, game } = this.state;
@@ -46,6 +56,10 @@ class DrawPad extends React.Component {
       { merge: true }
     );
   };
+
+  componentWillUnmount() {
+    this.unSub()
+  }
   render() {
     return (
       <div className="DrawingScreen">

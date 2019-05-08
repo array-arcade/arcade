@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import { Card, Grid } from '@material-ui/core';
 import CanvasDraw from 'react-canvas-draw';
 import firebase from 'firebase/app';
-import withStyles from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 
 const styles = theme => ({
   layout: {
