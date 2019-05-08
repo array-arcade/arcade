@@ -10,7 +10,6 @@ import PromptScreen from './Like What You See/Browser/PromptScreen'
 import VictoryScreen from './Like What You See/Browser/VictoryScreen'
 import PictureDisplays from './Like What You See/Browser/PictureDisplays'
 import JudgeVote from './Like What You See/Phone/JudgeVote'
-import WordPick from './Like What You See/Phone/JudgeWordPick'
 
 
 export default class Routes extends Component {
