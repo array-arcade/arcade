@@ -7,7 +7,6 @@ import {
   Typography,
   Button
 } from "@material-ui/core";
-import firebase from "firebase/app";
 import { db } from "./index";
 
 const styles = theme => ({
