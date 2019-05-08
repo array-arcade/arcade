@@ -4,7 +4,8 @@ import {
   CardMedia,
   CardContent,
   withStyles,
-  Typography
+  Typography,
+  Button
 } from "@material-ui/core";
 import firebase from "firebase/app";
 
@@ -59,6 +60,20 @@ export default withStyles(styles)(
       });
     }
 
+    startGame = () => {
+      const firstJudge = this.state.players[0].name;
+      const { currentGame, roomNumber } = this.state;
+      const db = firebase.firestore();
+      db.collection("games")
+        .doc(`${currentGame.name}`)
+        .collection("rooms")
+        .doc(`${roomNumber}`)
+        .collection("users")
+        .doc(`${firstJudge}`).set({
+          isJudge: true
+        }, { merge: true });
+    };
+
     render() {
       const { currentGame, roomNumber, players } = this.state;
       console.log(currentGame);
@@ -83,6 +98,7 @@ export default withStyles(styles)(
               {players.map(player => {
                 return <p>{player.name}</p>;
               })}
+              <Button onClick={this.startGame}>Start the Game!</Button>
             </div>
           );
         } else {
