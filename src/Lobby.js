@@ -50,13 +50,17 @@ export default withStyles(styles)(
         .collection("rooms")
         .doc(`${roomNumber}`)
         .collection("users");
-      users.onSnapshot(snapshot => {
+      this.unsubscribe = users.onSnapshot(snapshot => {
         let players = snapshot.docs.map(doc => doc.data());
         this.setState({ players: players });
         if (this.state.players.length >= this.state.currentGame.min) {
           console.log("render button visible here");
         }
       });
+    }
+
+    componentWillUnmount() {
+      this.unsubscribe()
     }
 
     render() {

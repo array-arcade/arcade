@@ -48,7 +48,7 @@ export default withStyles(styles)(
     async componentDidMount() {
       let db = firebase.firestore();
       let dbGames = db.collection("games");
-      dbGames.get().then(snapshot => {
+      await dbGames.get().then(snapshot => {
         snapshot.forEach(doc => {
           this.setState({ games: [...this.state.games, doc.data()] });
         });
