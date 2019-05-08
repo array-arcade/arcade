@@ -4,7 +4,8 @@ import {
   CardMedia,
   CardContent,
   withStyles,
-  Typography
+  Typography,
+  Button
 } from "@material-ui/core";
 import firebase from "firebase/app";
 
