@@ -37,6 +37,11 @@ export class WaitingRoom extends React.Component {
     });
   }
 
+  componentWillUnmount() {
+    this.playerUnsub()
+    this.roomUnsub()
+  }
+
   render() {
     const { roomNum, game, user, pageChange } = this.state;
     console.log(roomNum, game, user);
