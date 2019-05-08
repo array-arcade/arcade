@@ -73,15 +73,19 @@ export default withStyles(styles)(
     addUser = () => {
       const db = firebase.firestore(); //create ref to firestore
       let { roomNum, user, selectedGame } = this.state; //put state in local var
-      if (selectedGame === "none" || user === "") {
+      if (selectedGame === "none" || user === "" || roomNum === "") {
         //validate fields
-        this.setState({ error: true });
+        this.setState({ error: true, message:
+          "An error has occured. Make sure you have a name and a valid room number for the game you are trying to play." });
         return;
       }
       const game = db.collection("games").doc(`${selectedGame}`); //get game doc for selected game
-      let size, max; //vars to check for full room
+      let size = 0 
+      let max; //vars to check for full room
+      let currentGame = {}
       game.get().then(snap => {
-        max = snap.max; //gets a snapshot of game doc and sets max players to max
+        currentGame = snap.data()
+        max = currentGame.max; //gets a snapshot of game doc and sets max players to max
       });
       const roomRef = game.collection("rooms").doc(`${roomNum}`); //gets ref to room collection from game
       roomRef
@@ -89,7 +93,6 @@ export default withStyles(styles)(
         .then(room => {
           if (room.exists) {
             //here's where you check for max players reached
-
             roomRef
               .collection("users")
               .get()
@@ -98,7 +101,7 @@ export default withStyles(styles)(
               });
             if (size < max) {
               //add the user (and redirect)
-              room
+              roomRef
                 .collection("users")
                 .doc(`${user}`)
                 .set({
@@ -107,7 +110,7 @@ export default withStyles(styles)(
 
               return this.props.history.push({
                 pathname: `/${roomNum}/waitingroom`,
-                state: { roomNum, game, user }
+                state: { roomNum, currentGame, user }
               });
             } else {
               //render code indicating room is full
