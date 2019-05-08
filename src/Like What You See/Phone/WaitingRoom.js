@@ -9,13 +9,14 @@ export class WaitingRoom extends React.Component {
     this.state = {
       roomNum: 0,
       game: {},
-      user: {}
+      user: {},
+      pageChange: false
     };
   }
 
   componentDidMount() {
     const { roomNum, currentGame, user } = this.props.location.state;
-    let currentPlayer = {}
+    let currentPlayer
     const room = db
       .collection("games")
       .doc(`${currentGame.name}`)
@@ -23,17 +24,29 @@ export class WaitingRoom extends React.Component {
       .doc(`${roomNum}`);
     this.playerUnsub = room.collection("users").doc(`${user}`).onSnapshot(snapshot => {
       currentPlayer = snapshot.data()
+      this.setState({ user: currentPlayer })
     });
-    this.setState({ roomNum, game: currentGame, user: currentPlayer });
-    
+    this.setState({ roomNum, game: currentGame });
+    this.roomUnsub = room.onSnapshot(snapshot => {
+      if (snapshot.data().judge) {
+        this.setState({ pageChange: true })
+      }
+    })
   }
 
   render() {
-    const { roomNum, game, user } = this.state;
+    const { roomNum, game, user, pageChange } = this.state;
     console.log(roomNum, game, user)
+    const roomRender = () => {
+      if(user.isJudge && pageChange) {
+        return <WordPick />
+      } else if (pageChange) {
+        return <DrawPad />
+      }
+    }
     return (
       <div>
-        <h1>inside the waiting room!</h1>
+        {roomRender()}
       </div>
     );
   }
