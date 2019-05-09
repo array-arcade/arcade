@@ -80,12 +80,8 @@ export default withStyles(styles)(
 
       room.set(
         {
-<<<<<<< HEAD
-          judge: firstJudge
-=======
           judgeChange: true,
-          judge: firstJudge,
->>>>>>> 8f95c0f16c9cabc8623ed7fc7ff8f713495ad3fd
+          judge: firstJudge
         },
         { merge: true }
       );
