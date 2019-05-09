@@ -1,18 +1,19 @@
 //This will render after the game has started and will redirect to
 //PictureDisplays after the timer or after pictures have been submitted
 
-import { db } from "../../index";
-import React, { Component } from "react";
+import { db } from '../../index';
+import React, { Component } from 'react';
+import FooterScore from '../Browser/ScoreDisplay';
 
 export default class PromptScreen extends Component {
   constructor() {
     super();
     this.state = {
       game: {},
-      roomNumber: "",
-      judge: "",
+      roomNumber: '',
+      judge: '',
       players: [],
-      prompt: ""
+      prompt: '',
     };
   }
 
@@ -21,9 +22,9 @@ export default class PromptScreen extends Component {
     this.setState({ game, roomNumber, judge, players });
 
     const room = db
-      .collection("games")
+      .collection('games')
       .doc(`${game.name}`)
-      .collection("rooms")
+      .collection('rooms')
       .doc(`${roomNumber}`);
 
     this.unsubscribe = room.onSnapshot(snapshot => {
@@ -41,7 +42,7 @@ export default class PromptScreen extends Component {
 
   render() {
     const { judge, prompt } = this.state;
-    if ((prompt = "")) {
+    if (prompt === '') {
       //remember to reset prompt after round end
       return (
         <div>
@@ -53,6 +54,7 @@ export default class PromptScreen extends Component {
       <div>
         <h1>{prompt}</h1>
         <h3>Get Drawing!!!</h3>
+        <FooterScore />
       </div>
     );
   }
