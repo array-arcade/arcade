@@ -13,19 +13,31 @@ import { disableBodyScroll } from 'body-scroll-lock';
 class DrawPad extends React.Component {
   targetElement = null;
 
+  constructor() {
+    super();
+    this.state = {
+      user: {},
+      roomNum: null,
+      game: {},
+    };
+  }
+
   componentDidMount() {
     this.targetElement = document.querySelector('canvas');
     disableBodyScroll(this.targetElement);
+    const { user, roomNum, game } = this.props.location.state;
+    this.setState({ user, roomNum, game });
   }
   handleClick = () => {
+    const { user, roomNum, game } = this.state;
     let db = firebase.firestore();
     let dbGames = db
       .collection('games')
-      .doc('Like What You See?')
+      .doc(`${game.name}`)
       .collection('rooms')
-      .doc('5589')
+      .doc(`${roomNum}`)
       .collection('users')
-      .doc('Tim');
+      .doc(`${user.name}`);
     dbGames.set(
       {
         image: this.saveableCanvas.getSaveData(),
@@ -48,7 +60,7 @@ class DrawPad extends React.Component {
             ref={canvasDraw => (this.saveableCanvas = canvasDraw)}
             hideGrid={true}
             brushRadius={3}
-            lazyRadius={10}
+            lazyRadius={0}
             canvasHeight={350}
             brushColor="#000000"
             style={{
@@ -88,7 +100,7 @@ class DrawPad extends React.Component {
           size="large"
           fullWidth={true}
           onClick={() => {
-            this.saveableCanvas.undo();
+            this.handleClick();
           }}
         >
           <Check />
