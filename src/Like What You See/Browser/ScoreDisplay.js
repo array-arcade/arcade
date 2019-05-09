@@ -1,6 +1,5 @@
 import React from 'react';
 import firebase from 'firebase';
-import { spawn } from 'child_process';
 
 class FooterScore extends React.Component {
   constructor() {
@@ -34,11 +33,13 @@ class FooterScore extends React.Component {
     return (
       <div className="Footer">
         <footer>
-          {this.players.map(player => {
+          {this.state.players.map(player => {
             // eslint-disable-next-line no-unused-expressions
-            <span>
-              {player.name} - {player.score} ||
-            </span>;
+            return (
+              <span>
+                {player.name} - {player.score} ||
+              </span>
+            );
           })}
         </footer>
       </div>
