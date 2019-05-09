@@ -105,7 +105,8 @@ export default withStyles(styles)(
                 .collection("users")
                 .doc(`${user}`)
                 .set({
-                  name: `${user}`
+                  name: `${user}`,
+                  score: 0
                 });
 
               return this.props.history.push({

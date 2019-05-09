@@ -68,7 +68,8 @@ export default withStyles(styles)(
         open: false,
         roomNum: 0,
         game: {},
-        user: {}
+        user: {},
+        selected: ''
       };
     }
 
@@ -103,7 +104,7 @@ export default withStyles(styles)(
     };
 
     render() {
-      const { displayWords, open } = this.state;
+      const { displayWords, open, selected } = this.state;
       const { classes } = this.props;
 
       return (
@@ -122,20 +123,20 @@ export default withStyles(styles)(
                     </Grid>
                     <Grid item>
                       <CardActions>
-                        <IconButton onClick={() => this.setState({ open: true })}>
+                        <IconButton onClick={() => this.setState({ open: true, selected: word })}>
                           <TouchApp />
                         </IconButton>
-                        <Dialog open={open} onClose={() => this.setState({ open: false})}>
+                        <Dialog open={open} onClose={() => this.setState({ open: false, selected: ''})}>
                           <DialogContent>
                             <DialogContentText>
-                              Is this the prompt you want to choose? {word}
+                              Is this the prompt you want to choose? {selected}
                             </DialogContentText>
                           </DialogContent>
                           <DialogActions>
-                            <Button onClick={() => this.selectWord(word)}>
+                            <Button onClick={() => this.selectWord(selected)}>
                               YES!
                             </Button>
-                            <Button onClick={() => this.setState({ open: false })}>
+                            <Button onClick={() => this.setState({ open: false, selected: '' })}>
                               NO!
                             </Button>
                           </DialogActions>

@@ -41,6 +41,7 @@ class DrawPad extends React.Component {
   }
   handleClick = () => {
     const { user, roomNum, game } = this.state;
+    let numRef = Math.floor(Math.random() * 100)
     let db = firebase.firestore();
     let dbGames = db
       .collection('games')
@@ -49,11 +50,11 @@ class DrawPad extends React.Component {
       .doc(`${roomNum}`)
       .collection('users')
       .doc(`${user.name}`);
-    dbGames.set(
+    dbGames.update(
       {
+        refNum: numRef,
         image: this.saveableCanvas.getSaveData(),
-      },
-      { merge: true }
+      }
     );
   };
 
