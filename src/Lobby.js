@@ -5,10 +5,9 @@ import {
   CardContent,
   withStyles,
   Typography,
-  Button
-} from "@material-ui/core";
-import firebase from "firebase/app";
-import { db } from "./index";
+  Button,
+} from '@material-ui/core';
+import { db } from './index';
 
 const styles = theme => ({
   layout: {
@@ -46,17 +45,14 @@ export default withStyles(styles)(
       const { game, roomNumber } = this.props.location.state;
       this.setState({ currentGame: game, roomNumber });
       const room = db
-        .collection("games")
+        .collection('games')
         .doc(`${game.name}`)
-        .collection("rooms")
+        .collection('rooms')
         .doc(`${roomNumber}`);
-      let users = room.collection("users");
+      let users = room.collection('users');
       this.unsubscribe = users.onSnapshot(snapshot => {
         let players = snapshot.docs.map(doc => doc.data());
         this.setState({ players: players });
-        if (this.state.players.length >= this.state.currentGame.min) {
-          console.log("render button visible here");
-        }
       });
     }
 
@@ -66,28 +62,34 @@ export default withStyles(styles)(
 
     startGame = () => {
       const firstJudge = this.state.players[0].name;
-      const { currentGame, roomNumber } = this.state;
+      const { currentGame, roomNumber, players } = this.state;
       const room = db
-        .collection("games")
+        .collection('games')
         .doc(`${currentGame.name}`)
-        .collection("rooms")
+        .collection('rooms')
         .doc(`${roomNumber}`);
       room
-        .collection("users")
+        .collection('users')
         .doc(`${firstJudge}`)
         .set(
           {
-            isJudge: true
+            isJudge: true,
           },
           { merge: true }
         );
+
       room.set(
         {
           judgeChange: true,
-          judge: firstJudge
+          judge: firstJudge,
         },
         { merge: true }
       );
+
+      return this.props.history.push({
+        pathname: `/${currentGame.name}/${roomNumber}/prompt`,
+        state: { judge: firstJudge, roomNumber, players, game: currentGame },
+      });
     };
 
     render() {
