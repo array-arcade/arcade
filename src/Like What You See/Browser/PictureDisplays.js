@@ -7,6 +7,7 @@ import { Card, Grid } from '@material-ui/core';
 import CanvasDraw from 'react-canvas-draw';
 import firebase from 'firebase/app';
 import withStyles from '@material-ui/core/styles';
+import FooterScore from '../Browser/ScoreDisplay';
 
 const styles = theme => ({
   layout: {
@@ -84,6 +85,7 @@ class PictureDisplays extends Component {
             })}
           </Grid>
         </div>
+        <FooterScore />
       </div>
     );
   }
