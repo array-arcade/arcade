@@ -11,7 +11,7 @@ import {
   DialogContentText,
   withStyles
 } from "@material-ui/core";
-import { Firestore } from "@google-cloud/firestore";
+import classNames from 'classnames'
 
 const styles = theme => ({
   layout: {
@@ -50,6 +50,7 @@ export default withStyles(styles)(
         .collection("users")
         this.unsubscribe = users.onSnapshot(snap => {
           currentPlayers = snap.docs.map(doc => doc.data())
+          currentPlayers = this.shuffle(currentPlayers.filter(player => !player.isJudge))
           console.log(currentPlayers)
           this.setState({ players: currentPlayers });
         });
@@ -60,6 +61,7 @@ export default withStyles(styles)(
         let j = Math.floor(Math.random() * (i + 1)); // random index from 0 to i
         [array[i], array[j]] = [array[j], array[i]]; // swap elements
       }
+      return array
     };
 
     selectPic = async userRef => {
@@ -74,10 +76,7 @@ export default withStyles(styles)(
         .doc(`${userRef.name}`)
         await winner.get().then(snapshot => {
           newScore = snapshot.data().score + 1
-          console.log('inside update', newScore)
-
         })
-        console.log('outside update', newScore)
         winner.update({ score: newScore })
     };
 
@@ -86,7 +85,7 @@ export default withStyles(styles)(
       const { players, open, selected } = this.state;
       console.log(this.state)
       return (
-        <div>
+        <div className={classNames(classes.layout, classes.cardGrid, 'Mobile')}>
           <Grid container spacing={40}>
             {players.map(player => {
               return (

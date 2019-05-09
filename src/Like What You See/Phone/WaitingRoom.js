@@ -57,7 +57,7 @@ export class WaitingRoom extends React.Component {
         });
       } else {
         return (
-          <h1>Welcome to the waiting room.</h1>
+          <h1 className="Mobile">Welcome to the waiting room.</h1>
         )
       }
     };
