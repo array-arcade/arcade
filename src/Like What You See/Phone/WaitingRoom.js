@@ -16,36 +16,37 @@ export class WaitingRoom extends React.Component {
 
   componentDidMount() {
     const { roomNum, currentGame, user } = this.props.location.state;
+    console.log("inside waiting room mount", user);
     let currentPlayer;
     const room = db
       .collection("games")
       .doc(`${currentGame.name}`)
       .collection("rooms")
       .doc(`${roomNum}`);
-    this.playerUnsub = room
-      .collection("users")
-      .doc(`${user}`)
-      .onSnapshot(snapshot => {
-        currentPlayer = snapshot.data();
-        this.setState({ user: currentPlayer });
-      });
+    let player = room.collection("users").doc(`${user.name}`);
+    this.playerUnsub = player.onSnapshot(snapshot => {
+      currentPlayer = snapshot.data();
+      this.setState({ user: currentPlayer });
+    });
     this.setState({ roomNum, game: currentGame });
     this.roomUnsub = room.onSnapshot(snapshot => {
-      if (snapshot.data().judge) {
+      let doc = snapshot.data();
+      if (doc.judgeChange) {
         this.setState({ pageChange: true });
+        player.update({ image: null, refNum: null })
       }
     });
   }
 
   componentWillUnmount() {
-    this.playerUnsub()
-    this.roomUnsub()
+    this.playerUnsub();
+    this.roomUnsub();
   }
 
   render() {
     const { roomNum, game, user, pageChange } = this.state;
-    console.log(roomNum, game, user);
     const roomRender = () => {
+      console.log("inside room render waiting room", user);
       if (user.isJudge && pageChange) {
         return this.props.history.push({
           pathname: `/word-pick`,
@@ -57,9 +58,7 @@ export class WaitingRoom extends React.Component {
           state: { roomNum, game, user }
         });
       } else {
-        return (
-          <h1>Welcome to the waiting room.</h1>
-        )
+        return <h1 className="Mobile">Welcome to the waiting room.</h1>;
       }
     };
     return <div>{roomRender()}</div>;

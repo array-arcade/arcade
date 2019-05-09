@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Card,
   CardMedia,
@@ -11,23 +11,23 @@ import { db } from './index';
 
 const styles = theme => ({
   layout: {
-    width: 'auto',
+    width: "auto",
     marginLeft: theme.spacing.unit * 3,
-    marginRight: theme.spacing.unit * 3,
+    marginRight: theme.spacing.unit * 3
   },
   cardGrid: {
-    padding: `${theme.spacing.unit * 8}px 0`,
+    padding: `${theme.spacing.unit * 8}px 0`
   },
   card: {
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
+    height: "100%",
+    display: "flex",
+    flexDirection: "column"
   },
   cardMedia: {
-    marginTop: '30px',
-    paddingTop: '50%',
-    height: '100%',
-  },
+    marginTop: "30px",
+    paddingTop: "50%",
+    height: "100%"
+  }
 });
 
 export default withStyles(styles)(
@@ -37,7 +37,7 @@ export default withStyles(styles)(
       this.state = {
         currentGame: {},
         roomNumber: 0,
-        players: [],
+        players: []
       };
     }
 
@@ -80,6 +80,7 @@ export default withStyles(styles)(
 
       room.set(
         {
+          judgeChange: true,
           judge: firstJudge,
         },
         { merge: true }
@@ -117,7 +118,7 @@ export default withStyles(styles)(
               })}
               <Button
                 onClick={this.startGame}
-                disabled={players.length > 2 ? false : true}
+                //disabled={players.length > 2 ? false : true}
               >
                 Start the Game!
               </Button>
