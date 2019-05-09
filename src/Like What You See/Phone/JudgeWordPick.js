@@ -15,7 +15,7 @@ import {
   DialogContentText
 } from "@material-ui/core";
 import { TouchApp } from "@material-ui/icons";
-import {db} from "../../index"
+import { db } from "../../index";
 
 const styles = theme => ({
   root: {
@@ -69,13 +69,18 @@ export default withStyles(styles)(
         roomNum: 0,
         game: {},
         user: {},
-        selected: ''
+        selected: ""
       };
     }
 
     componentDidMount() {
-      let { roomNum, game, user } = this.props.location.state
-      this.setState({ roomNum, game, user })
+      let { roomNum, game, user } = this.props.location.state;
+      this.setState({ roomNum, game, user });
+      db.collection("games")
+        .doc(`${game.name}`)
+        .collection("rooms")
+        .doc(`${roomNum}`)
+        .update({ judgeChange: false });
       this.wordScramble();
     }
 
@@ -91,15 +96,21 @@ export default withStyles(styles)(
     };
 
     selectWord = word => {
-      const { roomNum, game, user } = this.state
-      const roomRef = db.collection("games").doc(`${game.name}`).collection("rooms").doc(`${roomNum}`)
-      roomRef.set({
-        prompt: word
-      }, {merge: true})
+      const { roomNum, game, user } = this.state;
+      const roomRef = db
+        .collection("games")
+        .doc(`${game.name}`)
+        .collection("rooms")
+        .doc(`${roomNum}`);
+      roomRef.set(
+        {
+          prompt: word
+        },
+        { merge: true }
+      );
       return this.props.history.push({
         pathname: `/vote`,
         state: { roomNum, game, user }
-
       });
     };
 
@@ -116,17 +127,24 @@ export default withStyles(styles)(
                   <Grid container spacing={24} className={classes.wordHolder}>
                     <Grid item>
                       <CardContent>
-                        <Typography variant="h4" >
-                          {word}
-                        </Typography>
+                        <Typography variant="h4">{word}</Typography>
                       </CardContent>
                     </Grid>
                     <Grid item>
                       <CardActions>
-                        <IconButton onClick={() => this.setState({ open: true, selected: word })}>
+                        <IconButton
+                          onClick={() =>
+                            this.setState({ open: true, selected: word })
+                          }
+                        >
                           <TouchApp />
                         </IconButton>
-                        <Dialog open={open} onClose={() => this.setState({ open: false, selected: ''})}>
+                        <Dialog
+                          open={open}
+                          onClose={() =>
+                            this.setState({ open: false, selected: "" })
+                          }
+                        >
                           <DialogContent>
                             <DialogContentText>
                               Is this the prompt you want to choose? {selected}
@@ -136,7 +154,11 @@ export default withStyles(styles)(
                             <Button onClick={() => this.selectWord(selected)}>
                               YES!
                             </Button>
-                            <Button onClick={() => this.setState({ open: false, selected: '' })}>
+                            <Button
+                              onClick={() =>
+                                this.setState({ open: false, selected: "" })
+                              }
+                            >
                               NO!
                             </Button>
                           </DialogActions>

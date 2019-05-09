@@ -20,6 +20,7 @@ class DrawPad extends React.Component {
       user: {},
       roomNum: null,
       game: {},
+      prompt: false
     };
   }
 
@@ -33,14 +34,18 @@ class DrawPad extends React.Component {
     .doc(`${game.name}`)
     .collection("rooms")
     .doc(`${roomNum}`);
-    this.unSub = room.onSnapshot(snapshot => {
+    this.timerUnsub = room.onSnapshot(snapshot => {
       if(snapshot.data().timesUp) {
         this.handleClick()
+      }
+      if(snapshot.data().prompt) {
+        this.setState({ prompt: true })
       }
     })
   }
   handleClick = () => {
     const { user, roomNum, game } = this.state;
+    console.log('inside draw pad click', user)
     let numRef = Math.floor(Math.random() * 100)
     let db = firebase.firestore();
     let dbGames = db
@@ -56,10 +61,14 @@ class DrawPad extends React.Component {
         image: this.saveableCanvas.getSaveData(),
       }
     );
+    return this.props.history.push({
+      pathname: `/${roomNum}/waitingroom`,
+      state: { roomNum, currentGame: game, user }
+    })
   };
 
   componentWillUnmount() {
-    this.unSub()
+    this.timerUnsub()
   }
   render() {
     return (
@@ -118,6 +127,7 @@ class DrawPad extends React.Component {
           onClick={() => {
             this.handleClick();
           }}
+          disabled={!this.state.prompt}
         >
           <Check />
           Submit
