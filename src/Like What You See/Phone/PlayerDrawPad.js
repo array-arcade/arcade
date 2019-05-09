@@ -9,6 +9,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import Undo from '@material-ui/icons/Undo';
 import Check from '@material-ui/icons/Check';
 import { disableBodyScroll } from 'body-scroll-lock';
+import { db } from '../../index';
 
 class DrawPad extends React.Component {
   targetElement = null;
@@ -19,6 +20,7 @@ class DrawPad extends React.Component {
       user: {},
       roomNum: null,
       game: {},
+      prompt: false
     };
   }
 
@@ -27,9 +29,24 @@ class DrawPad extends React.Component {
     disableBodyScroll(this.targetElement);
     const { user, roomNum, game } = this.props.location.state;
     this.setState({ user, roomNum, game });
+    const room = db
+    .collection("games")
+    .doc(`${game.name}`)
+    .collection("rooms")
+    .doc(`${roomNum}`);
+    this.timerUnsub = room.onSnapshot(snapshot => {
+      if(snapshot.data().timesUp) {
+        this.handleClick()
+      }
+      if(snapshot.data().prompt) {
+        this.setState({ prompt: true })
+      }
+    })
   }
   handleClick = () => {
     const { user, roomNum, game } = this.state;
+    console.log('inside draw pad click', user)
+    let numRef = Math.floor(Math.random() * 100)
     let db = firebase.firestore();
     let dbGames = db
       .collection('games')
@@ -38,13 +55,21 @@ class DrawPad extends React.Component {
       .doc(`${roomNum}`)
       .collection('users')
       .doc(`${user.name}`);
-    dbGames.set(
+    dbGames.update(
       {
+        refNum: numRef,
         image: this.saveableCanvas.getSaveData(),
-      },
-      { merge: true }
+      }
     );
+    return this.props.history.push({
+      pathname: `/${roomNum}/waitingroom`,
+      state: { roomNum, currentGame: game, user }
+    })
   };
+
+  componentWillUnmount() {
+    this.timerUnsub()
+  }
   render() {
     return (
       <div className="DrawingScreen">
@@ -102,6 +127,7 @@ class DrawPad extends React.Component {
           onClick={() => {
             this.handleClick();
           }}
+          disabled={!this.state.prompt}
         >
           <Check />
           Submit

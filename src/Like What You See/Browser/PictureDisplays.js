@@ -1,6 +1,7 @@
 //This will display the pictures the judge can choose from
 //Rendered by PromptScreen after timer is up or pictures are all submitted
 //Will redirect to either the prompt or victory screen
+<<<<<<< HEAD
 import React, { Component } from "react";
 import classNames from "classnames";
 import { Card, Grid } from "@material-ui/core";
@@ -8,6 +9,16 @@ import CanvasDraw from "react-canvas-draw";
 import firebase from "firebase/app";
 import { withStyles } from "@material-ui/core";
 import FooterScore from "../Browser/ScoreDisplay";
+=======
+
+import React, { Component } from 'react';
+import classNames from 'classnames';
+import { Card, Grid } from '@material-ui/core';
+import CanvasDraw from 'react-canvas-draw';
+import firebase from 'firebase/app';
+import { withStyles } from '@material-ui/core';
+import FooterScore from '../Browser/ScoreDisplay';
+>>>>>>> 8f95c0f16c9cabc8623ed7fc7ff8f713495ad3fd
 
 const styles = theme => ({
   layout: {

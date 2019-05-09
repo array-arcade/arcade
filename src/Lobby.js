@@ -80,7 +80,12 @@ export default withStyles(styles)(
 
       room.set(
         {
+<<<<<<< HEAD
           judge: firstJudge
+=======
+          judgeChange: true,
+          judge: firstJudge,
+>>>>>>> 8f95c0f16c9cabc8623ed7fc7ff8f713495ad3fd
         },
         { merge: true }
       );
@@ -117,7 +122,7 @@ export default withStyles(styles)(
               })}
               <Button
                 onClick={this.startGame}
-                disabled={players.length > 2 ? false : true}
+                //disabled={players.length > 2 ? false : true}
               >
                 Start the Game!
               </Button>

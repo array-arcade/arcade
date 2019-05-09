@@ -105,12 +105,13 @@ export default withStyles(styles)(
                 .collection("users")
                 .doc(`${user}`)
                 .set({
-                  name: `${user}`
+                  name: `${user}`,
+                  score: 0
                 });
 
               return this.props.history.push({
                 pathname: `/${roomNum}/waitingroom`,
-                state: { roomNum, currentGame, user }
+                state: { roomNum, currentGame, user: {name: user, score: 0} }
               });
             } else {
               //render code indicating room is full
