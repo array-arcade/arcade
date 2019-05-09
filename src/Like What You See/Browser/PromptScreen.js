@@ -1,8 +1,9 @@
 //This will render after the game has started and will redirect to
 //PictureDisplays after the timer or after pictures have been submitted
 
-import { db } from "../../index";
-import React, { Component } from "react";
+import { db } from '../../index';
+import React, { Component } from 'react';
+import FooterScore from '../Browser/ScoreDisplay';
 
 const Timer = require("tiny-timer");
 
@@ -11,8 +12,8 @@ export default class PromptScreen extends Component {
     super();
     this.state = {
       game: {},
-      roomNumber: "",
-      judge: "",
+      roomNumber: '',
+      judge: '',
       players: [],
       prompt: "",
       time: 90
@@ -24,9 +25,9 @@ export default class PromptScreen extends Component {
     this.setState({ game, roomNumber, judge, players });
 
     const room = db
-      .collection("games")
+      .collection('games')
       .doc(`${game.name}`)
-      .collection("rooms")
+      .collection('rooms')
       .doc(`${roomNumber}`);
 
     this.unsubscribe = room.onSnapshot(snapshot => {
@@ -60,6 +61,7 @@ export default class PromptScreen extends Component {
   render() {
     const { judge, prompt } = this.state;
     if (prompt === "") {
+
       //remember to reset prompt after round end
       return (
         <div>
