@@ -3,6 +3,7 @@
 
 import { db } from "../../index";
 import React, { Component } from "react";
+import FooterScore from "../Browser/ScoreDisplay";
 
 const Timer = require("tiny-timer");
 
@@ -85,6 +86,7 @@ export default class PromptScreen extends Component {
           <h1>{prompt}</h1>
           <h3>Get Drawing!!!</h3>
           <h1>{this.state.time}</h1>
+          <FooterScore />
         </div>
       );
     }
