@@ -1,6 +1,7 @@
 //This will display the pictures the judge can choose from
 //Rendered by PromptScreen after timer is up or pictures are all submitted
 //Will redirect to either the prompt or victory screen
+
 import React, { Component } from 'react';
 import classNames from 'classnames';
 import { Card, Grid } from '@material-ui/core';
@@ -11,23 +12,23 @@ import FooterScore from '../Browser/ScoreDisplay';
 
 const styles = theme => ({
   layout: {
-    width: 'auto',
+    width: "auto",
     marginLeft: theme.spacing.unit * 3,
-    marginRight: theme.spacing.unit * 3,
+    marginRight: theme.spacing.unit * 3
   },
   cardGrid: {
-    padding: `${theme.spacing.unit * 8}px 0`,
+    padding: `${theme.spacing.unit * 8}px 0`
   },
   card: {
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
+    height: "100%",
+    display: "flex",
+    flexDirection: "column"
   },
   cardMedia: {
-    marginTop: '30px',
-    paddingTop: '50%',
-    height: '100%',
-  },
+    marginTop: "30px",
+    paddingTop: "50%",
+    height: "100%"
+  }
 });
 
 export default withStyles(styles)(
