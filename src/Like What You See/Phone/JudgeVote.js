@@ -41,11 +41,11 @@ export default withStyles(styles)(
     componentDidMount() {
       const { roomNum, game, user } = this.props.location.state;
       this.setState({ roomNum, game, user });
-      db
-        .collection("games")
+      db.collection("games")
         .doc(`${game.name}`)
         .collection("rooms")
-        .doc(`${roomNum}`).update({previousJudge: user.name })
+        .doc(`${roomNum}`)
+        .update({ previousJudge: user.name });
       let currentPlayers;
       const users = db
         .collection("games")
@@ -64,7 +64,7 @@ export default withStyles(styles)(
 
     shuffle = array => {
       for (let i = array.length - 1; i > 0; i--) {
-          let j = Math.floor(Math.random() * (i + 1)); // random index from 0 to i
+        let j = Math.floor(Math.random() * (i + 1)); // random index from 0 to i
         [array[i], array[j]] = [array[j], array[i]]; // swap elements
       }
       return array;
@@ -74,27 +74,36 @@ export default withStyles(styles)(
       const { roomNum, game, user } = this.state;
       let newScore;
       let newJudge;
-      const room = db.collection("games").doc(`${game.name}`).collection("rooms").doc(`${roomNum}`)
+      const room = db
+        .collection("games")
+        .doc(`${game.name}`)
+        .collection("rooms")
+        .doc(`${roomNum}`);
       const users = db
         .collection("games")
         .doc(`${game.name}`)
         .collection("rooms")
         .doc(`${roomNum}`)
         .collection("users");
-      let winner = users
-        .doc(`${userRef.name}`);
+      let winner = users.doc(`${userRef.name}`);
       await winner.get().then(snapshot => {
         newScore = snapshot.data().score + 1;
-        newJudge = snapshot.data().name
+        newJudge = snapshot.data().name;
+        if (snapshot.data().score >= 4) {
+          room.update({ winner: true });
+          return this.props.history.push({
+            pathname: `/winner`,
+            state: { winner: snapshot.data() }
+          });
+        }
       });
-      let judge = users.doc(`${user.name}`)
+      let judge = users.doc(`${user.name}`);
       winner.update({ score: newScore, isJudge: true });
-      room.update({judge: newJudge, judgeChange: true})
-      judge.update({ isJudge: false })
+      room.update({ judge: newJudge, judgeChange: true });
+      judge.update({ isJudge: false });
       return this.props.history.push({
         pathname: `/${roomNum}/waitingroom`,
         state: { roomNum, currentGame: game, user }
-
       });
     };
 
