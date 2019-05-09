@@ -5,7 +5,7 @@ import { db } from "../../index";
 import React, { Component } from "react";
 import FooterScore from "../Browser/ScoreDisplay";
 
-const Timer = require("tiny-timer");
+import Timer from "tiny-timer";
 
 export default class PromptScreen extends Component {
   constructor() {
@@ -15,7 +15,7 @@ export default class PromptScreen extends Component {
       roomNumber: "",
       judge: "",
       players: [],
-      prompt: "",
+      prompt: undefined,
       time: 90
     };
   }
@@ -32,9 +32,9 @@ export default class PromptScreen extends Component {
 
     this.unsubscribe = room.onSnapshot(snapshot => {
       const prompt = snapshot.data().prompt;
-      if (prompt !== this.state.prompt) {
+      if (prompt !== undefined) {
         this.setState({ prompt });
-        this.render();
+        // this.render();
       }
     });
   }
@@ -59,15 +59,19 @@ export default class PromptScreen extends Component {
   };
 
   render() {
+    // console.log("***rendering state");
     const { judge, prompt } = this.state;
-    if (prompt === "") {
+    if (prompt === undefined) {
       //remember to reset prompt after round end
+      console.log("***prompt empty code", prompt);
       return (
         <div>
           <h1>Waiting for {judge} to select a prompt...</h1>
         </div>
       );
     } else {
+      console.log("***prompt selected code", prompt);
+
       const timer = new Timer({ interval: 1000 });
       timer.on("tick", ms => {
         if (this.state.time > 0) {

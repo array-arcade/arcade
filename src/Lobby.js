@@ -1,33 +1,33 @@
-import React from 'react';
+import React from "react";
 import {
   Card,
   CardMedia,
   CardContent,
   withStyles,
   Typography,
-  Button,
-} from '@material-ui/core';
-import { db } from './index';
+  Button
+} from "@material-ui/core";
+import { db } from "./index";
 
 const styles = theme => ({
   layout: {
-    width: 'auto',
+    width: "auto",
     marginLeft: theme.spacing.unit * 3,
-    marginRight: theme.spacing.unit * 3,
+    marginRight: theme.spacing.unit * 3
   },
   cardGrid: {
-    padding: `${theme.spacing.unit * 8}px 0`,
+    padding: `${theme.spacing.unit * 8}px 0`
   },
   card: {
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
+    height: "100%",
+    display: "flex",
+    flexDirection: "column"
   },
   cardMedia: {
-    marginTop: '30px',
-    paddingTop: '50%',
-    height: '100%',
-  },
+    marginTop: "30px",
+    paddingTop: "50%",
+    height: "100%"
+  }
 });
 
 export default withStyles(styles)(
@@ -37,7 +37,7 @@ export default withStyles(styles)(
       this.state = {
         currentGame: {},
         roomNumber: 0,
-        players: [],
+        players: []
       };
     }
 
@@ -45,11 +45,11 @@ export default withStyles(styles)(
       const { game, roomNumber } = this.props.location.state;
       this.setState({ currentGame: game, roomNumber });
       const room = db
-        .collection('games')
+        .collection("games")
         .doc(`${game.name}`)
-        .collection('rooms')
+        .collection("rooms")
         .doc(`${roomNumber}`);
-      let users = room.collection('users');
+      let users = room.collection("users");
       this.unsubscribe = users.onSnapshot(snapshot => {
         let players = snapshot.docs.map(doc => doc.data());
         this.setState({ players: players });
@@ -64,30 +64,30 @@ export default withStyles(styles)(
       const firstJudge = this.state.players[0].name;
       const { currentGame, roomNumber, players } = this.state;
       const room = db
-        .collection('games')
+        .collection("games")
         .doc(`${currentGame.name}`)
-        .collection('rooms')
+        .collection("rooms")
         .doc(`${roomNumber}`);
       room
-        .collection('users')
+        .collection("users")
         .doc(`${firstJudge}`)
         .set(
           {
-            isJudge: true,
+            isJudge: true
           },
           { merge: true }
         );
 
       room.set(
         {
-          judge: firstJudge,
+          judge: firstJudge
         },
         { merge: true }
       );
 
       return this.props.history.push({
         pathname: `/${currentGame.name}/${roomNumber}/prompt`,
-        state: { judge: firstJudge, roomNumber, players, game: currentGame },
+        state: { judge: firstJudge, roomNumber, players, game: currentGame }
       });
     };
 
