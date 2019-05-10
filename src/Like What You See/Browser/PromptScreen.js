@@ -1,21 +1,21 @@
 //This will render after the game has started and will redirect to
 //PictureDisplays after the timer or after pictures have been submitted
 
-import { db } from "../../index";
-import React, { Component } from "react";
-import FooterScore from "../Browser/ScoreDisplay";
-import Countdown from "react-countdown-now";
+import { db } from '../../index';
+import React, { Component } from 'react';
+import FooterScore from '../Browser/ScoreDisplay';
+import Countdown from 'react-countdown-now';
 
 export default class PromptScreen extends Component {
   constructor() {
     super();
     this.state = {
       game: {},
-      roomNumber: "",
-      judge: "",
+      roomNumber: '',
+      judge: '',
       players: [],
       prompt: undefined,
-      time: 90
+      time: 90,
     };
   }
 
@@ -24,9 +24,9 @@ export default class PromptScreen extends Component {
     this.setState({ game, roomNumber, judge, players });
 
     const room = db
-      .collection("games")
+      .collection('games')
       .doc(`${game.name}`)
-      .collection("rooms")
+      .collection('rooms')
       .doc(`${roomNumber}`);
 
     this.unsubscribe = room.onSnapshot(snapshot => {
@@ -45,14 +45,14 @@ export default class PromptScreen extends Component {
     //update room timesup variable here
     const { game, roomNumber } = this.props.location.state;
     const room = db
-      .collection("games")
+      .collection('games')
       .doc(`${game.name}`)
-      .collection("rooms")
+      .collection('rooms')
       .doc(`${roomNumber}`);
     room.update({ TimesUp: true });
     //redirect code here
     return this.props.history.push({
-      pathname: `/Like What You See?/${roomNumber}/choose`
+      pathname: `/Like What You See?/${roomNumber}/choose`,
     });
   };
 
@@ -70,14 +70,17 @@ export default class PromptScreen extends Component {
     const { judge, prompt } = this.state;
     if (prompt === undefined) {
       //remember to reset prompt after round end
-      console.log("***prompt empty code", prompt);
+      console.log('***prompt empty code', prompt);
       return (
         <div>
-          <h1>Waiting for {judge} to select a prompt...</h1>
+          <h1>
+            Waiting for {judge} to select a prompt... Stare them down til they
+            start sweating.
+          </h1>
         </div>
       );
     } else {
-      console.log("***prompt selected code", prompt);
+      console.log('***prompt selected code', prompt);
 
       return (
         <div>
