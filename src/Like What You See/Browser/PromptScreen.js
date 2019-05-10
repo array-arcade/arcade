@@ -61,7 +61,11 @@ export default class PromptScreen extends Component {
     if (completed) {
       this.TimesUp();
     } else {
-      return <span>{seconds}</span>;
+      return (
+        <span>
+          <h1>{seconds}</h1>
+        </span>
+      );
     }
   };
 
