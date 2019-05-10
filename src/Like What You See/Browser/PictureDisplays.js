@@ -20,7 +20,8 @@ const styles = theme => ({
     padding: `${theme.spacing.unit * 8}px 0`
   },
   card: {
-    height: "100%",
+    height: "425px",
+    width: "450px",
     display: "flex",
     flexDirection: "column"
   },
@@ -44,8 +45,8 @@ export default withStyles(styles)(
       };
     }
     async componentDidMount() {
-      const { game, roomNumber, players } = this.props.location.state;
-      this.setState({ game, roomNumber, players });
+      const { game, roomNumber } = this.props.location.state;
+      this.setState({ game, roomNumber });
       const dbRoom = db
         .collection("games")
         .doc(`${game.name}`)
@@ -70,6 +71,10 @@ export default withStyles(styles)(
           });
         }
       });
+    }
+
+    componentWillUnmount() {
+      this.unsubscribe()
     }
 
     render() {
