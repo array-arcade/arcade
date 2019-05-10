@@ -73,7 +73,7 @@ export default withStyles(styles)(
     }
 
     render() {
-      let { players } = this.state;
+      let { players, roomNumber } = this.state;
       let { classes } = this.props;
 
       return (
