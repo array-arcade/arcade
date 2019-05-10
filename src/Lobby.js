@@ -94,7 +94,6 @@ export default withStyles(styles)(
 
     render() {
       const { currentGame, roomNumber, players } = this.state;
-      console.log(currentGame);
       const renderer = () => {
         if (currentGame.name) {
           return (

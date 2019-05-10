@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import { withStyles } from "@material-ui/core";
 
-const styles = {}
+const styles = {};
 
 export default withStyles(styles)(
   class Winner extends Component {
     constructor() {
+      super();
       this.state = {
         winner: {}
       };

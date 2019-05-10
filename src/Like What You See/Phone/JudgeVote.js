@@ -110,7 +110,6 @@ export default withStyles(styles)(
     render() {
       const { classes } = this.props;
       const { players, open, selected } = this.state;
-      console.log(this.state);
       return (
         <div className={classNames(classes.layout, classes.cardGrid, "Mobile")}>
           <Grid container spacing={40}>

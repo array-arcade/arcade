@@ -1,6 +1,4 @@
 import React from "react";
-import DrawPad from "./PlayerDrawPad";
-import WordPick from "./JudgeWordPick";
 import { db } from "../../index";
 
 export class WaitingRoom extends React.Component {
@@ -16,7 +14,6 @@ export class WaitingRoom extends React.Component {
 
   componentDidMount() {
     const { roomNum, currentGame, user } = this.props.location.state;
-    console.log("inside waiting room mount", user);
     let currentPlayer;
     const room = db
       .collection("games")
@@ -46,7 +43,6 @@ export class WaitingRoom extends React.Component {
   render() {
     const { roomNum, game, user, pageChange } = this.state;
     const roomRender = () => {
-      console.log("inside room render waiting room", user);
       if (user.isJudge && pageChange) {
         return this.props.history.push({
           pathname: `/word-pick`,
