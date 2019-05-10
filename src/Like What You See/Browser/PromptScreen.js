@@ -1,21 +1,20 @@
 //This will render after the game has started and will redirect to
 //PictureDisplays after the timer or after pictures have been submitted
 
-import { db } from '../../index';
-import React, { Component } from 'react';
-import FooterScore from '../Browser/ScoreDisplay';
-
-const Timer = require("tiny-timer");
+import { db } from "../../index";
+import React, { Component } from "react";
+import FooterScore from "../Browser/ScoreDisplay";
+import Countdown from "react-countdown-now";
 
 export default class PromptScreen extends Component {
   constructor() {
     super();
     this.state = {
       game: {},
-      roomNumber: '',
-      judge: '',
+      roomNumber: "",
+      judge: "",
       players: [],
-      prompt: "",
+      prompt: undefined,
       time: 90
     };
   }
@@ -25,16 +24,15 @@ export default class PromptScreen extends Component {
     this.setState({ game, roomNumber, judge, players });
 
     const room = db
-      .collection('games')
+      .collection("games")
       .doc(`${game.name}`)
-      .collection('rooms')
+      .collection("rooms")
       .doc(`${roomNumber}`);
 
     this.unsubscribe = room.onSnapshot(snapshot => {
       const prompt = snapshot.data().prompt;
-      if (prompt !== this.state.prompt) {
+      if (prompt !== undefined) {
         this.setState({ prompt });
-        this.render();
       }
     });
   }
@@ -59,11 +57,21 @@ export default class PromptScreen extends Component {
     });
   };
 
+  TimerRender = ({ minutes, seconds, milliseconds, completed }) => {
+    return (
+      <span>
+        <h1>
+          {minutes}:{seconds}:{milliseconds}
+        </h1>
+      </span>
+    );
+  };
+
   render() {
     const { judge, prompt, players, roomNumber } = this.state;
-    if (prompt === "") {
-
+    if (prompt === undefined) {
       //remember to reset prompt after round end
+      console.log("***prompt empty code", prompt);
       return (
         <div>
           <h1>Waiting for {judge} to select a prompt...</h1>
@@ -71,24 +79,20 @@ export default class PromptScreen extends Component {
         </div>
       );
     } else {
-      const timer = new Timer({ interval: 1000 });
-      timer.on("tick", ms => {
-        if (this.state.time > 0) {
-          this.setState({ time: this.state.time - 1 });
-        }
-      });
-
-      timer.on("done", ms => {
-        this.TimesUp();
-      });
-
-      timer.start(90000);
+      console.log("***prompt selected code", prompt);
 
       return (
         <div>
           <h1>{prompt}</h1>
           <h3>Get Drawing!!!</h3>
-          <h1>{this.state.time}</h1>
+          <Countdown
+            date={Date.now() + 90000}
+            intervalDelay={0}
+            precision={3}
+            renderer={this.TimerRender}
+            onComplete={this.TimesUp}
+          />
+          <FooterScore />
         </div>
       );
     }
