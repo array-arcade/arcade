@@ -1,6 +1,5 @@
 //This will render after the game has started and will redirect to
 //PictureDisplays after the timer or after pictures have been submitted
-
 import { db } from '../../index';
 import React, { Component } from 'react';
 import FooterScore from '../Browser/ScoreDisplay';
@@ -45,15 +44,15 @@ export default class PromptScreen extends Component {
     if (prompt === '') {
       //remember to reset prompt after round end
       return (
-        <div>
+        <div className="App">
           <h1>Waiting for {judge} to select a prompt...</h1>
         </div>
       );
     }
     return (
-      <div>
-        <h1>{prompt}</h1>
-        <h3>Get Drawing!!!</h3>
+      <div className="App">
+        <h1 textAlign={'center'}>{prompt}</h1>
+        <h3 textAlign={'center'}>Get Drawing!!!</h3>
         <FooterScore />
       </div>
     );
