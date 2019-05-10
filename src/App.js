@@ -14,7 +14,6 @@ import {
 import firebase from "firebase/app";
 import "firebase/firestore";
 
-
 const styles = theme => ({
   layout: {
     width: "auto",
@@ -58,20 +57,23 @@ export default withStyles(styles)(
     createRoom = async game => {
       let db = firebase.firestore();
       let roomNumber = Math.floor(1000 + Math.random() * 9000);
-      const selection = db.collection('games').doc(`${game.name}`);
+      const selection = db.collection("games").doc(`${game.name}`);
       selection
-        .collection('rooms')
+        .collection("rooms")
         .doc(`${roomNumber}`)
         .set({
           roomNumber: `${roomNumber}`,
           timesUp: false,
+
           judgeChange: false,
+          prompt: "",
+          takenArtists: []
+
         });
       //redirect to game home, passing selection and room number as properties
       return this.props.history.push({
         pathname: `/${game.name}/${roomNumber}/lobby`,
         state: { roomNumber, game }
-
       });
     };
 
@@ -81,7 +83,7 @@ export default withStyles(styles)(
       return (
         <div className="App">
           <header className="header">
-            <img src={require("./logo.png")} alt="logo" />
+            <img src={require("./logov3.png")} alt="logo" />
           </header>
           <div className={classNames(classes.layout, classes.cardGrid)}>
             <Grid container spacing={40} alignItems="center" justify="center">

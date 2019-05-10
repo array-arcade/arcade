@@ -14,24 +14,22 @@ export default class PromptScreen extends Component {
       roomNumber: '',
       judge: '',
       players: [],
-      prompt: undefined,
+      prompt: "",
       time: 90,
     };
   }
 
   async componentDidMount() {
     const { game, roomNumber, judge, players } = this.props.location.state;
-    this.setState({ game, roomNumber, judge, players });
-
+    this.setState({ game: game, roomNumber: roomNumber, judge: judge, players: players });
     const room = db
       .collection('games')
       .doc(`${game.name}`)
       .collection('rooms')
       .doc(`${roomNumber}`);
-
     this.unsubscribe = room.onSnapshot(snapshot => {
       const prompt = snapshot.data().prompt;
-      if (prompt !== undefined) {
+      if (prompt) {
         this.setState({ prompt });
       }
     });
@@ -69,12 +67,14 @@ export default class PromptScreen extends Component {
 
   render() {
     const { judge, prompt, players, roomNumber } = this.state;
-    if (prompt === undefined) {
+    if (prompt === "") {
       //remember to reset prompt after round end
       return (
         <div className="App">
           <h1>Waiting for {judge} to select a prompt...</h1>
-          <FooterScore players={players} roomNumber={roomNumber} />
+          {
+            this.state.roomNumber ? <FooterScore players={players} roomNumber={roomNumber} /> : <h1>No state</h1> 
+          }
         </div>
       );
     } else {
@@ -83,13 +83,13 @@ export default class PromptScreen extends Component {
           <h1 textAlign={'center'}>{prompt}</h1>
           <h3 textAlign={'center'}>Get Drawing!!!</h3>
           <Countdown
-            date={Date.now() + 90000}
+            date={Date.now() + 60000}
             intervalDelay={0}
             precision={3}
             renderer={this.TimerRender}
             onComplete={this.TimesUp}
           />
-          <FooterScore />
+          <FooterScore players={players} roomNumber={roomNumber} />
         </div>
       );
     }
