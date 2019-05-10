@@ -13,7 +13,6 @@ import {
 } from "@material-ui/core";
 import firebase from "firebase/app";
 import "firebase/firestore";
-import { CountdownTimer } from './Like What You See/Browser/Timer'
 
 
 const styles = theme => ({
@@ -84,7 +83,6 @@ export default withStyles(styles)(
           <header className="header">
             <img src={require("./logo.png")} alt="logo" />
           </header>
-          <CountdownTimer startTimeInSeconds={90} />
           <div className={classNames(classes.layout, classes.cardGrid)}>
             <Grid container spacing={40} alignItems="center" justify="center">
               {games.map(game => {
