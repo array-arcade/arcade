@@ -14,7 +14,7 @@ export default class PromptScreen extends Component {
       roomNumber: '',
       judge: '',
       players: [],
-      prompt: undefined,
+      prompt: null,
       time: 90,
     };
   }
@@ -32,7 +32,7 @@ export default class PromptScreen extends Component {
 
     this.unsubscribe = room.onSnapshot(snapshot => {
       const prompt = snapshot.data().prompt;
-      if (prompt !== undefined) {
+      if (prompt !== null) {
         this.setState({ prompt });
       }
     });
@@ -70,7 +70,7 @@ export default class PromptScreen extends Component {
 
   render() {
     const { judge, prompt, players, roomNumber } = this.state;
-    if (prompt === undefined) {
+    if (prompt === null) {
       //remember to reset prompt after round end
       return (
         <div>
