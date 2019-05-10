@@ -93,6 +93,7 @@ export default withStyles(styles)(
 
       room.set(
         {
+          judgeChange: true,
           judge: firstJudge,
         },
         { merge: true }

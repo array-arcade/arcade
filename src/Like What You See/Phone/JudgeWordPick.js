@@ -1,10 +1,32 @@
 import React, { Component } from 'react';
-import { Paper, withStyles, Typography, Button } from '@material-ui/core';
+import {
+  Paper,
+  withStyles,
+  Typography,
+  Card,
+  CardContent,
+  CardActions,
+  Grid,
+  Button,
+  IconButton,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+} from '@material-ui/core';
+import { TouchApp } from '@material-ui/icons';
+import { db } from '../../index';
 
 const styles = theme => ({
   root: {
     paddingTop: theme.spacing.unit * 2,
     paddingBottom: theme.spacing.unit * 2,
+    minHeight: '100vh',
+    margin: '10px',
+  },
+  wordHolder: {
+    display: 'flex',
+    justifyContent: 'space-between',
   },
 });
 
@@ -43,10 +65,22 @@ export default withStyles(styles)(
           'Shame',
         ],
         displayWords: [],
+        open: false,
+        roomNum: 0,
+        game: {},
+        user: {},
+        selected: '',
       };
     }
 
     componentDidMount() {
+      let { roomNum, game, user } = this.props.location.state;
+      this.setState({ roomNum, game, user });
+      db.collection('games')
+        .doc(`${game.name}`)
+        .collection('rooms')
+        .doc(`${roomNum}`)
+        .update({ judgeChange: false });
       this.wordScramble();
     }
 
@@ -61,24 +95,78 @@ export default withStyles(styles)(
       this.setState({ displayWords });
     };
 
-    selectWord = event => {
-      console.log('I have been clicked!', event);
+    selectWord = word => {
+      const { roomNum, game, user } = this.state;
+      const roomRef = db
+        .collection('games')
+        .doc(`${game.name}`)
+        .collection('rooms')
+        .doc(`${roomNum}`);
+      roomRef.set(
+        {
+          prompt: word,
+        },
+        { merge: true }
+      );
+      return this.props.history.push({
+        pathname: `/vote`,
+        state: { roomNum, game, user },
+      });
     };
 
     render() {
-      const { displayWords } = this.state;
+      const { displayWords, open, selected } = this.state;
       const { classes } = this.props;
 
       return (
-        <div className="Mobile">
+        <div>
           <Paper elevation={4} className={classes.root}>
             {displayWords.map(word => {
               return (
-                <Button>
-                  <Typography variant="h3" onClick={this.selectWord} key={word}>
-                    {word}
-                  </Typography>
-                </Button>
+                <Card key={word}>
+                  <Grid container spacing={24} className={classes.wordHolder}>
+                    <Grid item>
+                      <CardContent>
+                        <Typography variant="h4">{word}</Typography>
+                      </CardContent>
+                    </Grid>
+                    <Grid item>
+                      <CardActions>
+                        <IconButton
+                          onClick={() =>
+                            this.setState({ open: true, selected: word })
+                          }
+                        >
+                          <TouchApp />
+                        </IconButton>
+                        <Dialog
+                          open={open}
+                          onClose={() =>
+                            this.setState({ open: false, selected: '' })
+                          }
+                        >
+                          <DialogContent>
+                            <DialogContentText>
+                              Is this the prompt you want to choose? {selected}
+                            </DialogContentText>
+                          </DialogContent>
+                          <DialogActions>
+                            <Button onClick={() => this.selectWord(selected)}>
+                              YES!
+                            </Button>
+                            <Button
+                              onClick={() =>
+                                this.setState({ open: false, selected: '' })
+                              }
+                            >
+                              NO!
+                            </Button>
+                          </DialogActions>
+                        </Dialog>
+                      </CardActions>
+                    </Grid>
+                  </Grid>
+                </Card>
               );
             })}
           </Paper>
