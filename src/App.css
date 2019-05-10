@@ -11,11 +11,6 @@
   pointer-events: none;
 }
 
-.header h1 {
-  margin: -20px;
-  padding: 21px 0;
-}
-
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
