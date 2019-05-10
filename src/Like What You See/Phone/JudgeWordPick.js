@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import {
   Paper,
   withStyles,
@@ -12,22 +12,22 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText
-} from "@material-ui/core";
-import { TouchApp } from "@material-ui/icons";
-import { db } from "../../index";
+  DialogContentText,
+} from '@material-ui/core';
+import { TouchApp } from '@material-ui/icons';
+import { db } from '../../index';
 
 const styles = theme => ({
   root: {
     paddingTop: theme.spacing.unit * 2,
     paddingBottom: theme.spacing.unit * 2,
-    minHeight: "100vh",
-    margin: "10px"
+    minHeight: '100vh',
+    margin: '10px',
   },
   wordHolder: {
-    display: "flex",
-    justifyContent: "space-between"
-  }
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
 });
 
 //This will be rendered through the waiting room
@@ -38,47 +38,47 @@ export default withStyles(styles)(
       super();
       this.state = {
         words: [
-          "Zipper",
-          "Restaurant",
-          "Cave",
-          "Zebra",
-          "Pokemon",
-          "Meme",
-          "Panda",
-          "Bagpipe",
-          "Pastry",
-          "Cacti",
-          "Cowboy",
-          "Ninja",
-          "Pirate",
-          "Mailbox",
-          "Gingerbread Man",
-          "Cherry Bomb",
-          "Cat",
-          "Dog",
-          "Dogs Playing Poker",
-          "Snowman",
-          "M&Ms",
-          "Newborn Baby",
-          "Prison Riot",
-          "Angry Old Man",
-          "Shame"
+          'Zipper',
+          'Restaurant',
+          'Cave',
+          'Zebra',
+          'Pokemon',
+          'Meme',
+          'Panda',
+          'Bagpipe',
+          'Pastry',
+          'Cacti',
+          'Cowboy',
+          'Ninja',
+          'Pirate',
+          'Mailbox',
+          'Gingerbread Man',
+          'Cherry Bomb',
+          'Cat',
+          'Dog',
+          'Dogs Playing Poker',
+          'Snowman',
+          'M&Ms',
+          'Newborn Baby',
+          'Prison Riot',
+          'Angry Old Man',
+          'Shame',
         ],
         displayWords: [],
         open: false,
         roomNum: 0,
         game: {},
         user: {},
-        selected: ""
+        selected: '',
       };
     }
 
     componentDidMount() {
       let { roomNum, game, user } = this.props.location.state;
       this.setState({ roomNum, game, user });
-      db.collection("games")
+      db.collection('games')
         .doc(`${game.name}`)
-        .collection("rooms")
+        .collection('rooms')
         .doc(`${roomNum}`)
         .update({ judgeChange: false });
       this.wordScramble();
@@ -98,19 +98,19 @@ export default withStyles(styles)(
     selectWord = word => {
       const { roomNum, game, user } = this.state;
       const roomRef = db
-        .collection("games")
+        .collection('games')
         .doc(`${game.name}`)
-        .collection("rooms")
+        .collection('rooms')
         .doc(`${roomNum}`);
       roomRef.set(
         {
-          prompt: word
+          prompt: word,
         },
         { merge: true }
       );
       return this.props.history.push({
         pathname: `/vote`,
-        state: { roomNum, game, user }
+        state: { roomNum, game, user },
       });
     };
 
@@ -142,7 +142,7 @@ export default withStyles(styles)(
                         <Dialog
                           open={open}
                           onClose={() =>
-                            this.setState({ open: false, selected: "" })
+                            this.setState({ open: false, selected: '' })
                           }
                         >
                           <DialogContent>
@@ -156,7 +156,7 @@ export default withStyles(styles)(
                             </Button>
                             <Button
                               onClick={() =>
-                                this.setState({ open: false, selected: "" })
+                                this.setState({ open: false, selected: '' })
                               }
                             >
                               NO!

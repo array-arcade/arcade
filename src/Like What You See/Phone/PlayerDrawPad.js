@@ -45,7 +45,6 @@ class DrawPad extends React.Component {
   }
   handleClick = () => {
     const { user, roomNum, game } = this.state;
-    console.log('inside draw pad click', user)
     let numRef = Math.floor(Math.random() * 100)
     let db = firebase.firestore();
     let dbGames = db
