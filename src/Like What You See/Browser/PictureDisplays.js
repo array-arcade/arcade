@@ -53,7 +53,7 @@ export default withStyles(styles)(
         .doc(`${roomNumber}`);
       let dbUsers = dbRoom.collection("users");
       await dbUsers.get().then(snapshot => {
-        return snapshot.ForEach(player => {
+        return snapshot.forEach(player => {
           this.setState({ players: [...this.state.players, player.data()] });
         });
       });
