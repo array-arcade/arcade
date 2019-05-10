@@ -44,6 +44,7 @@ export default withStyles(styles)(
         judge: {}
       };
     }
+    
     async componentDidMount() {
       const { game, roomNumber, players } = this.props.location.state;
       this.setState({ game, roomNumber });
@@ -52,13 +53,15 @@ export default withStyles(styles)(
         .doc(`${game.name}`)
         .collection("rooms")
         .doc(`${roomNumber}`);
-      dbRoom.update({ prompt: null })
+      dbRoom.update({ prompt: "" })
       let dbUsers = dbRoom.collection("users");
+      let dbPlayers = []
       await dbUsers.get().then(snapshot => {
-        return snapshot.forEach(player => {
-          this.setState({ players: [...this.state.players, player.data()] });
+         snapshot.forEach(player => {
+          dbPlayers.push(player.data())
         });
       });
+      this.setState({ players: dbPlayers.filter(player => !player.isJudge) })
       this.roomUnsub = dbRoom.onSnapshot(snapshot => {
         if (snapshot.data().judgeChange) {
           return this.props.history.push({

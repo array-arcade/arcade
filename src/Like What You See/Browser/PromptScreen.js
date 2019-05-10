@@ -14,25 +14,22 @@ export default class PromptScreen extends Component {
       roomNumber: '',
       judge: '',
       players: [],
-      prompt: null,
+      prompt: "",
       time: 90,
     };
   }
 
   async componentDidMount() {
     const { game, roomNumber, judge, players } = this.props.location.state;
-    console.log('location state', this.props.location.state)
     this.setState({ game: game, roomNumber: roomNumber, judge: judge, players: players });
-    console.log(this.state)
     const room = db
       .collection('games')
       .doc(`${game.name}`)
       .collection('rooms')
       .doc(`${roomNumber}`);
-
     this.unsubscribe = room.onSnapshot(snapshot => {
       const prompt = snapshot.data().prompt;
-      if (prompt !== null) {
+      if (prompt) {
         this.setState({ prompt });
       }
     });
@@ -70,10 +67,10 @@ export default class PromptScreen extends Component {
 
   render() {
     const { judge, prompt, players, roomNumber } = this.state;
-    if (prompt === null) {
+    if (prompt === "") {
       //remember to reset prompt after round end
       return (
-        <div>
+        <div className="App">
           <h1>Waiting for {judge} to select a prompt...</h1>
           {
             this.state.roomNumber ? <FooterScore players={players} roomNumber={roomNumber} /> : <h1>No state</h1> 

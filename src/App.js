@@ -66,6 +66,8 @@ export default withStyles(styles)(
           roomNumber: `${roomNumber}`,
           timesUp: false,
           judgeChange: false,
+          prompt: "",
+          takenArtists: []
         });
       //redirect to game home, passing selection and room number as properties
       return this.props.history.push({
