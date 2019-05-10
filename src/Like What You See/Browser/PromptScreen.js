@@ -21,8 +21,9 @@ export default class PromptScreen extends Component {
 
   async componentDidMount() {
     const { game, roomNumber, judge, players } = this.props.location.state;
-    this.setState({ game, roomNumber, judge, players });
-
+    console.log('location state', this.props.location.state)
+    this.setState({ game: game, roomNumber: roomNumber, judge: judge, players: players });
+    console.log(this.state)
     const room = db
       .collection("games")
       .doc(`${game.name}`)
@@ -74,7 +75,9 @@ export default class PromptScreen extends Component {
       return (
         <div>
           <h1>Waiting for {judge} to select a prompt...</h1>
-          <FooterScore players={players} roomNumber={roomNumber} />
+          {
+            this.state.roomNumber ? <FooterScore players={players} roomNumber={roomNumber} /> : <h1>No state</h1> 
+          }
         </div>
       );
     } else {
@@ -89,7 +92,7 @@ export default class PromptScreen extends Component {
             renderer={this.TimerRender}
             onComplete={this.TimesUp}
           />
-          <FooterScore />
+          <FooterScore players={players} roomNumber={roomNumber} />
         </div>
       );
     }
