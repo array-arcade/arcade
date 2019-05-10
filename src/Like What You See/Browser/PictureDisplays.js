@@ -80,7 +80,7 @@ export default withStyles(styles)(
     }
 
     componentWillUnmount() {
-      this.unsubscribe()
+      this.roomUnsub()
     }
 
     render() {
