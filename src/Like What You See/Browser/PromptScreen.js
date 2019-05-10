@@ -57,13 +57,15 @@ export default class PromptScreen extends Component {
     });
   };
 
-  TimerRender = ({ hours, minutes, seconds, completed }) => {
+  TimerRender = ({ minutes, seconds, milliseconds, completed }) => {
     if (completed) {
       this.TimesUp();
     } else {
       return (
         <span>
-          <h1>{seconds}</h1>
+          <h1>
+            {minutes}:{seconds}:{milliseconds}
+          </h1>
         </span>
       );
     }
@@ -107,7 +109,6 @@ export default class PromptScreen extends Component {
             precision={3}
             renderer={this.TimerRender}
           />
-          ,
           <FooterScore />
         </div>
       );
