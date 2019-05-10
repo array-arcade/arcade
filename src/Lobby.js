@@ -98,7 +98,6 @@ export default withStyles(styles)(
         },
         { merge: true }
       );
-
       return this.props.history.push({
         pathname: `/${currentGame.name}/${roomNumber}/prompt`,
         state: { judge: firstJudge, roomNumber, players, game: currentGame },
@@ -150,7 +149,7 @@ export default withStyles(styles)(
                     </Typography>
                     {players.map(player => {
                       return (
-                        <div className={styles.root}>
+                        <div className={styles.root} key={player.name}>
                           <Grid container spacing={16}>
                             <Grid item xs={12} md={6}>
                               <div className={styles.demo}>
