@@ -1,15 +1,15 @@
-import React from 'react';
-import CanvasDraw from 'react-canvas-draw';
-import Button from '@material-ui/core/Button';
-import firebase from 'firebase/app';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import DeleteIcon from '@material-ui/icons/Delete';
-import Undo from '@material-ui/icons/Undo';
-import Check from '@material-ui/icons/Check';
-import { disableBodyScroll } from 'body-scroll-lock';
-import { db } from '../../index';
+import React from "react";
+import CanvasDraw from "react-canvas-draw";
+import Button from "@material-ui/core/Button";
+import firebase from "firebase/app";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
+import DeleteIcon from "@material-ui/icons/Delete";
+import Undo from "@material-ui/icons/Undo";
+import Check from "@material-ui/icons/Check";
+import { disableBodyScroll } from "body-scroll-lock";
+import { db } from "../../index";
 
 class DrawPad extends React.Component {
   targetElement = null;
@@ -20,55 +20,71 @@ class DrawPad extends React.Component {
       user: {},
       roomNum: null,
       game: {},
-      prompt: false
+      prompt: false,
+      artists: [],
+      takenArtists: []
     };
   }
 
-  componentDidMount() {
-    this.targetElement = document.querySelector('canvas');
+  async componentDidMount() {
+    this.targetElement = document.querySelector("canvas");
     disableBodyScroll(this.targetElement);
     const { user, roomNum, game } = this.props.location.state;
-    this.setState({ user, roomNum, game });
-    const room = db
+    const dbGame = db.collection("games").doc('Like What You See?');
+    const artists = await dbGame.get().then(game => game.data().artists)
+    this.setState({ user, roomNum, game, artists });
+    const room = dbGame.collection("rooms").doc(`${roomNum}`);
+    this.timerUnsub = room.onSnapshot(snapshot => {
+      this.setState({ takenArtists: snapshot.data().takenArtists })
+      if (snapshot.data().timesUp) {
+        this.handleClick();
+      }
+      if (snapshot.data().prompt) {
+        this.setState({ prompt: true });
+      }
+    });
+  }
+
+  
+  handleClick = () => {
+    const { user, roomNum, game, artists, takenArtists } = this.state;
+    let numRef = this.randomArtist(artists, takenArtists)
+    takenArtists.push(numRef)
+    const dbRoom = db
     .collection("games")
     .doc(`${game.name}`)
     .collection("rooms")
-    .doc(`${roomNum}`);
-    this.timerUnsub = room.onSnapshot(snapshot => {
-      if(snapshot.data().timesUp) {
-        this.handleClick()
-      }
-      if(snapshot.data().prompt) {
-        this.setState({ prompt: true })
-      }
-    })
-  }
-  handleClick = () => {
-    const { user, roomNum, game } = this.state;
-    let numRef = Math.floor(Math.random() * 100)
-    let db = firebase.firestore();
-    let dbGames = db
-      .collection('games')
-      .doc(`${game.name}`)
-      .collection('rooms')
-      .doc(`${roomNum}`)
-      .collection('users')
+    .doc(`${roomNum}`)
+    let dbUser = dbRoom
+      .collection("users")
       .doc(`${user.name}`);
-    dbGames.update(
-      {
-        refNum: numRef,
-        image: this.saveableCanvas.getSaveData(),
-      }
-    );
+      dbRoom.update({
+        takenArtists: takenArtists
+      })
+    dbUser.update({
+      refNum: numRef,
+      image: this.saveableCanvas.getSaveData()
+    });
     return this.props.history.push({
       pathname: `/${roomNum}/waitingroom`,
       state: { roomNum, currentGame: game, user }
-    })
+    });
   };
 
-  componentWillUnmount() {
-    this.timerUnsub()
+  randomArtist = (artists, takenArtists) => {
+    let artistIdx = Math.floor(Math.random() * artists.length);
+    let artistRef = artists[artistIdx]
+    if(takenArtists.includes(artistRef)) {
+      return this.randomArtist(artists, takenArtists)
+    } else {
+      return artistRef
+    }
   }
+
+  componentWillUnmount() {
+    this.timerUnsub();
+  }
+
   render() {
     return (
       <div className="DrawingScreen">
@@ -89,7 +105,7 @@ class DrawPad extends React.Component {
             brushColor="#000000"
             style={{
               boxShadow:
-                '0 13px 27px -5px rgba(20, 20, 63, 0.1),    0 2px 3px -2px rgba(1, 200, 1, 0.3)',
+                "0 13px 27px -5px rgba(20, 20, 63, 0.1),    0 2px 3px -2px rgba(1, 200, 1, 0.3)"
             }}
           />
         </div>

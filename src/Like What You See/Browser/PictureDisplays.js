@@ -20,7 +20,8 @@ const styles = theme => ({
     padding: `${theme.spacing.unit * 8}px 0`
   },
   card: {
-    height: "100%",
+    height: "425px",
+    width: "450px",
     display: "flex",
     flexDirection: "column"
   },
@@ -43,41 +44,55 @@ export default withStyles(styles)(
         judge: {}
       };
     }
+    
     async componentDidMount() {
-      const { game, roomNumber } = this.props.location.state;
+      const { game, roomNumber, players } = this.props.location.state;
       this.setState({ game, roomNumber });
       const dbRoom = db
         .collection("games")
         .doc(`${game.name}`)
         .collection("rooms")
         .doc(`${roomNumber}`);
+      dbRoom.update({ prompt: "" })
       let dbUsers = dbRoom.collection("users");
+      let dbPlayers = []
       await dbUsers.get().then(snapshot => {
-        return snapshot.ForEach(player => {
-          this.setState({ players: [...this.state.players, player.data()] });
+         snapshot.forEach(player => {
+          dbPlayers.push(player.data())
         });
       });
+      this.setState({ players: dbPlayers.filter(player => !player.isJudge) })
       this.roomUnsub = dbRoom.onSnapshot(snapshot => {
         if (snapshot.data().judgeChange) {
           return this.props.history.push({
-            pathname: `/${game.name}/${roomNumber}/winner`,
-            state: { winner: snapshot.data().judge }
-          })
-        } else if (snapshot.data().winner) {
-          return this.props.history.push({
-            pathname: `/${game.name}/${roomNumber}/victory`,
-            state: { winner: snapshot.data().judge }
-          })
+            pathname: `/${game.name}/${roomNumber}/prompt`,
+            state: { players, game, roomNumber, judge: snapshot.data().judge}
+          });
         }
-      })
+        // if (snapshot.data().judgeChange) {
+        //   return this.props.history.push({
+        //     pathname: `/${game.name}/${roomNumber}/winner`,
+        //     state: { winner: snapshot.data().judge }
+        //   });
+        // } else if (snapshot.data().winner) {
+        //   return this.props.history.push({
+        //     pathname: `/${game.name}/${roomNumber}/victory`,
+        //     state: { winner: snapshot.data().judge }
+        //   });
+        // }
+      });
+    }
+
+    componentWillUnmount() {
+      this.roomUnsub()
     }
 
     render() {
-      let { players } = this.state;
+      let { players, roomNumber } = this.state;
       let { classes } = this.props;
 
       return (
-        <div>
+        <div className="App">
           <div>
             <header>
               judge name choose wisely is what should be rendered!
@@ -106,7 +121,11 @@ export default withStyles(styles)(
               })}
             </Grid>
           </div>
-          <FooterScore />
+          {this.state.roomNumber ? (
+            <FooterScore players={players} roomNumber={roomNumber} />
+          ) : (
+            <h1>No state</h1>
+          )}{" "}
         </div>
       );
     }

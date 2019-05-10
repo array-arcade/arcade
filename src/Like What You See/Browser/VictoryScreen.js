@@ -39,7 +39,7 @@ export default class VictoryScreen extends Component {
           color="primary"
           size="large"
           fullWidth={true}
-          onClick={this.handleClick}
+          onClick={() => this.handleClick()}
         >
           Leave Game
         </Button>
