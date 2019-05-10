@@ -44,8 +44,8 @@ export default withStyles(styles)(
       };
     }
     async componentDidMount() {
-      const { game, roomNumber } = this.props.location.state;
-      this.setState({ game, roomNumber });
+      const { game, roomNumber, players } = this.props.location.state;
+      this.setState({ game, roomNumber, players });
       const dbRoom = db
         .collection("games")
         .doc(`${game.name}`)
@@ -62,14 +62,14 @@ export default withStyles(styles)(
           return this.props.history.push({
             pathname: `/${game.name}/${roomNumber}/winner`,
             state: { winner: snapshot.data().judge }
-          })
+          });
         } else if (snapshot.data().winner) {
           return this.props.history.push({
             pathname: `/${game.name}/${roomNumber}/victory`,
             state: { winner: snapshot.data().judge }
-          })
+          });
         }
-      })
+      });
     }
 
     render() {
@@ -106,7 +106,11 @@ export default withStyles(styles)(
               })}
             </Grid>
           </div>
-          <FooterScore />
+          {this.state.roomNumber ? (
+            <FooterScore players={players} roomNumber={roomNumber} />
+          ) : (
+            <h1>No state</h1>
+          )}{" "}
         </div>
       );
     }
