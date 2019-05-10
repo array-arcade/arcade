@@ -86,7 +86,7 @@ export default class PromptScreen extends Component {
           <h1>{prompt}</h1>
           <h3>Get Drawing!!!</h3>
           <Countdown
-            date={Date.now() + 90000}
+            date={Date.now() + 60000}
             intervalDelay={0}
             precision={3}
             renderer={this.TimerRender}

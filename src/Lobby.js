@@ -85,7 +85,6 @@ export default withStyles(styles)(
         },
         { merge: true }
       );
-        console.log(this.state)
       return this.props.history.push({
         pathname: `/${currentGame.name}/${roomNumber}/prompt`,
         state: { judge: firstJudge, roomNumber, players, game: currentGame }
