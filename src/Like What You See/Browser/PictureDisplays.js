@@ -52,6 +52,7 @@ export default withStyles(styles)(
         .doc(`${game.name}`)
         .collection("rooms")
         .doc(`${roomNumber}`);
+      dbRoom.update({ prompt: null })
       let dbUsers = dbRoom.collection("users");
       await dbUsers.get().then(snapshot => {
         return snapshot.forEach(player => {
