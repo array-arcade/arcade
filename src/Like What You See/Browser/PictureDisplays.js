@@ -45,7 +45,7 @@ export default withStyles(styles)(
       };
     }
     async componentDidMount() {
-      const { game, roomNumber } = this.props.location.state;
+      const { game, roomNumber, players } = this.props.location.state;
       this.setState({ game, roomNumber });
       const dbRoom = db
         .collection("games")
@@ -61,15 +61,21 @@ export default withStyles(styles)(
       this.roomUnsub = dbRoom.onSnapshot(snapshot => {
         if (snapshot.data().judgeChange) {
           return this.props.history.push({
-            pathname: `/${game.name}/${roomNumber}/winner`,
-            state: { winner: snapshot.data().judge }
-          });
-        } else if (snapshot.data().winner) {
-          return this.props.history.push({
-            pathname: `/${game.name}/${roomNumber}/victory`,
-            state: { winner: snapshot.data().judge }
+            pathname: `/${game.name}/${roomNumber}/prompt`,
+            state: { players, game, roomNumber, judge: snapshot.data().judge}
           });
         }
+        // if (snapshot.data().judgeChange) {
+        //   return this.props.history.push({
+        //     pathname: `/${game.name}/${roomNumber}/winner`,
+        //     state: { winner: snapshot.data().judge }
+        //   });
+        // } else if (snapshot.data().winner) {
+        //   return this.props.history.push({
+        //     pathname: `/${game.name}/${roomNumber}/victory`,
+        //     state: { winner: snapshot.data().judge }
+        //   });
+        // }
       });
     }
 
