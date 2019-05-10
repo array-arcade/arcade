@@ -6,19 +6,21 @@ class FooterScore extends React.Component {
     super();
     this.state = {
       users: [],
-      roomNum: null,
+      roomNumber: null,
       game: {},
       players: [],
     };
   }
 
   async componentDidMount() {
+    let { roomNumber, players } = this.props
+    this.setState({ roomNumber, players })
     let db = firebase.firestore();
     let dbName = db
       .collection('games')
       .doc('Like What You See?')
       .collection('rooms')
-      .doc('7979')
+      .doc(`${roomNumber}`)
       .collection('users');
     this.unsubscribe = dbName.onSnapshot(snapshot => {
       let players = snapshot.docs.map(doc => doc.data());
