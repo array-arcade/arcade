@@ -33,7 +33,6 @@ export default class PromptScreen extends Component {
       const prompt = snapshot.data().prompt;
       if (prompt !== undefined) {
         this.setState({ prompt });
-        // this.render();
       }
     });
   }
@@ -72,7 +71,6 @@ export default class PromptScreen extends Component {
   };
 
   render() {
-    // console.log("***rendering state");
     const { judge, prompt } = this.state;
     if (prompt === undefined) {
       //remember to reset prompt after round end
@@ -85,24 +83,10 @@ export default class PromptScreen extends Component {
     } else {
       console.log("***prompt selected code", prompt);
 
-      // const timer = new Timer({ interval: 1000 });
-      // timer.on("tick", ms => {
-      //   if (this.state.time > 0) {
-      //     this.setState({ time: this.state.time - 1 });
-      //   }
-      // });
-
-      // timer.on("done", ms => {
-      //   this.TimesUp();
-      // });
-
-      // timer.start(90000);
-
       return (
         <div>
           <h1>{prompt}</h1>
           <h3>Get Drawing!!!</h3>
-          {/* <h1>{this.state.time}</h1> */}
           <Countdown
             date={Date.now() + 90000}
             intervalDelay={0}
