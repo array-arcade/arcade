@@ -4,11 +4,11 @@
 
 import React, { Component } from "react";
 import classNames from "classnames";
-import { Card, Grid } from "@material-ui/core";
+import { Card, Grid, CardContent, Typography } from "@material-ui/core";
 import CanvasDraw from "react-canvas-draw";
-import firebase from "firebase/app";
 import { withStyles } from "@material-ui/core";
 import FooterScore from "../Browser/ScoreDisplay";
+import { db } from "../../index";
 
 const styles = theme => ({
   layout: {
@@ -37,29 +37,43 @@ export default withStyles(styles)(
       super();
       this.state = {
         user: {},
-        roomNum: null,
+        roomNumber: null,
         game: {},
-        images: [],
+        players: [],
         judge: {}
       };
     }
     async componentDidMount() {
-      let db = firebase.firestore();
-      let dbPhotos = db
+      const { game, roomNumber } = this.props.location.state;
+      this.setState({ game, roomNumber });
+      const dbRoom = db
         .collection("games")
-        .doc("Like What You See?")
+        .doc(`${game.name}`)
         .collection("rooms")
-        .doc("7979")
-        .collection("users");
-      await dbPhotos.get().then(snapshot => {
-        return snapshot.ForEach(img => {
-          this.setState({ images: [...this.state.images, img.data()] });
+        .doc(`${roomNumber}`);
+      let dbUsers = dbRoom.collection("users");
+      await dbUsers.get().then(snapshot => {
+        return snapshot.ForEach(player => {
+          this.setState({ players: [...this.state.players, player.data()] });
         });
       });
+      this.roomUnsub = dbRoom.onSnapshot(snapshot => {
+        if (snapshot.data().judgeChange) {
+          return this.props.history.push({
+            pathname: `/${game.name}/${roomNumber}/winner`,
+            state: { winner: snapshot.data().judge }
+          })
+        } else if (snapshot.data().winner) {
+          return this.props.history.push({
+            pathname: `/${game.name}/${roomNumber}/victory`,
+            state: { winner: snapshot.data().judge }
+          })
+        }
+      })
     }
 
     render() {
-      let { images } = this.state;
+      let { players } = this.state;
       let { classes } = this.props;
 
       return (
@@ -71,9 +85,9 @@ export default withStyles(styles)(
           </div>
           <div className={classNames(classes.layout, classes.cardGrid)}>
             <Grid container spacing={40} alignItems="center" justify="center">
-              {images.map(img => {
+              {players.map(player => {
                 return (
-                  <Grid item key={img.name} sm={6} md={4} lg={3}>
+                  <Grid item key={player.name} sm={6} md={4} lg={3}>
                     <Card className={classes.card} raised={true}>
                       <CanvasDraw
                         className={classes.cardMedia}
@@ -81,8 +95,11 @@ export default withStyles(styles)(
                         canvasHeight={350}
                         disabled={true}
                         hideGrid={true}
-                        saveData={img.image}
+                        saveData={player.image}
                       />
+                      <CardContent>
+                        <Typography variant="h4">{player.refNum}</Typography>
+                      </CardContent>
                     </Card>
                   </Grid>
                 );
