@@ -43,7 +43,7 @@ export default class PromptScreen extends Component {
 
   TimesUp = () => {
     //update room timesup variable here
-    const { game, roomNumber } = this.props.location.state;
+    const { game, roomNumber, players, prompt } = this.state;
     const room = db
       .collection("games")
       .doc(`${game.name}`)
@@ -52,7 +52,8 @@ export default class PromptScreen extends Component {
     room.update({ TimesUp: true });
     //redirect code here
     return this.props.history.push({
-      pathname: `/Like What You See?/${roomNumber}/choose`
+      pathname: `/Like What You See?/${roomNumber}/choose`,
+      state: {game, roomNumber, players, prompt}
     });
   };
 
@@ -67,18 +68,16 @@ export default class PromptScreen extends Component {
   };
 
   render() {
-    const { judge, prompt } = this.state;
+    const { judge, prompt, players, roomNumber } = this.state;
     if (prompt === undefined) {
       //remember to reset prompt after round end
-      console.log("***prompt empty code", prompt);
       return (
         <div>
           <h1>Waiting for {judge} to select a prompt...</h1>
+          <FooterScore players={players} roomNumber={roomNumber} />
         </div>
       );
     } else {
-      console.log("***prompt selected code", prompt);
-
       return (
         <div>
           <h1>{prompt}</h1>
