@@ -1,21 +1,21 @@
 //This will render after the game has started and will redirect to
 //PictureDisplays after the timer or after pictures have been submitted
 
-import { db } from "../../index";
-import React, { Component } from "react";
-import FooterScore from "../Browser/ScoreDisplay";
-import Countdown from "react-countdown-now";
+import { db } from '../../index';
+import React, { Component } from 'react';
+import FooterScore from '../Browser/ScoreDisplay';
+import Countdown from 'react-countdown-now';
 
 export default class PromptScreen extends Component {
   constructor() {
     super();
     this.state = {
       game: {},
-      roomNumber: "",
-      judge: "",
+      roomNumber: '',
+      judge: '',
       players: [],
       prompt: undefined,
-      time: 90
+      time: 90,
     };
   }
 
@@ -24,9 +24,9 @@ export default class PromptScreen extends Component {
     this.setState({ game, roomNumber, judge, players });
 
     const room = db
-      .collection("games")
+      .collection('games')
       .doc(`${game.name}`)
-      .collection("rooms")
+      .collection('rooms')
       .doc(`${roomNumber}`);
 
     this.unsubscribe = room.onSnapshot(snapshot => {
@@ -45,9 +45,9 @@ export default class PromptScreen extends Component {
     //update room timesup variable here
     const { game, roomNumber, players, prompt } = this.state;
     const room = db
-      .collection("games")
+      .collection('games')
       .doc(`${game.name}`)
-      .collection("rooms")
+      .collection('rooms')
       .doc(`${roomNumber}`);
     room.update({ TimesUp: true });
     //redirect code here
@@ -79,9 +79,9 @@ export default class PromptScreen extends Component {
       );
     } else {
       return (
-        <div>
-          <h1>{prompt}</h1>
-          <h3>Get Drawing!!!</h3>
+        <div className="App">
+          <h1 textAlign={'center'}>{prompt}</h1>
+          <h3 textAlign={'center'}>Get Drawing!!!</h3>
           <Countdown
             date={Date.now() + 90000}
             intervalDelay={0}
