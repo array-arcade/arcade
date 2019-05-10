@@ -75,16 +75,19 @@ export default withStyles(styles)(
       let { roomNum, user, selectedGame } = this.state; //put state in local var
       if (selectedGame === "none" || user === "" || roomNum === "") {
         //validate fields
-        this.setState({ error: true, message:
-          "An error has occured. Make sure you have a name and a valid room number for the game you are trying to play." });
+        this.setState({
+          error: true,
+          message:
+            "An error has occured. Make sure you have a name and a valid room number for the game you are trying to play."
+        });
         return;
       }
       const game = db.collection("games").doc(`${selectedGame}`); //get game doc for selected game
-      let size = 0 
+      let size = 0;
       let max; //vars to check for full room
-      let currentGame = {}
+      let currentGame = {};
       game.get().then(snap => {
-        currentGame = snap.data()
+        currentGame = snap.data();
         max = currentGame.max; //gets a snapshot of game doc and sets max players to max
       });
       const roomRef = game.collection("rooms").doc(`${roomNum}`); //gets ref to room collection from game
@@ -111,7 +114,7 @@ export default withStyles(styles)(
 
               return this.props.history.push({
                 pathname: `/${roomNum}/waitingroom`,
-                state: { roomNum, currentGame, user: {name: user, score: 0} }
+                state: { roomNum, currentGame, user: { name: user, score: 0 } }
               });
             } else {
               //render code indicating room is full
@@ -139,7 +142,7 @@ export default withStyles(styles)(
       return (
         <div className="Mobile">
           <header className="header">
-            <img src={require("./logo.png")} alt="logo" />
+            <img src={require("./logov3.png")} alt="logo" />
           </header>
           <div
             style={{
