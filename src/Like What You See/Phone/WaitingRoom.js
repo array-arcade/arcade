@@ -1,5 +1,7 @@
-import React from "react";
-import { db } from "../../index";
+import React from 'react';
+import { db } from '../../index';
+import Button from '@material-ui/core/Button';
+import VolumeUp from '@material-ui/icons/VolumeUp';
 
 export class WaitingRoom extends React.Component {
   constructor() {
@@ -8,7 +10,7 @@ export class WaitingRoom extends React.Component {
       roomNum: 0,
       game: {},
       user: {},
-      pageChange: false
+      pageChange: false,
     };
   }
 
@@ -16,11 +18,11 @@ export class WaitingRoom extends React.Component {
     const { roomNum, currentGame, user } = this.props.location.state;
     let currentPlayer;
     const room = db
-      .collection("games")
+      .collection('games')
       .doc(`${currentGame.name}`)
-      .collection("rooms")
+      .collection('rooms')
       .doc(`${roomNum}`);
-    let player = room.collection("users").doc(`${user.name}`);
+    let player = room.collection('users').doc(`${user.name}`);
     this.playerUnsub = player.onSnapshot(snapshot => {
       currentPlayer = snapshot.data();
       this.setState({ user: currentPlayer });
@@ -30,7 +32,7 @@ export class WaitingRoom extends React.Component {
       let doc = snapshot.data();
       if (doc.judgeChange) {
         this.setState({ pageChange: true });
-        player.update({ image: null, refNum: null })
+        player.update({ image: null, refNum: null });
       }
     });
   }
@@ -46,15 +48,25 @@ export class WaitingRoom extends React.Component {
       if (user.isJudge && pageChange) {
         return this.props.history.push({
           pathname: `/word-pick`,
-          state: { roomNum, game, user }
+          state: { roomNum, game, user },
         });
       } else if (pageChange) {
         return this.props.history.push({
           pathname: `/draw`,
-          state: { roomNum, game, user }
+          state: { roomNum, game, user },
         });
       } else {
-        return <h1 className="Mobile">Welcome to the waiting room.</h1>;
+        return (
+          <div className="h1Mobile">
+            <h1>Welcome to the waiting room.</h1>
+            <div>
+              <Button>
+                Random Noise!
+                <VolumeUp />
+              </Button>
+            </div>
+          </div>
+        );
       }
     };
     return <div>{roomRender()}</div>;

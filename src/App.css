@@ -1,4 +1,5 @@
 .App {
+  overflow: hidden;
   text-align: center;
   min-height: 100vh;
   background-color: #08aeea;
@@ -53,6 +54,26 @@
   overflow-x: hidden;
   overflow-y: hidden;
   position: relative;
+  background-color: #08aeea;
+  background-image: linear-gradient(0deg, #08aeea 0%, #6ccc88 100%);
+}
+
+.html {
+  margin: 0;
+}
+.body {
+  margin: 0px;
+}
+
+h1 {
+  margin-top: 0;
+}
+
+.h1Mobile {
+  padding: 100px;
+  overflow: hidden;
+  text-align: center;
+  min-height: 100vh;
   background-color: #08aeea;
   background-image: linear-gradient(0deg, #08aeea 0%, #6ccc88 100%);
 }
