@@ -112,7 +112,7 @@ export default withStyles(styles)(
             <div className="App">
               <div>
                 <header className="header">
-                  <img src={require('./logo.png')} alt="logo" />
+                  <img src={require('./TheLogo.png')} alt="logo" />
                 </header>
                 <Grid
                   container

@@ -1,11 +1,11 @@
-import React from "react";
-import TextField from "@material-ui/core/TextField";
-import Face from "@material-ui/icons/Face";
-import DialPad from "@material-ui/icons/Dialpad";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import CardActions from "@material-ui/core/CardActions";
-import Button from "@material-ui/core/Button";
+import React from 'react';
+import TextField from '@material-ui/core/TextField';
+import Face from '@material-ui/icons/Face';
+import DialPad from '@material-ui/icons/Dialpad';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardActions from '@material-ui/core/CardActions';
+import Button from '@material-ui/core/Button';
 
 import {
   withStyles,
@@ -15,26 +15,26 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText
-} from "@material-ui/core";
-import firebase from "firebase/app";
-import "firebase/firestore";
-import { disableBodyScroll } from "body-scroll-lock";
+  DialogContentText,
+} from '@material-ui/core';
+import firebase from 'firebase/app';
+import 'firebase/firestore';
+import { disableBodyScroll } from 'body-scroll-lock';
 
 const styles = theme => ({
   cardItem: {
-    display: "flex",
-    justifyContent: "center",
-    alignitems: "center",
-    padding: "7px"
+    display: 'flex',
+    justifyContent: 'center',
+    alignitems: 'center',
+    padding: '7px',
   },
   selections: {
     minWidth: 120,
     margin: theme.spacing.unit,
-    dislay: "flex",
-    justifyContent: "center",
-    alignitems: "center"
-  }
+    dislay: 'flex',
+    justifyContent: 'center',
+    alignitems: 'center',
+  },
 });
 
 export default withStyles(styles)(
@@ -42,47 +42,47 @@ export default withStyles(styles)(
     constructor() {
       super();
       this.state = {
-        user: "",
-        roomNum: "",
-        selectedGame: "none",
+        user: '',
+        roomNum: '',
+        selectedGame: 'none',
         games: [],
         error: false,
-        message: ""
+        message: '',
       };
     }
     targetElement = null;
 
     async componentDidMount() {
       const db = firebase.firestore();
-      const dbGames = db.collection("games");
+      const dbGames = db.collection('games');
       await dbGames.get().then(snapshot => {
         snapshot.forEach(doc => {
           this.setState({ games: [...this.state.games, doc.data()] });
         });
       });
-      this.targetElement = document.querySelector("Mobile");
+      this.targetElement = document.querySelector('Mobile');
       disableBodyScroll(this.targetElement);
     }
 
     handleChange = evt => {
       this.setState({
-        [evt.target.name]: evt.target.value
+        [evt.target.name]: evt.target.value,
       });
     };
 
     addUser = () => {
       const db = firebase.firestore(); //create ref to firestore
       let { roomNum, user, selectedGame } = this.state; //put state in local var
-      if (selectedGame === "none" || user === "" || roomNum === "") {
+      if (selectedGame === 'none' || user === '' || roomNum === '') {
         //validate fields
         this.setState({
           error: true,
           message:
-            "An error has occured. Make sure you have a name and a valid room number for the game you are trying to play."
+            'An error has occured. Make sure you have a name and a valid room number for the game you are trying to play.',
         });
         return;
       }
-      const game = db.collection("games").doc(`${selectedGame}`); //get game doc for selected game
+      const game = db.collection('games').doc(`${selectedGame}`); //get game doc for selected game
       let size = 0;
       let max; //vars to check for full room
       let currentGame = {};
@@ -90,14 +90,14 @@ export default withStyles(styles)(
         currentGame = snap.data();
         max = currentGame.max; //gets a snapshot of game doc and sets max players to max
       });
-      const roomRef = game.collection("rooms").doc(`${roomNum}`); //gets ref to room collection from game
+      const roomRef = game.collection('rooms').doc(`${roomNum}`); //gets ref to room collection from game
       roomRef
         .get()
         .then(room => {
           if (room.exists) {
             //here's where you check for max players reached
             roomRef
-              .collection("users")
+              .collection('users')
               .get()
               .then(snapshot => {
                 size = snapshot.size; // will return the room size
@@ -105,34 +105,34 @@ export default withStyles(styles)(
             if (size < max) {
               //add the user (and redirect)
               roomRef
-                .collection("users")
+                .collection('users')
                 .doc(`${user}`)
                 .set({
                   name: `${user}`,
-                  score: 0
+                  score: 0,
                 });
 
               return this.props.history.push({
                 pathname: `/${roomNum}/waitingroom`,
-                state: { roomNum, currentGame, user: { name: user, score: 0 } }
+                state: { roomNum, currentGame, user: { name: user, score: 0 } },
               });
             } else {
               //render code indicating room is full
               this.setState({
                 error: true,
                 message:
-                  "The selected room is full currently and you will not be able to join."
+                  'The selected room is full currently and you will not be able to join.',
               });
             }
           } else {
             this.setState({
               error: true,
               message:
-                "An error has occured. Make sure you have a name and a valid room number for the game you are trying to play."
+                'An error has occured. Make sure you have a name and a valid room number for the game you are trying to play.',
             });
           }
         })
-        .catch(err => console.log("Something went wrong!", err));
+        .catch(err => console.log('Something went wrong!', err));
     };
 
     render() {
@@ -142,14 +142,14 @@ export default withStyles(styles)(
       return (
         <div className="Mobile">
           <header className="header">
-            <img src={require("./logov3.png")} alt="logo" />
+            <img src={require('./TheLogo.png')} alt="logo" />
           </header>
           <div
             style={{
-              position: "absolute",
-              top: "60%",
-              left: "50%",
-              transform: "translate(-50%, -50%)"
+              position: 'absolute',
+              top: '60%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
             }}
           >
             <Card alignitems="center" justify="center">
@@ -181,7 +181,7 @@ export default withStyles(styles)(
                 <Select
                   onChange={this.handleChange}
                   value={this.state.selectedGame}
-                  inputProps={{ name: "selectedGame" }}
+                  inputProps={{ name: 'selectedGame' }}
                   className={classes.selections}
                 >
                   <InputLabel>Choose Game</InputLabel>
