@@ -53,7 +53,6 @@ export default withStyles(styles)(
     timeout = (players, game, roomNumber, winner) => {
       const history = this.props.history
       setTimeout(function() {
-        console.log(this.props)
         return history.push({
           pathname: `/${game.name}/${roomNumber}/prompt`,
           state: { players, game, roomNumber, judge: winner }

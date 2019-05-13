@@ -1,6 +1,5 @@
 //This will render after the game has started and will redirect to
 //PictureDisplays after the timer or after pictures have been submitted
-
 import { db } from "../../index";
 import React, { Component } from "react";
 import FooterScore from "../Browser/ScoreDisplay";
@@ -16,7 +15,8 @@ export default class PromptScreen extends Component {
       judge: "",
       players: [],
       prompt: "",
-      time: 60
+      time: 25000,
+      date: Date.now()
     };
   }
 
@@ -46,16 +46,18 @@ export default class PromptScreen extends Component {
     this.unsubscribe();
   }
 
-  // Tick = () => {
-  //   this.setState(prevState => ({ time: prevState.time - 1 }));
-  //   if (this.state.time < 10) {
-  //     //Beep if there are < 10 seconds left
-  //   }
-  //   if (this.state.time < 5) {
-  //     //Beep twice if there < 5 seconds left
-  //     Beep();
-  //   }
-  // };
+  Tick = () => {
+    this.setState(prevState => ({ time: prevState.time - 1000 }));
+    if (this.state.time < 10000) {
+      console.log(this.state.time)
+      //Beep if there are < 10 seconds left
+    }
+    if (this.state.time < 5000) {
+      console.log(this.state.time)
+      //Beep twice if there < 5 seconds left
+      Beep();
+    }
+  };
 
   TimesUp = () => {
     //update room timesup variable here
@@ -84,7 +86,7 @@ export default class PromptScreen extends Component {
   };
 
   render() {
-    const { judge, prompt, players, roomNumber } = this.state;
+    const { judge, prompt, players, roomNumber, time, date } = this.state;
     if (prompt === "") {
       //remember to reset prompt after round end
       return (
@@ -103,12 +105,12 @@ export default class PromptScreen extends Component {
           <h1 textAlign="center">{prompt}</h1>
           <h3 textAlign="center">Get Drawing!!!</h3>
           <Countdown
-            date={Date.now() + 60000}
+            date={date + time}
             // intervalDelay={0}
             precision={3}
             renderer={this.TimerRender}
             onComplete={this.TimesUp}
-            // onTick={this.Tick}
+            onTick={this.Tick}
           />
           <FooterScore players={players} roomNumber={roomNumber} />
         </div>
