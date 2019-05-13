@@ -1,7 +1,7 @@
 //This will be rendered through JudgeWordPick and
 //will redirect to the WaitingRoom
-import React, { Component } from 'react';
-import { db } from '../../index';
+import React, { Component } from "react";
+import { db } from "../../index";
 import {
   Button,
   Grid,
@@ -9,19 +9,19 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
-  withStyles,
-} from '@material-ui/core';
-import classNames from 'classnames';
+  withStyles
+} from "@material-ui/core";
+import classNames from "classnames";
 
 const styles = theme => ({
   layout: {
-    width: 'auto',
+    width: "auto",
     marginLeft: theme.spacing.unit * 3,
-    marginRight: theme.spacing.unit * 3,
+    marginRight: theme.spacing.unit * 3
   },
   cardGrid: {
-    padding: `${theme.spacing.unit * 5}px 0`,
-  },
+    padding: `${theme.spacing.unit * 5}px 0`
+  }
 });
 
 export default withStyles(styles)(
@@ -34,25 +34,25 @@ export default withStyles(styles)(
         user: {},
         players: [],
         open: false,
-        selected: '',
+        selected: ""
       };
     }
 
     componentDidMount() {
       const { roomNum, game, user } = this.props.location.state;
       this.setState({ roomNum, game, user });
-      db.collection('games')
+      db.collection("games")
         .doc(`${game.name}`)
-        .collection('rooms')
+        .collection("rooms")
         .doc(`${roomNum}`)
         .update({ previousJudge: user.name });
       let currentPlayers;
       const users = db
-        .collection('games')
+        .collection("games")
         .doc(`${game.name}`)
-        .collection('rooms')
+        .collection("rooms")
         .doc(`${roomNum}`)
-        .collection('users');
+        .collection("users");
       this.unsubscribe = users.onSnapshot(snap => {
         currentPlayers = snap.docs.map(doc => doc.data());
         currentPlayers = this.shuffle(
@@ -75,16 +75,16 @@ export default withStyles(styles)(
       let newScore;
       let newJudge;
       const room = db
-        .collection('games')
+        .collection("games")
         .doc(`${game.name}`)
-        .collection('rooms')
+        .collection("rooms")
         .doc(`${roomNum}`);
       const users = db
-        .collection('games')
+        .collection("games")
         .doc(`${game.name}`)
-        .collection('rooms')
+        .collection("rooms")
         .doc(`${roomNum}`)
-        .collection('users');
+        .collection("users");
       let winner = users.doc(`${userRef.name}`);
       await winner.get().then(snapshot => {
         newScore = snapshot.data().score + 1;
@@ -93,7 +93,7 @@ export default withStyles(styles)(
           room.update({ winner: true });
           return this.props.history.push({
             pathname: `/winner`,
-            state: { winner: snapshot.data() },
+            state: { winner: snapshot.data() }
           });
         }
       });
@@ -103,11 +103,47 @@ export default withStyles(styles)(
       judge.update({ isJudge: false });
       return this.props.history.push({
         pathname: `/${roomNum}/waitingroom`,
-        state: { roomNum, currentGame: game, user },
+        state: { roomNum, currentGame: game, user }
       });
     };
 
     render() {
+      const imageCheck = player => {
+        if (player.refNum) {
+          return (
+            <Grid item key={player.name} sm={6} md={4} lg={3}>
+              <Button
+                //add container and color. full length. margin inbetween.
+                onClick={() => this.setState({ open: true, selected: player })}
+              >
+                {player.refNum}
+              </Button>
+              <Dialog
+                open={open}
+                onClose={() => this.setState({ open: false, selected: "" })}
+              >
+                <DialogContent>
+                  <DialogContentText>
+                    Is this the picture you want to choose? The artist of this
+                    picture will be next rounds judge.
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={() => this.selectPic(selected)}>YES!</Button>
+                  <Button
+                    onClick={() => this.setState({ open: false, selected: "" })}
+                  >
+                    NO!
+                  </Button>
+                </DialogActions>
+              </Dialog>
+            </Grid>
+          );
+        } else {
+          return null;
+        }
+      };
+
       const { classes } = this.props;
       const { players, open, selected } = this.state;
       return (
@@ -115,46 +151,7 @@ export default withStyles(styles)(
           <div className={classNames(classes.layout, classes.cardGrid)}>
             <Grid container spacing={40}>
               {players.map(player => {
-                return (
-                  <Grid item key={player.name}>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      size="large"
-                      fullWidth={true}
-                      onClick={() =>
-                        this.setState({ open: true, selected: player })
-                      }
-                    >
-                      {player.refNum}
-                    </Button>
-                    <Dialog
-                      open={open}
-                      onClose={() =>
-                        this.setState({ open: false, selected: '' })
-                      }
-                    >
-                      <DialogContent>
-                        <DialogContentText>
-                          Is this the picture you want to choose? The artist of
-                          this picture will be next rounds judge.
-                        </DialogContentText>
-                      </DialogContent>
-                      <DialogActions>
-                        <Button onClick={() => this.selectPic(selected)}>
-                          YES!
-                        </Button>
-                        <Button
-                          onClick={() =>
-                            this.setState({ open: false, selected: '' })
-                          }
-                        >
-                          NO!
-                        </Button>
-                      </DialogActions>
-                    </Dialog>
-                  </Grid>
-                );
+                return imageCheck(player);
               })}
             </Grid>
           </div>
