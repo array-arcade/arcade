@@ -1,7 +1,9 @@
 import React from 'react';
 import { db } from '../../index';
 import Button from '@material-ui/core/Button';
-import VolumeUp from '@material-ui/icons/VolumeUp';
+import ImageSearch from '@material-ui/icons/ImageSearch';
+import giphyRandom from 'giphy-random';
+import { giphyKey } from '../../secrets';
 
 export class WaitingRoom extends React.Component {
   constructor() {
@@ -10,9 +12,19 @@ export class WaitingRoom extends React.Component {
       roomNum: 0,
       game: {},
       user: {},
+      gif: '',
       pageChange: false,
     };
   }
+
+  handleClick = async () => {
+    let { data } = await giphyRandom(giphyKey, {
+      tag: 'cats',
+      rating: 'pg',
+    });
+    this.setState({ gif: data.image_url });
+    console.log(data);
+  };
 
   componentDidMount() {
     const { roomNum, currentGame, user } = this.props.location.state;
@@ -43,7 +55,7 @@ export class WaitingRoom extends React.Component {
   }
 
   render() {
-    const { roomNum, game, user, pageChange } = this.state;
+    const { roomNum, game, user, pageChange, gif } = this.state;
     const roomRender = () => {
       if (user.isJudge && pageChange) {
         return this.props.history.push({
@@ -60,10 +72,15 @@ export class WaitingRoom extends React.Component {
           <div className="h1Mobile">
             <h1>Welcome to the waiting room.</h1>
             <div>
-              <Button>
-                Random Noise!
-                <VolumeUp />
+              <Button
+                onClick={() => {
+                  this.handleClick();
+                }}
+              >
+                Generate a gif!
+                <ImageSearch />
               </Button>
+              <div className="GifDiv">{gif ? <img src={gif} /> : null}</div>
             </div>
           </div>
         );

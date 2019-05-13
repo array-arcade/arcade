@@ -82,7 +82,7 @@ export default withStyles(styles)(
       return (
         <div className="App">
           <header className="header">
-            <img src={require('./TheLogo.png')} alt="logo" />
+            <img src={require('./LastLogo.png')} alt="logo" />
           </header>
           <div className={classNames(classes.layout, classes.cardGrid)}>
             <Grid container spacing={40} alignItems="center" justify="center">

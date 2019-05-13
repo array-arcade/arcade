@@ -142,7 +142,7 @@ export default withStyles(styles)(
       return (
         <div className="Mobile">
           <header className="header">
-            <img src={require('./TheLogo.png')} alt="logo" />
+            <img src={require('./LastLogo.png')} alt="logo" />
           </header>
           <div
             style={{
