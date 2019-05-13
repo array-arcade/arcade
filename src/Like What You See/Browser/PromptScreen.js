@@ -37,6 +37,7 @@ export default class PromptScreen extends Component {
       const prompt = snapshot.data().prompt;
       if (prompt) {
         this.setState({ prompt });
+        this.unsubscribe()
       }
     });
   }
@@ -45,16 +46,16 @@ export default class PromptScreen extends Component {
     this.unsubscribe();
   }
 
-  Tick = () => {
-    this.setState(prevState => ({ time: prevState.time - 1 }));
-    if (this.state.time < 10) {
-      //Beep if there are < 10 seconds left
-    }
-    if (this.state.time < 5) {
-      //Beep twice if there < 5 seconds left
-      Beep();
-    }
-  };
+  // Tick = () => {
+  //   this.setState(prevState => ({ time: prevState.time - 1 }));
+  //   if (this.state.time < 10) {
+  //     //Beep if there are < 10 seconds left
+  //   }
+  //   if (this.state.time < 5) {
+  //     //Beep twice if there < 5 seconds left
+  //     Beep();
+  //   }
+  // };
 
   TimesUp = () => {
     //update room timesup variable here
@@ -107,7 +108,7 @@ export default class PromptScreen extends Component {
             precision={3}
             renderer={this.TimerRender}
             onComplete={this.TimesUp}
-            onTick={this.Tick}
+            // onTick={this.Tick}
           />
           <FooterScore players={players} roomNumber={roomNumber} />
         </div>
