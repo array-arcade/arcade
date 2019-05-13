@@ -10,6 +10,7 @@ import PromptScreen from './Like What You See/Browser/PromptScreen';
 import VictoryScreen from './Like What You See/Browser/VictoryScreen';
 import PictureDisplays from './Like What You See/Browser/PictureDisplays';
 import JudgeVote from './Like What You See/Phone/JudgeVote';
+import Winner from './Like What You See/Browser/RoundWinner'
 
 export default class Routes extends Component {
   render() {
@@ -35,6 +36,7 @@ export default class Routes extends Component {
           <Route path="/:game/:roomNum/victory" component={VictoryScreen} />
           <Route path="/:game/:roomNum/prompt" component={PromptScreen} />
           <Route path="/:game/:roomNum/choose" component={PictureDisplays} />
+          <Route path="/:game/:roomNum/winner" component={Winner} />
           <Route path="/browse" component={App} />
           <Redirect from="/" to="browse" />
         </Switch>
