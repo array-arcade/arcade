@@ -122,7 +122,6 @@ export default withStyles(styles)(
                       color="primary"
                       size="large"
                       fullWidth={true}
-                      mt={2}
                       onClick={() =>
                         this.setState({ open: true, selected: player })
                       }
@@ -142,15 +141,15 @@ export default withStyles(styles)(
                         </DialogContentText>
                       </DialogContent>
                       <DialogActions>
+                        <Button onClick={() => this.selectPic(selected)}>
+                          YES!
+                        </Button>
                         <Button
                           onClick={() =>
                             this.setState({ open: false, selected: '' })
                           }
                         >
                           NO!
-                        </Button>
-                        <Button onClick={() => this.selectPic(selected)}>
-                          YES!
                         </Button>
                       </DialogActions>
                     </Dialog>
