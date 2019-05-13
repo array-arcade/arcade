@@ -77,7 +77,7 @@ export default withStyles(styles)(
         } else if (snapshot.data().winner) {
           return this.props.history.push({
             pathname: `/${game.name}/${roomNumber}/victory`,
-            state: { winner: snapshot.data().judge }
+            state: { winner: snapshot.data().judge, roomNumber, game }
           });
         }
       });
@@ -99,13 +99,12 @@ export default withStyles(styles)(
             </header>
           </div>
           <div className={classNames(classes.layout, classes.cardGrid)}>
-            <Grid container spacing={40} alignItems="center" justify="center">
+            <Grid container spacing={40} alignContent="space-around">
               {players.map(player => {
                 return (
                   <Grid item key={player.name} sm={6} md={4} lg={3}>
                     <Card className={classes.card} raised={true}>
                       <CanvasDraw
-                        className={classes.cardMedia}
                         canvasWidth={400}
                         canvasHeight={350}
                         disabled={true}

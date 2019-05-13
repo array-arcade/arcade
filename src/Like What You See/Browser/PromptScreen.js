@@ -17,7 +17,7 @@ export default class PromptScreen extends Component {
       judge: "",
       players: [],
       prompt: "",
-      time: 60000,
+      time: 20000,
     };
   }
 

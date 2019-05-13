@@ -4,22 +4,31 @@
 
 import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
-import firebase from 'firebase/app';
+import { db } from '../../index'
 
 export default class VictoryScreen extends Component {
   constructor() {
     super();
-    this.state = {};
+    this.state = {
+      winner: {},
+      roomNum: 0,
+      game: {}
+    };
   }
 
-  handleClick = () => {
-    let db = firebase.firestore();
+  componentDidMount() {
+    const { winner, roomNum, game } = this.props.location.state
+    this.setState({ winner, roomNum, game })
+  }
+
+  exitGame = () => {
+    const { roomNum, game }  = this.state
     let deleteUsers = db
       .collection('games')
       .doc('Like What You See?')
       .collection('rooms');
     deleteUsers
-      .doc('1616')
+      .doc(`${roomNum}`)
       .collection('users')
       .get()
       .then(snapshot => {
@@ -27,7 +36,7 @@ export default class VictoryScreen extends Component {
           doc.ref.delete();
         });
       });
-    deleteUsers.doc('1616').delete();
+    deleteUsers.doc(`${roomNum}`).delete();
   };
 
   render() {
@@ -39,7 +48,7 @@ export default class VictoryScreen extends Component {
           color="primary"
           size="large"
           fullWidth={true}
-          onClick={() => this.handleClick()}
+          onClick={() => this.exitGame()}
         >
           Leave Game
         </Button>

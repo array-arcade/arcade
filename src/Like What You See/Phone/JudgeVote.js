@@ -86,21 +86,21 @@ export default withStyles(styles)(
         .doc(`${roomNum}`)
         .collection("users");
       let winner = users.doc(`${userRef.name}`);
+      let judge = users.doc(`${user.name}`);
+      judge.update({ isJudge: false });
       await winner.get().then(snapshot => {
         newScore = snapshot.data().score + 1;
         newJudge = snapshot.data().name;
+        winner.update({ score: newScore, isJudge: true });
         if (snapshot.data().score >= 4) {
-          room.update({ winner: true });
+          room.update({ winner: snapshot.data() });
           return this.props.history.push({
             pathname: `/winner`,
             state: { winner: snapshot.data() }
           });
         }
       });
-      let judge = users.doc(`${user.name}`);
-      winner.update({ score: newScore, isJudge: true });
       room.update({ judge: newJudge, judgeChange: true });
-      judge.update({ isJudge: false });
       return this.props.history.push({
         pathname: `/${roomNum}/waitingroom`,
         state: { roomNum, currentGame: game, user }
