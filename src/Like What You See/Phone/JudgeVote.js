@@ -147,12 +147,14 @@ export default withStyles(styles)(
       const { classes } = this.props;
       const { players, open, selected } = this.state;
       return (
-        <div className={classNames(classes.layout, classes.cardGrid, "Mobile")}>
-          <Grid container spacing={40}>
-            {players.map(player => {
-              return imageCheck(player);
-            })}
-          </Grid>
+        <div className="Mobile">
+          <div className={classNames(classes.layout, classes.cardGrid)}>
+            <Grid container spacing={40}>
+              {players.map(player => {
+                return imageCheck(player);
+              })}
+            </Grid>
+          </div>
         </div>
       );
     }
