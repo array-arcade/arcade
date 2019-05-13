@@ -6,9 +6,7 @@ import {
   Card,
   CardContent,
   CardActions,
-  Grid,
   Button,
-  IconButton,
   Dialog,
   DialogActions,
   DialogContent,
@@ -27,6 +25,15 @@ const styles = theme => ({
   wordHolder: {
     display: 'flex',
     justifyContent: 'space-between',
+  },
+  button: {
+    margin: theme.spacing.unit,
+  },
+  rightIcon: {
+    marginLeft: theme.spacing.unit,
+  },
+  iconSmall: {
+    fontSize: 20,
   },
 });
 
@@ -124,48 +131,46 @@ export default withStyles(styles)(
             {displayWords.map(word => {
               return (
                 <Card key={word}>
-                  <Grid container spacing={24} className={classes.wordHolder}>
-                    <Grid item>
-                      <CardContent>
-                        <Typography variant="h4">{word}</Typography>
-                      </CardContent>
-                    </Grid>
-                    <Grid item>
-                      <CardActions>
-                        <IconButton
+                  {/* <Grid container spacing={24} className={classes.wordHolder}> */}
+                  {/* <Grid item> */}
+                  <CardContent>
+                    <Button
+                      fullWidth={true}
+                      color="primary"
+                      onClick={() =>
+                        this.setState({ open: true, selected: word })
+                      }
+                    >
+                      <Typography variant="h4">{word}</Typography>
+                      <TouchApp />
+                    </Button>
+                  </CardContent>
+                  <CardActions>
+                    <Dialog
+                      open={open}
+                      onClose={() =>
+                        this.setState({ open: false, selected: '' })
+                      }
+                    >
+                      <DialogContent>
+                        <DialogContentText>
+                          Is this the prompt you want to choose? {selected}
+                        </DialogContentText>
+                      </DialogContent>
+                      <DialogActions>
+                        <Button
                           onClick={() =>
-                            this.setState({ open: true, selected: word })
-                          }
-                        >
-                          <TouchApp />
-                        </IconButton>
-                        <Dialog
-                          open={open}
-                          onClose={() =>
                             this.setState({ open: false, selected: '' })
                           }
                         >
-                          <DialogContent>
-                            <DialogContentText>
-                              Is this the prompt you want to choose? {selected}
-                            </DialogContentText>
-                          </DialogContent>
-                          <DialogActions>
-                            <Button onClick={() => this.selectWord(selected)}>
-                              YES!
-                            </Button>
-                            <Button
-                              onClick={() =>
-                                this.setState({ open: false, selected: '' })
-                              }
-                            >
-                              NO!
-                            </Button>
-                          </DialogActions>
-                        </Dialog>
-                      </CardActions>
-                    </Grid>
-                  </Grid>
+                          NO!
+                        </Button>
+                        <Button onClick={() => this.selectWord(selected)}>
+                          YES!
+                        </Button>
+                      </DialogActions>
+                    </Dialog>
+                  </CardActions>
                 </Card>
               );
             })}
