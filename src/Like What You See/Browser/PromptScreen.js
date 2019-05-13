@@ -20,7 +20,7 @@ export default class PromptScreen extends Component {
     };
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     const { game, roomNumber, judge, players } = this.props.location.state;
     this.setState({
       game: game,
@@ -99,8 +99,8 @@ export default class PromptScreen extends Component {
     } else {
       return (
         <div className="App">
-          <h1 textAlign={"center"}>{prompt}</h1>
-          <h3 textAlign={"center"}>Get Drawing!!!</h3>
+          <h1 textAlign="center">{prompt}</h1>
+          <h3 textAlign="center">Get Drawing!!!</h3>
           <Countdown
             date={Date.now() + 60000}
             // intervalDelay={0}
