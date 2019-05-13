@@ -75,6 +75,12 @@ h1 {
   margin-top: 0;
 }
 
+.h3Vote {
+  padding: 10px;
+  overflow: hidden;
+  text-align: center;
+}
+
 .header {
   margin-top: 7px;
 }

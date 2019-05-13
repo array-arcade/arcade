@@ -5,6 +5,7 @@ import { db } from '../../index';
 import {
   Button,
   Grid,
+  Card,
   Dialog,
   DialogActions,
   DialogContent,
@@ -21,6 +22,17 @@ const styles = theme => ({
   },
   cardGrid: {
     padding: `${theme.spacing.unit * 5}px 0`,
+  },
+  Grid: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignitems: 'center',
+  },
+  Card: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignitems: 'center',
+    padding: '7px',
   },
 });
 
@@ -108,13 +120,18 @@ export default withStyles(styles)(
     };
 
     render() {
+      const { classes } = this.props;
       const imageCheck = player => {
         if (player.refNum) {
           return (
             <Grid item key={player.name} sm={6} md={4} lg={3}>
               <Button
+                variant="contained"
                 color="primary"
                 size="large"
+                fullWidth={true}
+                padding="10px"
+                justifyContent="center"
                 onClick={() => this.setState({ open: true, selected: player })}
               >
                 {player.refNum}
@@ -145,16 +162,17 @@ export default withStyles(styles)(
         }
       };
 
-      const { classes } = this.props;
       const { players, open, selected } = this.state;
       return (
         <div className="Mobile">
           <div className={classNames(classes.layout, classes.cardGrid)}>
-            <Grid container spacing={40}>
-              <h3 className="h1Mobile">Pick your favorite drawing!</h3>
-              {players.map(player => {
-                return imageCheck(player);
-              })}
+            <h3 className="h3Vote">Pick your favorite drawing!</h3>
+            <Grid className={classes.Grid}>
+              <Card className={classes.card} spacing={6}>
+                {players.map(player => {
+                  return imageCheck(player);
+                })}
+              </Card>
             </Grid>
           </div>
         </div>
