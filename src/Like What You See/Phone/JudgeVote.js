@@ -111,46 +111,53 @@ export default withStyles(styles)(
       const { classes } = this.props;
       const { players, open, selected } = this.state;
       return (
-        <div className={classNames(classes.layout, classes.cardGrid, 'Mobile')}>
-          <Grid container spacing={40}>
-            {players.map(player => {
-              return (
-                <Grid item key={player.name} sm={6} md={4} lg={3}>
-                  <Button
-                    //add container and color. full length. margin inbetween.
-                    onClick={() =>
-                      this.setState({ open: true, selected: player })
-                    }
-                  >
-                    {player.refNum}
-                  </Button>
-                  <Dialog
-                    open={open}
-                    onClose={() => this.setState({ open: false, selected: '' })}
-                  >
-                    <DialogContent>
-                      <DialogContentText>
-                        Is this the picture you want to choose? The artist of
-                        this picture will be next rounds judge.
-                      </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                      <Button onClick={() => this.selectPic(selected)}>
-                        YES!
-                      </Button>
-                      <Button
-                        onClick={() =>
-                          this.setState({ open: false, selected: '' })
-                        }
-                      >
-                        NO!
-                      </Button>
-                    </DialogActions>
-                  </Dialog>
-                </Grid>
-              );
-            })}
-          </Grid>
+        <div className="Mobile">
+          <div className={classNames(classes.layout, classes.cardGrid)}>
+            <Grid container spacing={40}>
+              {players.map(player => {
+                return (
+                  <Grid item key={player.name}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      size="large"
+                      fullWidth={true}
+                      onClick={() =>
+                        this.setState({ open: true, selected: player })
+                      }
+                    >
+                      {player.refNum}
+                    </Button>
+                    <Dialog
+                      open={open}
+                      onClose={() =>
+                        this.setState({ open: false, selected: '' })
+                      }
+                    >
+                      <DialogContent>
+                        <DialogContentText>
+                          Is this the picture you want to choose? The artist of
+                          this picture will be next rounds judge.
+                        </DialogContentText>
+                      </DialogContent>
+                      <DialogActions>
+                        <Button onClick={() => this.selectPic(selected)}>
+                          YES!
+                        </Button>
+                        <Button
+                          onClick={() =>
+                            this.setState({ open: false, selected: '' })
+                          }
+                        >
+                          NO!
+                        </Button>
+                      </DialogActions>
+                    </Dialog>
+                  </Grid>
+                );
+              })}
+            </Grid>
+          </div>
         </div>
       );
     }
