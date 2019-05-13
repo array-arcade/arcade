@@ -114,14 +114,13 @@ export default withStyles(styles)(
         <div className="Mobile">
           <div className={classNames(classes.layout, classes.cardGrid)}>
             <Grid container spacing={40}>
+              <h3 className="h1Mobile">Pick your favorite drawing!</h3>
               {players.map(player => {
                 return (
                   <Grid item key={player.name}>
                     <Button
-                      variant="contained"
                       color="primary"
                       size="large"
-                      fullWidth={true}
                       onClick={() =>
                         this.setState({ open: true, selected: player })
                       }

@@ -1,22 +1,22 @@
 //This will render after the game has started and will redirect to
 //PictureDisplays after the timer or after pictures have been submitted
 
-import { db } from "../../index";
-import React, { Component } from "react";
-import FooterScore from "../Browser/ScoreDisplay";
-import Countdown from "react-countdown-now";
-import Beep from "beepbeep";
+import { db } from '../../index';
+import React, { Component } from 'react';
+import FooterScore from '../Browser/ScoreDisplay';
+import Countdown from 'react-countdown-now';
+import Beep from 'beepbeep';
 
 export default class PromptScreen extends Component {
   constructor() {
     super();
     this.state = {
       game: {},
-      roomNumber: "",
-      judge: "",
+      roomNumber: '',
+      judge: '',
       players: [],
-      prompt: "",
-      time: 60
+      prompt: '',
+      time: 60,
     };
   }
 
@@ -26,12 +26,12 @@ export default class PromptScreen extends Component {
       game: game,
       roomNumber: roomNumber,
       judge: judge,
-      players: players
+      players: players,
     });
     const room = db
-      .collection("games")
+      .collection('games')
       .doc(`${game.name}`)
-      .collection("rooms")
+      .collection('rooms')
       .doc(`${roomNumber}`);
     this.unsubscribe = room.onSnapshot(snapshot => {
       const prompt = snapshot.data().prompt;
@@ -60,15 +60,15 @@ export default class PromptScreen extends Component {
     //update room timesup variable here
     const { game, roomNumber, players, prompt } = this.state;
     const room = db
-      .collection("games")
+      .collection('games')
       .doc(`${game.name}`)
-      .collection("rooms")
+      .collection('rooms')
       .doc(`${roomNumber}`);
     room.update({ TimesUp: true });
     //redirect code here
     return this.props.history.push({
       pathname: `/Like What You See?/${roomNumber}/choose`,
-      state: { game, roomNumber, players, prompt }
+      state: { game, roomNumber, players, prompt },
     });
   };
 
@@ -84,7 +84,7 @@ export default class PromptScreen extends Component {
 
   render() {
     const { judge, prompt, players, roomNumber } = this.state;
-    if (prompt === "") {
+    if (prompt === '') {
       //remember to reset prompt after round end
       return (
         <div className="App">

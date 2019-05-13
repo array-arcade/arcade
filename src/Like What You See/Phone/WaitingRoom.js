@@ -23,7 +23,6 @@ export class WaitingRoom extends React.Component {
       rating: 'pg',
     });
     this.setState({ gif: data.image_url });
-    console.log(data);
   };
 
   componentDidMount() {
