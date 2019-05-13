@@ -80,11 +80,7 @@ h1 {
 }
 
 .h1Mobile {
-<<<<<<< HEAD
-  padding: 70px;
-=======
-  padding: 100px;
->>>>>>> master
+  padding: 75px;
   overflow: hidden;
   text-align: center;
   min-height: 100vh;
