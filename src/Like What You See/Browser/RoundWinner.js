@@ -41,17 +41,19 @@ export default withStyles(styles)(
           });
         }
       });
-      this.timeout = setTimeout(function() {
-        return this.props.history.push({
-          pathname: `/${game.name}/${roomNumber}/prompt`,
-          state: { players, game, roomNumber, judge: winner }
-        }); 
-      }, 10000)
+      this.timeout();
     }
 
+    timeout = setTimeout(function() {
+      return this.props.history.push({
+        pathname: `/${game.name}/${roomNumber}/prompt`,
+        state: { players, game, roomNumber, judge: winner }
+      });
+    }, 10000);
+
     componentWillUnmount() {
-      clearTimeout(this.timeout)
-      this.unsub()
+      clearTimeout(this.timeout);
+      this.unsub();
     }
 
     render() {
