@@ -1,5 +1,11 @@
 import React, { Component } from "react";
-import { withStyles, Card, CardContent, Typography } from "@material-ui/core";
+import {
+  withStyles,
+  Card,
+  CardContent,
+  Typography,
+  CardMedia
+} from "@material-ui/core";
 import FooterScore from "../Browser/ScoreDisplay";
 import CanvasDraw from "react-canvas-draw";
 import { db } from "../../index";
@@ -22,7 +28,7 @@ export default withStyles(styles)(
       };
     }
 
-    componentDidMount() {
+    async componentDidMount() {
       const { game, roomNumber, players, winner } = this.props.location.state;
       const dbRoom = db
         .collection("games")
@@ -30,7 +36,7 @@ export default withStyles(styles)(
         .collection("rooms")
         .doc(`${roomNumber}`);
       const dbWinner = dbRoom.collection("users").doc(`${winner}`);
-      dbWinner.get().then(snapshot => {
+      await dbWinner.get().then(snapshot => {
         this.setState({ winner: snapshot.data() });
       });
       this.unsub = dbRoom.onSnapshot(snapshot => {
@@ -41,15 +47,19 @@ export default withStyles(styles)(
           });
         }
       });
-      this.timeout();
+      this.timeout(players, game, roomNumber, winner);
     }
 
-    timeout = setTimeout(function() {
-      return this.props.history.push({
-        pathname: `/${game.name}/${roomNumber}/prompt`,
-        state: { players, game, roomNumber, judge: winner }
-      });
-    }, 10000);
+    timeout = (players, game, roomNumber, winner) => {
+      const history = this.props.history
+      setTimeout(function() {
+        console.log(this.props)
+        return history.push({
+          pathname: `/${game.name}/${roomNumber}/prompt`,
+          state: { players, game, roomNumber, judge: winner }
+        });
+      }, 10000);
+    };
 
     componentWillUnmount() {
       clearTimeout(this.timeout);
@@ -62,19 +72,22 @@ export default withStyles(styles)(
 
       return (
         <div className="App">
-          <Card className={classes.card}>
+          <Card className={classes.card} raised={true}>
             <CardContent>
               <Typography variant="h3">
                 {winner.name} has won the round, bask in their splendor.
               </Typography>
             </CardContent>
-            <CanvasDraw
-              canvasWidth={600}
-              canvasHeight={550}
-              disabled={true}
-              hideGrid={true}
-              saveData={winner.image}
-            />
+            <CardMedia>
+              <CanvasDraw
+                canvasWidth={600}
+                canvasHeight={550}
+                disabled={true}
+                hideGrid={true}
+                saveData={winner.image}
+                immediateLoading={true}
+              />
+            </CardMedia>
           </Card>
         </div>
       );
