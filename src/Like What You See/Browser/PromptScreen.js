@@ -37,7 +37,6 @@ export default class PromptScreen extends Component {
       const prompt = snapshot.data().prompt;
       if (prompt) {
         this.setState({ prompt });
-        this.unsubscribe()
       }
     });
   }
