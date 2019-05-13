@@ -83,7 +83,7 @@ export default withStyles(styles)(
         return;
       }
       const game = db.collection("games").doc(`${selectedGame}`); //get game doc for selected game
-      let size = 0;
+      let size;
       let max; //vars to check for full room
       let currentGame = {};
       game.get().then(snap => {
@@ -93,14 +93,14 @@ export default withStyles(styles)(
       const roomRef = game.collection("rooms").doc(`${roomNum}`); //gets ref to room collection from game
       roomRef
         .get()
-        .then(room => {
+        .then(async room => {
           if (room.exists) {
             //here's where you check for max players reached
-            roomRef
+            await roomRef
               .collection("users")
               .get()
-              .then(snapshot => {
-                size = snapshot.size; // will return the room size
+              .then(async snapshot => {
+                size = await snapshot.docs.length; // will return the room size
               });
             if (size < max) {
               //add the user (and redirect)
