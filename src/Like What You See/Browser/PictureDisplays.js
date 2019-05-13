@@ -63,23 +63,23 @@ export default withStyles(styles)(
       });
       this.setState({ players: dbPlayers.filter(player => !player.isJudge) });
       this.roomUnsub = dbRoom.onSnapshot(snapshot => {
-        if (snapshot.data().judgeChange) {
-          return this.props.history.push({
-            pathname: `/${game.name}/${roomNumber}/prompt`,
-            state: { players, game, roomNumber, judge: snapshot.data().judge },
-          });
-        }
         // if (snapshot.data().judgeChange) {
         //   return this.props.history.push({
-        //     pathname: `/${game.name}/${roomNumber}/winner`,
-        //     state: { winner: snapshot.data().judge }
-        //   });
-        // } else if (snapshot.data().winner) {
-        //   return this.props.history.push({
-        //     pathname: `/${game.name}/${roomNumber}/victory`,
-        //     state: { winner: snapshot.data().judge }
+        //     pathname: `/${game.name}/${roomNumber}/prompt`,
+        //     state: { players, game, roomNumber, judge: snapshot.data().judge}
         //   });
         // }
+        if (snapshot.data().judgeChange) {
+          return this.props.history.push({
+            pathname: `/${game.name}/${roomNumber}/winner`,
+            state: { winner: snapshot.data().judge, players, roomNumber, game }
+          });
+        } else if (snapshot.data().winner) {
+          return this.props.history.push({
+            pathname: `/${game.name}/${roomNumber}/victory`,
+            state: { winner: snapshot.data().judge }
+          });
+        }
       });
     }
 

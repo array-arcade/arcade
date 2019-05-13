@@ -4,8 +4,9 @@
 import { db } from '../../index';
 import React, { Component } from 'react';
 import FooterScore from '../Browser/ScoreDisplay';
-import Countdown from 'react-countdown-now';
-import Beep from 'beepbeep';
+import Countdown, { calcTimeDelta } from 'react-countdown-now';
+
+const beep = require('beepbeep');
 
 export default class PromptScreen extends Component {
   constructor() {
@@ -16,7 +17,7 @@ export default class PromptScreen extends Component {
       judge: '',
       players: [],
       prompt: '',
-      time: 60,
+      time: 60000,
     };
   }
 
@@ -45,17 +46,6 @@ export default class PromptScreen extends Component {
     this.unsubscribe();
   }
 
-  Tick = () => {
-    this.setState(prevState => ({ time: prevState.time - 1 }));
-    if (this.state.time < 10) {
-      //Beep if there are < 10 seconds left
-    }
-    if (this.state.time < 5) {
-      //Beep twice if there < 5 seconds left
-      Beep();
-    }
-  };
-
   TimesUp = () => {
     //update room timesup variable here
     const { game, roomNumber, players, prompt } = this.state;
@@ -82,8 +72,24 @@ export default class PromptScreen extends Component {
     );
   };
 
+  start = () => {
+    this.interval = setInterval(() => {
+      // if (this.state.time < 10000) {
+      //   //Beep if there are < 10 seconds left
+      // }
+      // if (this.state.time < 5000) {
+      //   //Beep twice if there < 5 seconds left
+      //   beep();
+      // }
+      if (this.state.time <= 0) {
+        return clearInterval(this.interval);
+      }
+      this.setState(prevState => ({ time: prevState.time - 1000 }));
+    }, 1000);
+  };
+
   render() {
-    const { judge, prompt, players, roomNumber } = this.state;
+    const { judge, prompt, players, roomNumber, time } = this.state;
     if (prompt === '') {
       //remember to reset prompt after round end
       return (
@@ -102,12 +108,13 @@ export default class PromptScreen extends Component {
           <h1 textAlign="center">{prompt}</h1>
           <h3 textAlign="center">Get Drawing!!!</h3>
           <Countdown
-            date={Date.now() + 60000}
+            date={time}
             // intervalDelay={0}
+            onMount={this.start}
             precision={3}
             renderer={this.TimerRender}
             onComplete={this.TimesUp}
-            onTick={this.Tick}
+            controlled={true}
           />
           <FooterScore players={players} roomNumber={roomNumber} />
         </div>

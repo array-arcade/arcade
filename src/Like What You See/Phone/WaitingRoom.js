@@ -79,7 +79,7 @@ export class WaitingRoom extends React.Component {
                 Generate a gif!
                 <ImageSearch />
               </Button>
-              <div className="GifDiv">{gif ? <img src={gif} /> : null}</div>
+              <div className="GifDiv">{gif ? <img src={gif} alt='cat gif' /> : null}</div>
             </div>
           </div>
         );

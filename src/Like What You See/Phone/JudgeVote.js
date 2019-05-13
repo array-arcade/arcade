@@ -108,6 +108,43 @@ export default withStyles(styles)(
     };
 
     render() {
+      const imageCheck = player => {
+        if (player.refNum) {
+          return (
+            <Grid item key={player.name} sm={6} md={4} lg={3}>
+              <Button
+                color="primary"
+                size="large"
+                onClick={() => this.setState({ open: true, selected: player })}
+              >
+                {player.refNum}
+              </Button>
+              <Dialog
+                open={open}
+                onClose={() => this.setState({ open: false, selected: '' })}
+              >
+                <DialogContent>
+                  <DialogContentText>
+                    Is this the picture you want to choose? The artist of this
+                    picture will be next rounds judge.
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={() => this.selectPic(selected)}>YES!</Button>
+                  <Button
+                    onClick={() => this.setState({ open: false, selected: '' })}
+                  >
+                    NO!
+                  </Button>
+                </DialogActions>
+              </Dialog>
+            </Grid>
+          );
+        } else {
+          return null;
+        }
+      };
+
       const { classes } = this.props;
       const { players, open, selected } = this.state;
       return (
@@ -116,44 +153,7 @@ export default withStyles(styles)(
             <Grid container spacing={40}>
               <h3 className="h1Mobile">Pick your favorite drawing!</h3>
               {players.map(player => {
-                return (
-                  <Grid item key={player.name}>
-                    <Button
-                      color="primary"
-                      size="large"
-                      onClick={() =>
-                        this.setState({ open: true, selected: player })
-                      }
-                    >
-                      {player.refNum}
-                    </Button>
-                    <Dialog
-                      open={open}
-                      onClose={() =>
-                        this.setState({ open: false, selected: '' })
-                      }
-                    >
-                      <DialogContent>
-                        <DialogContentText>
-                          Is this the picture you want to choose? The artist of
-                          this picture will be next rounds judge.
-                        </DialogContentText>
-                      </DialogContent>
-                      <DialogActions>
-                        <Button onClick={() => this.selectPic(selected)}>
-                          YES!
-                        </Button>
-                        <Button
-                          onClick={() =>
-                            this.setState({ open: false, selected: '' })
-                          }
-                        >
-                          NO!
-                        </Button>
-                      </DialogActions>
-                    </Dialog>
-                  </Grid>
-                );
+                return imageCheck(player);
               })}
             </Grid>
           </div>

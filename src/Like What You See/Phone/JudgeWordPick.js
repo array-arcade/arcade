@@ -65,7 +65,6 @@ export default withStyles(styles)(
           'Dog',
           'Dogs Playing Poker',
           'Snowman',
-          'M&Ms',
           'Newborn Baby',
           'Prison Riot',
           'Angry Old Man',

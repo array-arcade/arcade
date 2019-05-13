@@ -64,7 +64,6 @@ export default withStyles(styles)(
         .set({
           roomNumber: `${roomNumber}`,
           timesUp: false,
-
           judgeChange: false,
           prompt: '',
           takenArtists: [],
@@ -101,7 +100,7 @@ export default withStyles(styles)(
                           {game.description}
                         </Typography>
                         <Typography variant="caption">
-                          Player: {game.players}
+                          Players: {game.players}
                         </Typography>
                       </CardContent>
                       <CardActions>
