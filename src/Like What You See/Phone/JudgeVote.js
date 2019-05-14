@@ -1,7 +1,7 @@
 //This will be rendered through JudgeWordPick and
 //will redirect to the WaitingRoom
-import React, { Component } from 'react';
-import { db } from '../../index';
+import React, { Component } from "react";
+import { db } from "../../index";
 import {
   Button,
   Grid,
@@ -10,15 +10,15 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
-  withStyles,
-} from '@material-ui/core';
-import classNames from 'classnames';
+  withStyles
+} from "@material-ui/core";
+import classNames from "classnames";
 
 const styles = theme => ({
   layout: {
-    width: 'auto',
+    width: "auto",
     marginLeft: theme.spacing.unit * 3,
-    marginRight: theme.spacing.unit * 3,
+    marginRight: theme.spacing.unit * 3
   },
   cardGrid: {
     padding: `${theme.spacing.unit * 5}px 0`,
@@ -46,25 +46,25 @@ export default withStyles(styles)(
         user: {},
         players: [],
         open: false,
-        selected: '',
+        selected: ""
       };
     }
 
     componentDidMount() {
       const { roomNum, game, user } = this.props.location.state;
       this.setState({ roomNum, game, user });
-      db.collection('games')
+      db.collection("games")
         .doc(`${game.name}`)
-        .collection('rooms')
+        .collection("rooms")
         .doc(`${roomNum}`)
         .update({ previousJudge: user.name });
       let currentPlayers;
       const users = db
-        .collection('games')
+        .collection("games")
         .doc(`${game.name}`)
-        .collection('rooms')
+        .collection("rooms")
         .doc(`${roomNum}`)
-        .collection('users');
+        .collection("users");
       this.unsubscribe = users.onSnapshot(snap => {
         currentPlayers = snap.docs.map(doc => doc.data());
         currentPlayers = this.shuffle(
@@ -91,16 +91,16 @@ export default withStyles(styles)(
       let newScore;
       let newJudge;
       const room = db
-        .collection('games')
+        .collection("games")
         .doc(`${game.name}`)
-        .collection('rooms')
+        .collection("rooms")
         .doc(`${roomNum}`);
       const users = db
-        .collection('games')
+        .collection("games")
         .doc(`${game.name}`)
-        .collection('rooms')
+        .collection("rooms")
         .doc(`${roomNum}`)
-        .collection('users');
+        .collection("users");
       let winner = users.doc(`${userRef.name}`);
       let judge = users.doc(`${user.name}`);
       judge.update({ isJudge: false });
@@ -108,18 +108,19 @@ export default withStyles(styles)(
         newScore = snapshot.data().score + 1;
         newJudge = snapshot.data().name;
         await winner.update({ score: newScore, isJudge: true });
-        if (snapshot.data().score >= 1) {
+        if (snapshot.data().score >= 0) {
           await room.update({ winner: snapshot.data() });
           return this.props.history.push({
             pathname: `/winner`,
-            state: { winner: snapshot.data() },
+            state: { roomNum, game, user }
+          });
+        } else {
+          room.update({ judge: newJudge, judgeChange: true });
+          return this.props.history.push({
+            pathname: `/${roomNum}/waitingroom`,
+            state: { roomNum, currentGame: game, user }
           });
         }
-      });
-      room.update({ judge: newJudge, judgeChange: true });
-      return this.props.history.push({
-        pathname: `/${roomNum}/waitingroom`,
-        state: { roomNum, currentGame: game, user },
       });
     };
 

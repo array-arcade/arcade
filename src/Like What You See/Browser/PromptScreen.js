@@ -20,7 +20,7 @@ export default class PromptScreen extends Component {
       players: [],
       prompt: '',
       gif: '',
-      time: 60000,
+      time: 20000,
     };
   }
 
@@ -89,12 +89,12 @@ export default class PromptScreen extends Component {
       //   //Beep twice if there < 5 seconds left
       //   beep();
       // }
-      if (this.state.time <= 0) {
-        return clearInterval(this.interval);
+      if(this.state.time <= 0) {
+        return clearInterval(this.interval)
       }
       this.setState(prevState => ({ time: prevState.time - 1000 }));
-    }, 1000);
-  };
+    }, 1000)
+  }
 
   render() {
     const { judge, prompt, players, roomNumber, time, gif } = this.state;
