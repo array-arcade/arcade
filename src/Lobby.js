@@ -1,46 +1,46 @@
-import React from "react";
+import React from 'react';
 import {
   Card,
   CardMedia,
   CardContent,
   withStyles,
   Typography,
-  Button
-} from "@material-ui/core";
-import Grid from "@material-ui/core/Grid";
-import Face from "@material-ui/icons/Face";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import ListItemText from "@material-ui/core/ListItemText";
-import { db } from "./index";
+  Button,
+} from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
+import Face from '@material-ui/icons/Face';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import ListItemText from '@material-ui/core/ListItemText';
+import { db } from './index';
 
 const styles = theme => ({
   layout: {
-    width: "auto",
+    width: 'auto',
     marginLeft: theme.spacing.unit * 3,
-    marginRight: theme.spacing.unit * 3
+    marginRight: theme.spacing.unit * 3,
   },
   cardGrid: {
-    padding: `${theme.spacing.unit * 8}px 0`
+    padding: `${theme.spacing.unit * 8}px 0`,
   },
   card: {
-    height: "100%",
-    display: "flex",
-    flexDirection: "column"
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
   },
   cardMedia: {
-    marginTop: "30px",
-    paddingTop: "50%",
-    height: "100%"
+    marginTop: '30px',
+    paddingTop: '50%',
+    height: '100%',
   },
   root: {
     flexGrow: 1,
-    maxWidth: 752
+    maxWidth: 752,
   },
   title: {
-    margin: `${theme.spacing.unit * 4}px 0 ${theme.spacing.unit * 2}px`
-  }
+    margin: `${theme.spacing.unit * 4}px 0 ${theme.spacing.unit * 2}px`,
+  },
 });
 
 export default withStyles(styles)(
@@ -50,7 +50,7 @@ export default withStyles(styles)(
       this.state = {
         currentGame: {},
         roomNumber: 0,
-        players: []
+        players: [],
       };
     }
 
@@ -58,11 +58,11 @@ export default withStyles(styles)(
       const { game, roomNumber } = this.props.location.state;
       this.setState({ currentGame: game, roomNumber });
       const room = db
-        .collection("games")
+        .collection('games')
         .doc(`${game.name}`)
-        .collection("rooms")
+        .collection('rooms')
         .doc(`${roomNumber}`);
-      let users = room.collection("users");
+      let users = room.collection('users');
       this.unsubscribe = users.onSnapshot(snapshot => {
         let players = snapshot.docs.map(doc => doc.data());
         this.setState({ players: players });
@@ -74,28 +74,19 @@ export default withStyles(styles)(
     }
 
     startGame = () => {
+      const firstJudge = this.state.players[0].name;
       const { currentGame, roomNumber, players } = this.state;
-      let judgeCount = 0;
-      let firstJudge;
-      for (let i = 0; i < players.length; i++) {
-        if (players[i].isJudge && !firstJudge) {
-          firstJudge = players[i].name
-        }
-      }
-      if (judgeCount === 0) {
-        firstJudge = players[0].name;
-      }
       const room = db
-        .collection("games")
+        .collection('games')
         .doc(`${currentGame.name}`)
-        .collection("rooms")
+        .collection('rooms')
         .doc(`${roomNumber}`);
       room
-        .collection("users")
+        .collection('users')
         .doc(`${firstJudge}`)
         .set(
           {
-            isJudge: true
+            isJudge: true,
           },
           { merge: true }
         );
@@ -103,13 +94,13 @@ export default withStyles(styles)(
       room.set(
         {
           judgeChange: true,
-          judge: firstJudge
+          judge: firstJudge,
         },
         { merge: true }
       );
       return this.props.history.push({
         pathname: `/${currentGame.name}/${roomNumber}/prompt`,
-        state: { judge: firstJudge, roomNumber, players, game: currentGame }
+        state: { judge: firstJudge, roomNumber, players, game: currentGame },
       });
     };
 
@@ -121,7 +112,7 @@ export default withStyles(styles)(
             <div className="App">
               <div>
                 <header className="header">
-                  <img src={require("./LastLogo.png")} alt="logo" />
+                  <img src={require('./LastLogo.png')} alt="logo" />
                 </header>
                 <Grid
                   container
@@ -132,10 +123,10 @@ export default withStyles(styles)(
                   <Card
                     raised={true}
                     style={{
-                      position: "absolute",
-                      top: "56%",
-                      left: "50%",
-                      transform: "translate(-50%, -50%)"
+                      position: 'absolute',
+                      top: '56%',
+                      left: '50%',
+                      transform: 'translate(-50%, -50%)',
                     }}
                   >
                     <CardMedia
@@ -150,7 +141,7 @@ export default withStyles(styles)(
                         {currentGame.description}
                       </Typography>
                       <Typography variant="caption" align="center">
-                        Players: {currentGame.players}
+                        Player: {currentGame.players}
                       </Typography>
                     </CardContent>
                     <Typography align="center">
@@ -178,7 +169,7 @@ export default withStyles(styles)(
                     })}
                     <Button
                       onClick={this.startGame}
-                      // disabled={players.length > 2 ? false : true}
+                      disabled={players.length > 2 ? false : true}
                     >
                       Start the Game!
                     </Button>
