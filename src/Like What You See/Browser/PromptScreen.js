@@ -8,6 +8,9 @@ import Countdown from 'react-countdown-now';
 import giphyRandom from 'giphy-random';
 import { giphyKey } from '../../secrets';
 
+const song = require('../../SpanishFlea.mp3')
+
+const flea = new Audio(song)
 const beep = new Audio('https://www.soundjay.com/button/sounds/beep-10.mp3')
 
 export default class PromptScreen extends Component {
@@ -47,6 +50,7 @@ export default class PromptScreen extends Component {
       const prompt = room.prompt;
       if (room.prompt) {
         this.setState({ prompt: room.prompt });
+        flea.play()
       }
       if (room.submissions === players.length - 1) {
         return this.props.history.push({
@@ -93,6 +97,7 @@ export default class PromptScreen extends Component {
       if (this.state.time <= 0) {
         return clearInterval(this.interval);
       } else if (this.state.time <= 10000) {
+        flea.pause()
         beep.play()
       }
       this.setState(prevState => ({ time: prevState.time - 1000 }));
