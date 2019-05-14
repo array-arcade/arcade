@@ -108,58 +108,23 @@ export default withStyles(styles)(
         newScore = snapshot.data().score + 1;
         newJudge = snapshot.data().name;
         await winner.update({ score: newScore, isJudge: true });
-        if (snapshot.data().score >= 1) {
+        if (snapshot.data().score >= 0) {
           await room.update({ winner: snapshot.data() });
           return this.props.history.push({
             pathname: `/winner`,
-            state: { winner: snapshot.data() }
+            state: { roomNum, game, user }
+          });
+        } else {
+          room.update({ judge: newJudge, judgeChange: true });
+          return this.props.history.push({
+            pathname: `/${roomNum}/waitingroom`,
+            state: { roomNum, currentGame: game, user }
           });
         }
-      });
-      room.update({ judge: newJudge, judgeChange: true });
-      return this.props.history.push({
-        pathname: `/${roomNum}/waitingroom`,
-        state: { roomNum, currentGame: game, user }
       });
     };
 
     render() {
-      const imageCheck = player => {
-        if (player.refNum) {
-          return (
-            <Grid item key={player.name} sm={6} md={4} lg={3}>
-              <Button
-                //add container and color. full length. margin inbetween.
-                onClick={() => this.setState({ open: true, selected: player })}
-              >
-                {player.refNum}
-              </Button>
-              <Dialog
-                open={open}
-                onClose={() => this.setState({ open: false, selected: "" })}
-              >
-                <DialogContent>
-                  <DialogContentText>
-                    Is this the picture you want to choose? The artist of this
-                    picture will be next rounds judge.
-                  </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                  <Button onClick={() => this.selectPic(selected)}>YES!</Button>
-                  <Button
-                    onClick={() => this.setState({ open: false, selected: "" })}
-                  >
-                    NO!
-                  </Button>
-                </DialogActions>
-              </Dialog>
-            </Grid>
-          );
-        } else {
-          return null;
-        }
-      };
-
       const { classes } = this.props;
       const imageCheck = player => {
         if (player.refNum) {
