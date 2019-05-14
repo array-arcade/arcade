@@ -29,7 +29,7 @@ export default withStyles(styles)(
     render() {
       return (
         <div>
-          <h1>We have a winner!</h1>
+          <h1 className="WinnerH1">We have a winner!</h1>
           <div className="GifDiv">
             {gif ? (
               <img src={gif} />

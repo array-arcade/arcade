@@ -27,7 +27,7 @@ export default class PromptScreen extends Component {
   async componentDidMount() {
     const { game, roomNumber, judge, players, gif } = this.props.location.state;
     let { data } = await giphyRandom(giphyKey, {
-      tag: 'timer hurry',
+      tag: 'waiting',
       rating: 'pg',
     });
     this.setState({
