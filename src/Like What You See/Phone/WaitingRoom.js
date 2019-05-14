@@ -54,6 +54,7 @@ export class WaitingRoom extends React.Component {
     });
   }
 
+  
   componentWillUnmount() {
     this.playerUnsub();
     this.roomUnsub();
