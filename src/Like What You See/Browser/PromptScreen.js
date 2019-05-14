@@ -9,9 +9,10 @@ import giphyRandom from 'giphy-random';
 import { giphyKey } from '../../secrets';
 
 const song = require('../../SpanishFlea.mp3')
+const countdown = require('../../countdown.mp3')
 
 const flea = new Audio(song)
-const beep = new Audio('https://www.soundjay.com/button/sounds/beep-10.mp3')
+const beep = new Audio(countdown)
 
 export default class PromptScreen extends Component {
   constructor() {
@@ -64,6 +65,7 @@ export default class PromptScreen extends Component {
   componentWillUnmount() {
     this.unsubscribe();
     clearInterval(this.interval)
+    beep.pause()
   }
 
   TimesUp = () => {
