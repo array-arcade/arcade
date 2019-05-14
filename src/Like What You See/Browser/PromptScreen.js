@@ -9,15 +9,8 @@ import giphyRandom from 'giphy-random';
 import { giphyKey } from '../../secrets';
 
 const song = require('../../SpanishFlea.mp3')
-<<<<<<< HEAD
 
 const flea = new Audio(song)
-=======
-const countdown = require('../../countdown.mp3')
-
-const flea = new Audio(song)
-const beep = new Audio(countdown)
->>>>>>> master
 
 export default class PromptScreen extends Component {
   constructor() {
@@ -56,11 +49,8 @@ export default class PromptScreen extends Component {
       const prompt = room.prompt;
       if (room.prompt) {
         this.setState({ prompt: room.prompt });
-<<<<<<< HEAD
         flea.playbackRate = 1.0
         flea.loop = true
-=======
->>>>>>> master
         flea.play()
       }
       if (room.submissions === players.length - 1) {
@@ -75,11 +65,7 @@ export default class PromptScreen extends Component {
   componentWillUnmount() {
     this.unsubscribe();
     clearInterval(this.interval)
-<<<<<<< HEAD
     flea.pause()
-=======
-    beep.pause()
->>>>>>> master
   }
 
   TimesUp = () => {
@@ -92,7 +78,6 @@ export default class PromptScreen extends Component {
       .doc(`${roomNumber}`);
     room.update({ TimesUp: true });
     //redirect code here
-<<<<<<< HEAD
     room.get().then(snapshot => {
       if (snapshot.data.submissions === players.length - 1) {
         return this.props.history.push({
@@ -101,12 +86,6 @@ export default class PromptScreen extends Component {
         });
       }
     })
-=======
-    return this.props.history.push({
-      pathname: `/Like What You See?/${roomNumber}/choose`,
-      state: { game, roomNumber, players, prompt }
-    });
->>>>>>> master
   };
 
   TimerRender = ({ minutes, seconds, milliseconds, completed }) => {
@@ -123,7 +102,6 @@ export default class PromptScreen extends Component {
     this.interval = setInterval(() => {
       if (this.state.time <= 0) {
         return clearInterval(this.interval);
-<<<<<<< HEAD
       } else if (this.state.time <= 5000) {
         flea.playbackRate = 2.0
       } else if (this.state.time <= 10000) {
@@ -132,11 +110,6 @@ export default class PromptScreen extends Component {
         flea.playbackRate = 1.5
       } else if (this.state.time <= 20000) {
         flea.playbackRate = 1.25
-=======
-      } else if (this.state.time <= 10000) {
-        flea.pause()
-        beep.play()
->>>>>>> master
       }
       this.setState(prevState => ({ time: prevState.time - 1000 }));
     }, 1000);
