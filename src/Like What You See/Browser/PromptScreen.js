@@ -1,12 +1,12 @@
 //This will render after the game has started and will redirect to
 //PictureDisplays after the timer or after pictures have been submitted
 
-import { db } from "../../index";
-import React, { Component } from "react";
-import FooterScore from "../Browser/ScoreDisplay";
-import Countdown from "react-countdown-now";
-import giphyRandom from "giphy-random";
-import { giphyKey } from "../../secrets";
+import { db } from '../../index';
+import React, { Component } from 'react';
+import FooterScore from '../Browser/ScoreDisplay';
+import Countdown from 'react-countdown-now';
+import giphyRandom from 'giphy-random';
+import { giphyKey } from '../../secrets';
 
 const beep = require("beepbeep");
 
@@ -18,17 +18,17 @@ export default class PromptScreen extends Component {
       roomNumber: "",
       judge: "",
       players: [],
-      prompt: "",
-      gif: "",
-      time: 20000
+      prompt: '',
+      gif: '',
+      time: 20000,
     };
   }
 
   async componentDidMount() {
     const { game, roomNumber, judge, players } = this.props.location.state;
     let { data } = await giphyRandom(giphyKey, {
-      tag: "timer hurry",
-      rating: "pg"
+      tag: 'waiting',
+      rating: 'pg',
     });
     this.setState({
       game: game,

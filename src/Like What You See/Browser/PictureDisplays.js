@@ -4,7 +4,13 @@
 
 import React, { Component } from 'react';
 import classNames from 'classnames';
-import { Card, Grid, CardContent, Typography, withStyles } from '@material-ui/core';
+import {
+  Card,
+  Grid,
+  CardContent,
+  Typography,
+  withStyles,
+} from '@material-ui/core';
 import CanvasDraw from 'react-canvas-draw';
 import FooterScore from '../Browser/ScoreDisplay';
 import { db } from '../../index';
@@ -65,12 +71,12 @@ export default withStyles(styles)(
         if (snapshot.data().judgeChange) {
           return this.props.history.push({
             pathname: `/${game.name}/${roomNumber}/winner`,
-            state: { winner: snapshot.data().judge, players, roomNumber, game }
+            state: { winner: snapshot.data().judge, players, roomNumber, game },
           });
         } else if (snapshot.data().winner) {
           return this.props.history.push({
             pathname: `/${game.name}/${roomNumber}/victory`,
-            state: { winner: snapshot.data().judge, roomNumber, game, prompt }
+            state: { winner: snapshot.data().judge, roomNumber, game, prompt },
           });
         }
       });
@@ -87,9 +93,7 @@ export default withStyles(styles)(
       return (
         <div className="App">
           <div>
-            <header>
-              judge name choose wisely is what should be rendered!
-            </header>
+            <header>Wow... What artists! Judge choose wisely!</header>
           </div>
           <div className={classNames(classes.layout, classes.cardGrid)}>
             <Grid container spacing={40} alignContent="space-around">
