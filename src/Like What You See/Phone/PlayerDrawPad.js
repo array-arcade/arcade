@@ -48,8 +48,9 @@ class DrawPad extends React.Component {
     });
   }
 
-  handleClick = () => {
+  handleClick = async () => {
     const { user, roomNum, game, artists, takenArtists } = this.state;
+    let newSubmission;
     let numRef = this.randomArtist(artists, takenArtists);
     takenArtists.push(numRef);
     const dbRoom = db
@@ -58,9 +59,13 @@ class DrawPad extends React.Component {
       .collection('rooms')
       .doc(`${roomNum}`);
     let dbUser = dbRoom.collection('users').doc(`${user.name}`);
-    dbRoom.update({
-      takenArtists: takenArtists,
-    });
+    await dbRoom.get().then(snapshot => {
+      newSubmission = snapshot.data().submissions + 1
+      dbRoom.update({
+        takenArtists: takenArtists,
+        submissions: newSubmission
+      });
+    })
     dbUser.update({
       refNum: numRef,
       image: this.saveableCanvas.getSaveData(),

@@ -21,19 +21,19 @@ const styles = theme => ({
     marginRight: theme.spacing.unit * 3
   },
   cardGrid: {
-    padding: `${theme.spacing.unit * 5}px 0`,
+    padding: `${theme.spacing.unit * 5}px 0`
   },
   Grid: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignitems: 'center',
+    display: "flex",
+    justifyContent: "center",
+    alignitems: "center"
   },
   Card: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignitems: 'center',
-    padding: '7px',
-  },
+    display: "flex",
+    justifyContent: "center",
+    alignitems: "center",
+    padding: "7px"
+  }
 });
 
 export default withStyles(styles)(
@@ -46,18 +46,20 @@ export default withStyles(styles)(
         user: {},
         players: [],
         open: false,
-        selected: ""
+        selected: "",
+        disable: true
       };
     }
 
     componentDidMount() {
       const { roomNum, game, user } = this.props.location.state;
       this.setState({ roomNum, game, user });
-      db.collection("games")
+      const dbRoom = db
+        .collection("games")
         .doc(`${game.name}`)
         .collection("rooms")
-        .doc(`${roomNum}`)
-        .update({ previousJudge: user.name });
+        .doc(`${roomNum}`);
+      dbRoom.update({ previousJudge: user.name });
       let currentPlayers;
       const users = db
         .collection("games")
@@ -65,17 +67,23 @@ export default withStyles(styles)(
         .collection("rooms")
         .doc(`${roomNum}`)
         .collection("users");
-      this.unsubscribe = users.onSnapshot(snap => {
+      this.usersUnsub = users.onSnapshot(snap => {
         currentPlayers = snap.docs.map(doc => doc.data());
         currentPlayers = this.shuffle(
           currentPlayers.filter(player => !player.isJudge)
         );
         this.setState({ players: currentPlayers });
       });
+      this.roomUnsub = dbRoom.onSnapshot(snapshot => {
+        let room = snapshot.data()
+        if (room.submissions === room.players) {
+          this.setState({ disabled: false })
+        }
+      })
     }
 
     componentWillUnmount() {
-      this.unsubscribe();
+      this.usersUnsub();
     }
 
     shuffle = array => {
@@ -116,7 +124,7 @@ export default withStyles(styles)(
             state: { roomNum, game, user }
           });
         } else {
-          room.update({ judgeChange: true  })
+          room.update({ judgeChange: true });
           return this.props.history.push({
             pathname: `/${roomNum}/waitingroom`,
             state: { roomNum, currentGame: game, user }
@@ -138,13 +146,14 @@ export default withStyles(styles)(
                 fullWidth={true}
                 padding="10px"
                 justifyContent="center"
+                disabled={this.state.disabled}
                 onClick={() => this.setState({ open: true, selected: player })}
               >
                 {player.refNum}
               </Button>
               <Dialog
                 open={open}
-                onClose={() => this.setState({ open: false, selected: '' })}
+                onClose={() => this.setState({ open: false, selected: "" })}
               >
                 <DialogContent>
                   <DialogContentText>
@@ -155,7 +164,7 @@ export default withStyles(styles)(
                 <DialogActions>
                   <Button onClick={() => this.selectPic(selected)}>YES!</Button>
                   <Button
-                    onClick={() => this.setState({ open: false, selected: '' })}
+                    onClick={() => this.setState({ open: false, selected: "" })}
                   >
                     NO!
                   </Button>
