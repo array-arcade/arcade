@@ -74,6 +74,10 @@ export default withStyles(styles)(
       });
     }
 
+    componentWillUnmount() {
+      this.unsubscribe();
+    }
+
     shuffle = array => {
       for (let i = array.length - 1; i > 0; i--) {
         let j = Math.floor(Math.random() * (i + 1)); // random index from 0 to i
@@ -98,21 +102,21 @@ export default withStyles(styles)(
         .doc(`${roomNum}`)
         .collection('users');
       let winner = users.doc(`${userRef.name}`);
-      await winner.get().then(snapshot => {
+      let judge = users.doc(`${user.name}`);
+      judge.update({ isJudge: false });
+      await winner.get().then(async snapshot => {
         newScore = snapshot.data().score + 1;
         newJudge = snapshot.data().name;
-        if (snapshot.data().score >= 4) {
-          room.update({ winner: true });
+        await winner.update({ score: newScore, isJudge: true });
+        if (snapshot.data().score >= 1) {
+          await room.update({ winner: snapshot.data() });
           return this.props.history.push({
             pathname: `/winner`,
             state: { winner: snapshot.data() },
           });
         }
       });
-      let judge = users.doc(`${user.name}`);
-      winner.update({ score: newScore, isJudge: true });
       room.update({ judge: newJudge, judgeChange: true });
-      judge.update({ isJudge: false });
       return this.props.history.push({
         pathname: `/${roomNum}/waitingroom`,
         state: { roomNum, currentGame: game, user },

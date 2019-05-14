@@ -4,9 +4,8 @@
 
 import React, { Component } from 'react';
 import classNames from 'classnames';
-import { Card, Grid, CardContent, Typography } from '@material-ui/core';
+import { Card, Grid, CardContent, Typography, withStyles } from '@material-ui/core';
 import CanvasDraw from 'react-canvas-draw';
-import { withStyles } from '@material-ui/core';
 import FooterScore from '../Browser/ScoreDisplay';
 import { db } from '../../index';
 
@@ -46,7 +45,7 @@ export default withStyles(styles)(
     }
 
     async componentDidMount() {
-      const { game, roomNumber, players } = this.props.location.state;
+      const { game, roomNumber, players, prompt } = this.props.location.state;
       this.setState({ game, roomNumber });
       const dbRoom = db
         .collection('games')
@@ -63,12 +62,6 @@ export default withStyles(styles)(
       });
       this.setState({ players: dbPlayers.filter(player => !player.isJudge) });
       this.roomUnsub = dbRoom.onSnapshot(snapshot => {
-        // if (snapshot.data().judgeChange) {
-        //   return this.props.history.push({
-        //     pathname: `/${game.name}/${roomNumber}/prompt`,
-        //     state: { players, game, roomNumber, judge: snapshot.data().judge}
-        //   });
-        // }
         if (snapshot.data().judgeChange) {
           return this.props.history.push({
             pathname: `/${game.name}/${roomNumber}/winner`,
@@ -77,7 +70,7 @@ export default withStyles(styles)(
         } else if (snapshot.data().winner) {
           return this.props.history.push({
             pathname: `/${game.name}/${roomNumber}/victory`,
-            state: { winner: snapshot.data().judge }
+            state: { winner: snapshot.data().judge, roomNumber, game, prompt }
           });
         }
       });
@@ -99,13 +92,12 @@ export default withStyles(styles)(
             </header>
           </div>
           <div className={classNames(classes.layout, classes.cardGrid)}>
-            <Grid container spacing={40} alignItems="center" justify="center">
+            <Grid container spacing={40} alignContent="space-around">
               {players.map(player => {
                 return (
                   <Grid item key={player.name} sm={6} md={4} lg={3}>
                     <Card className={classes.card} raised={true}>
                       <CanvasDraw
-                        className={classes.cardMedia}
                         canvasWidth={400}
                         canvasHeight={350}
                         disabled={true}
