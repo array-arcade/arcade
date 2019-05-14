@@ -1,24 +1,19 @@
-import React, { Component } from "react";
-import {
-  withStyles,
-  Card,
-  CardContent,
-  Typography
-} from "@material-ui/core";
-import CanvasDraw from "react-canvas-draw";
-import { db } from "../../index";
+import React, { Component } from 'react';
+import { withStyles, Card, CardContent, Typography } from '@material-ui/core';
+import CanvasDraw from 'react-canvas-draw';
+import { db } from '../../index';
 
 const styles = {
   card: {
-    height: "650px",
-    width: "650px",
-    display: "flex",
-    flexDirection: "column",
+    height: 'auto',
+    width: '650px',
+    display: 'flex',
+    flexDirection: 'column',
     position: 'absolute',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-  }
+  },
 };
 
 export default withStyles(styles)(
@@ -26,18 +21,18 @@ export default withStyles(styles)(
     constructor() {
       super();
       this.state = {
-        winner: {}
+        winner: {},
       };
     }
 
     async componentDidMount() {
       const { game, roomNumber, players, winner } = this.props.location.state;
       const dbRoom = db
-        .collection("games")
+        .collection('games')
         .doc(`${game.name}`)
-        .collection("rooms")
+        .collection('rooms')
         .doc(`${roomNumber}`);
-      const dbWinner = dbRoom.collection("users").doc(`${winner}`);
+      const dbWinner = dbRoom.collection('users').doc(`${winner}`);
       await dbWinner.get().then(snapshot => {
         this.setState({ winner: snapshot.data() });
       });
@@ -45,7 +40,7 @@ export default withStyles(styles)(
         if (snapshot.data().prompt) {
           return this.props.history.push({
             pathname: `/${game.name}/${roomNumber}/prompt`,
-            state: { players, game, roomNumber, judge: snapshot.data().judge }
+            state: { players, game, roomNumber, judge: snapshot.data().judge },
           });
         }
       });
@@ -57,7 +52,7 @@ export default withStyles(styles)(
       setTimeout(function() {
         return history.push({
           pathname: `/${game.name}/${roomNumber}/prompt`,
-          state: { players, game, roomNumber, judge: winner }
+          state: { players, game, roomNumber, judge: winner },
         });
       }, 5000);
     };
@@ -79,14 +74,14 @@ export default withStyles(styles)(
                 {winner.name} has won the round, bask in their splendor.
               </Typography>
             </CardContent>
-              <CanvasDraw
-                canvasWidth={600}
-                canvasHeight={550}
-                disabled={true}
-                hideGrid={true}
-                saveData={winner.image}
-                immediateLoading={true}
-              />
+            <CanvasDraw
+              canvasWidth={600}
+              canvasHeight={550}
+              disabled={true}
+              hideGrid={true}
+              saveData={winner.image}
+              immediateLoading={true}
+            />
           </Card>
         </div>
       );

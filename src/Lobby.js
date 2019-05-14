@@ -113,6 +113,7 @@ export default withStyles(styles)(
       const renderer = () => {
         if (currentGame.name) {
           return (
+<<<<<<< Updated upstream
             <div className="App">
               <div>
                 <header className="header">
@@ -180,6 +181,32 @@ export default withStyles(styles)(
                   </Card>
                 </Grid>
               </div>
+=======
+            <div>
+              <Card raised={true}>
+                <CardMedia image={currentGame.image} title={currentGame.name} />
+                <CardContent>
+                  <Typography variant="h6">{currentGame.name}</Typography>
+                  <Typography variant="body1" gutterBottom>
+                    {currentGame.description}
+                  </Typography>
+                  <Typography variant="caption">
+                    Player: {currentGame.players}
+                  </Typography>
+                </CardContent>
+              </Card>
+              <h1 text-align={'center'}>{currentGame.name}</h1>
+              <h2>{roomNumber}</h2>
+              {players.map(player => {
+                return <p>{player.name}</p>;
+              })}
+              <Button
+                onClick={this.startGame}
+                disabled={players.length > 2 ? false : true}
+              >
+                Start the Game!
+              </Button>
+>>>>>>> Stashed changes
             </div>
           );
         } else {
