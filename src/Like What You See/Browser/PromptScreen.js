@@ -1,36 +1,46 @@
 //This will render after the game has started and will redirect to
 //PictureDisplays after the timer or after pictures have been submitted
 
-import { db } from "../../index";
-import React, { Component } from "react";
-import FooterScore from "../Browser/ScoreDisplay";
-import Countdown from "react-countdown-now";
+import { db } from '../../index';
+import React, { Component } from 'react';
+import FooterScore from '../Browser/ScoreDisplay';
+import Countdown, { calcTimeDelta } from 'react-countdown-now';
+import giphyRandom from 'giphy-random';
+import { giphyKey } from '../../secrets';
+
+const beep = require('beepbeep');
 
 export default class PromptScreen extends Component {
   constructor() {
     super();
     this.state = {
       game: {},
-      roomNumber: "",
-      judge: "",
+      roomNumber: '',
+      judge: '',
       players: [],
-      prompt: "",
+      prompt: '',
+      gif: '',
       time: 20000,
     };
   }
 
-  componentDidMount() {
-    const { game, roomNumber, judge, players } = this.props.location.state;
+  async componentDidMount() {
+    const { game, roomNumber, judge, players, gif } = this.props.location.state;
+    let { data } = await giphyRandom(giphyKey, {
+      tag: 'timer hurry',
+      rating: 'pg',
+    });
     this.setState({
       game: game,
+      gif: data.image_url,
       roomNumber: roomNumber,
       judge: judge,
       players: players,
     });
     const room = db
-      .collection("games")
+      .collection('games')
       .doc(`${game.name}`)
-      .collection("rooms")
+      .collection('rooms')
       .doc(`${roomNumber}`);
     this.unsubscribe = room.onSnapshot(snapshot => {
       const prompt = snapshot.data().prompt;
@@ -48,15 +58,15 @@ export default class PromptScreen extends Component {
     //update room timesup variable here
     const { game, roomNumber, players, prompt } = this.state;
     const room = db
-      .collection("games")
+      .collection('games')
       .doc(`${game.name}`)
-      .collection("rooms")
+      .collection('rooms')
       .doc(`${roomNumber}`);
     room.update({ TimesUp: true });
     //redirect code here
     return this.props.history.push({
       pathname: `/Like What You See?/${roomNumber}/choose`,
-      state: { game, roomNumber, players, prompt }
+      state: { game, roomNumber, players, prompt },
     });
   };
 
@@ -87,12 +97,15 @@ export default class PromptScreen extends Component {
   }
 
   render() {
-    const { judge, prompt, players, roomNumber, time } = this.state;
-    if (prompt === "") {
+    const { judge, prompt, players, roomNumber, time, gif } = this.state;
+    if (prompt === '') {
       //remember to reset prompt after round end
       return (
         <div className="App">
           <h1>Waiting for {judge} to select a prompt...</h1>
+          <div className="GifDiv">
+            {gif ? <img src={gif} alt="cat gif" /> : null}
+          </div>
           {this.state.roomNumber ? (
             <FooterScore players={players} roomNumber={roomNumber} />
           ) : (
@@ -114,6 +127,7 @@ export default class PromptScreen extends Component {
             onComplete={this.TimesUp}
             controlled={true}
           />
+          <div className="GifDiv">{gif ? <img src={gif} /> : null}</div>
           <FooterScore players={players} roomNumber={roomNumber} />
         </div>
       );

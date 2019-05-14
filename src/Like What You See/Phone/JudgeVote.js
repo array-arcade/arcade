@@ -75,7 +75,7 @@ export default withStyles(styles)(
     }
 
     componentWillUnmount() {
-      this.unsubscribe()
+      this.unsubscribe();
     }
 
     shuffle = array => {

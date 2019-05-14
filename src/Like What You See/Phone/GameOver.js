@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { withStyles } from "@material-ui/core";
 import { db } from "../../index";
+import giphyRandom from 'giphy-random';
+import { giphyKey } from '../../secrets';
 
 const styles = {};
 
@@ -11,13 +13,18 @@ export default withStyles(styles)(
       this.state = {
         game: {},
         roomNum: 0,
-        user: {}
+        user: {},
+        gif: ''
       };
     }
 
     async componentDidMount() {
+      let { data } = await giphyRandom(giphyKey, {
+        tag: 'clapping',
+        rating: 'pg',
+      });
       const { roomNum, game, user } = this.props.location.state;
-      this.setState({ roomNum, game, user });
+      this.setState({ roomNum, game, user, gif: data.image_url });
       //Check if game over gets flagged on room, reroute to phone home if true
       //Check if restart is flagged on room, reroute to waiting room if true
       //If game is restarting, update player fields in db to base values
@@ -52,10 +59,17 @@ export default withStyles(styles)(
     }
 
     render() {
+      const { gif } = this.state
       return (
-        <div>
+        <div className='Mobile'>
           <h1>We have a winner!</h1>
-          <img src="https://media.giphy.com/media/6brH8dM3zeMyA/giphy.gif" />
+          <div className="GifDiv">
+            {gif ? (
+              <img src={gif} />
+            ) : (
+              <img src="https://media.giphy.com/media/xUPGcMzwkOY01nj6hi/giphy.gif" />
+            )}
+          </div>
         </div>
       );
     }
