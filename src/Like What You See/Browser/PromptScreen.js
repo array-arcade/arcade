@@ -4,7 +4,7 @@
 import { db } from "../../index";
 import React, { Component } from "react";
 import FooterScore from "../Browser/ScoreDisplay";
-import Countdown, { calcTimeDelta } from "react-countdown-now";
+import Countdown from "react-countdown-now";
 
 const beep = require('beepbeep')
 

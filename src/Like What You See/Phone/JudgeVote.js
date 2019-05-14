@@ -62,6 +62,10 @@ export default withStyles(styles)(
       });
     }
 
+    componentWillUnmount() {
+      this.unsubscribe()
+    }
+
     shuffle = array => {
       for (let i = array.length - 1; i > 0; i--) {
         let j = Math.floor(Math.random() * (i + 1)); // random index from 0 to i
@@ -92,7 +96,7 @@ export default withStyles(styles)(
         newScore = snapshot.data().score + 1;
         newJudge = snapshot.data().name;
         winner.update({ score: newScore, isJudge: true });
-        if (snapshot.data().score >= 4) {
+        if (snapshot.data().score >= 1) {
           room.update({ winner: snapshot.data() });
           return this.props.history.push({
             pathname: `/winner`,

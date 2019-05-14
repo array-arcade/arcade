@@ -12,10 +12,14 @@ import { db } from "../../index";
 
 const styles = {
   card: {
-    height: "600px",
+    height: "650px",
     width: "650px",
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "column",
+    position: 'absolute',
+    top: '60%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
   }
 };
 
@@ -57,7 +61,7 @@ export default withStyles(styles)(
           pathname: `/${game.name}/${roomNumber}/prompt`,
           state: { players, game, roomNumber, judge: winner }
         });
-      }, 10000);
+      }, 5000);
     };
 
     componentWillUnmount() {
