@@ -93,6 +93,8 @@ export default withStyles(styles)(
 
       room.set(
         {
+          winner: null,
+          restart: false,
           judgeChange: true,
           judge: firstJudge,
         },
