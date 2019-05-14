@@ -97,6 +97,8 @@ export default withStyles(styles)(
           restart: false,
           judgeChange: true,
           judge: firstJudge,
+          players: players.length - 1,
+          submissions: 0
         },
         { merge: true }
       );
