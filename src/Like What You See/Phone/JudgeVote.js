@@ -66,8 +66,8 @@ export default withStyles(styles)(
         .doc(`${game.name}`)
         .collection('rooms')
         .doc(`${roomNum}`)
-        .collection('users');
-      this.unsubscribe = users.onSnapshot(snap => {
+        .collection("users");
+      this.usersUnsub = users.onSnapshot(snap => {
         currentPlayers = snap.docs.map(doc => doc.data());
         currentPlayers = this.shuffle(
           currentPlayers.filter(player => !player.isJudge)
@@ -84,6 +84,7 @@ export default withStyles(styles)(
 
     componentWillUnmount() {
       this.usersUnsub();
+      this.roomUnsub();
     }
 
     shuffle = array => {

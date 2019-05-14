@@ -32,7 +32,7 @@ export default class PromptScreen extends Component {
     });
     this.setState({
       game: game,
-      gif: data.image_url,
+      gif: data.image_url ? data.image_url : null,
       roomNumber: roomNumber,
       judge: judge,
       players: players
