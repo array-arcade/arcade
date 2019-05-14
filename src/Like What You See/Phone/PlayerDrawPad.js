@@ -39,8 +39,8 @@ class DrawPad extends React.Component {
     this.setState({ user, roomNum, game, artists });
     this.timerUnsub = room.onSnapshot(snapshot => {
       this.setState({ takenArtists: snapshot.data().takenArtists });
-      if (snapshot.data().timesUp) {
-        this.handleClick();
+      if (snapshot.data().TimesUp) {
+        return this.handleClick();
       }
       if (snapshot.data().prompt) {
         this.setState({ prompt: true });

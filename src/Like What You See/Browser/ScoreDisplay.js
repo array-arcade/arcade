@@ -39,7 +39,7 @@ class FooterScore extends React.Component {
           {this.state.players.map(player => {
             // eslint-disable-next-line no-unused-expressions
             return (
-              <span className="Span">
+              <span className="Span" key={player.name} >
                 {player.name}: {player.score}
               </span>
             );
