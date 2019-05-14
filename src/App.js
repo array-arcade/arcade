@@ -24,6 +24,7 @@ const styles = theme => ({
     padding: `${theme.spacing.unit * 8}px 0`,
   },
   card: {
+    position: 'relative',
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
@@ -89,6 +90,11 @@ export default withStyles(styles)(
                 return (
                   <Grid item key={game.name} sm={6} md={4} lg={3}>
                     <Card className={classes.card} raised={true}>
+                      {game.name === 'Hot Potato Doodle' ? (
+                        <div class="ribbon ribbon-top-left">
+                          <span>coming soon</span>
+                        </div>
+                      ) : null}
                       <CardMedia
                         className={classes.cardMedia}
                         image={game.image}
@@ -105,6 +111,9 @@ export default withStyles(styles)(
                       </CardContent>
                       <CardActions>
                         <Button
+                          disabled={
+                            game.name === 'Hot Potato Doodle' ? true : false
+                          }
                           size="medium"
                           color="primary"
                           onClick={() => this.createRoom(game)}

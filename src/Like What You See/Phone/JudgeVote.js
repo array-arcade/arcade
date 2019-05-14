@@ -5,6 +5,7 @@ import { db } from "../../index";
 import {
   Button,
   Grid,
+  Card,
   Dialog,
   DialogActions,
   DialogContent,
@@ -20,8 +21,19 @@ const styles = theme => ({
     marginRight: theme.spacing.unit * 3
   },
   cardGrid: {
-    padding: `${theme.spacing.unit * 5}px 0`
-  }
+    padding: `${theme.spacing.unit * 5}px 0`,
+  },
+  Grid: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignitems: 'center',
+  },
+  Card: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignitems: 'center',
+    padding: '7px',
+  },
 });
 
 export default withStyles(styles)(
@@ -149,14 +161,58 @@ export default withStyles(styles)(
       };
 
       const { classes } = this.props;
+      const imageCheck = player => {
+        if (player.refNum) {
+          return (
+            <Grid item key={player.name} sm={6} md={4} lg={3}>
+              <Button
+                variant="contained"
+                color="primary"
+                size="large"
+                fullWidth={true}
+                padding="10px"
+                justifyContent="center"
+                onClick={() => this.setState({ open: true, selected: player })}
+              >
+                {player.refNum}
+              </Button>
+              <Dialog
+                open={open}
+                onClose={() => this.setState({ open: false, selected: '' })}
+              >
+                <DialogContent>
+                  <DialogContentText>
+                    Is this the picture you want to choose? The artist of this
+                    picture will be next rounds judge.
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={() => this.selectPic(selected)}>YES!</Button>
+                  <Button
+                    onClick={() => this.setState({ open: false, selected: '' })}
+                  >
+                    NO!
+                  </Button>
+                </DialogActions>
+              </Dialog>
+            </Grid>
+          );
+        } else {
+          return null;
+        }
+      };
+
       const { players, open, selected } = this.state;
       return (
         <div className="Mobile">
           <div className={classNames(classes.layout, classes.cardGrid)}>
-            <Grid container spacing={40}>
-              {players.map(player => {
-                return imageCheck(player);
-              })}
+            <h3 className="h3Vote">Pick your favorite drawing!</h3>
+            <Grid className={classes.Grid}>
+              <Card className={classes.card} spacing={6}>
+                {players.map(player => {
+                  return imageCheck(player);
+                })}
+              </Card>
             </Grid>
           </div>
         </div>

@@ -6,8 +6,6 @@ import React, { Component } from "react";
 import FooterScore from "../Browser/ScoreDisplay";
 import Countdown from "react-countdown-now";
 
-const beep = require('beepbeep')
-
 export default class PromptScreen extends Component {
   constructor() {
     super();
