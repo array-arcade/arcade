@@ -21,19 +21,19 @@ const styles = theme => ({
     marginRight: theme.spacing.unit * 3,
   },
   cardGrid: {
-    padding: `${theme.spacing.unit * 5}px 0`
+    padding: `${theme.spacing.unit * 5}px 0`,
   },
   Grid: {
-    display: "flex",
-    justifyContent: "center",
-    alignitems: "center"
+    display: 'flex',
+    justifyContent: 'center',
+    alignitems: 'center',
   },
   Card: {
-    display: "flex",
-    justifyContent: "center",
-    alignitems: "center",
-    padding: "7px"
-  }
+    display: 'flex',
+    justifyContent: 'center',
+    alignitems: 'center',
+    padding: '7px',
+  },
 });
 
 export default withStyles(styles)(
@@ -46,8 +46,8 @@ export default withStyles(styles)(
         user: {},
         players: [],
         open: false,
-        selected: "",
-        disabled: true
+        selected: '',
+        disabled: true,
       };
     }
 
@@ -55,9 +55,9 @@ export default withStyles(styles)(
       const { roomNum, game, user } = this.props.location.state;
       this.setState({ roomNum, game, user });
       const dbRoom = db
-        .collection("games")
+        .collection('games')
         .doc(`${game.name}`)
-        .collection("rooms")
+        .collection('rooms')
         .doc(`${roomNum}`);
       dbRoom.update({ previousJudge: user.name });
       let currentPlayers;
@@ -66,7 +66,7 @@ export default withStyles(styles)(
         .doc(`${game.name}`)
         .collection('rooms')
         .doc(`${roomNum}`)
-        .collection("users");
+        .collection('users');
       this.usersUnsub = users.onSnapshot(snap => {
         currentPlayers = snap.docs.map(doc => doc.data());
         currentPlayers = this.shuffle(
@@ -75,11 +75,11 @@ export default withStyles(styles)(
         this.setState({ players: currentPlayers });
       });
       this.roomUnsub = dbRoom.onSnapshot(snapshot => {
-        let room = snapshot.data()
+        let room = snapshot.data();
         if (room.submissions === room.players) {
-          this.setState({ disabled: false })
+          this.setState({ disabled: false });
         }
-      })
+      });
     }
 
     componentWillUnmount() {
@@ -156,7 +156,7 @@ export default withStyles(styles)(
               </Button>
               <Dialog
                 open={open}
-                onClose={() => this.setState({ open: false, selected: "" })}
+                onClose={() => this.setState({ open: false, selected: '' })}
               >
                 <DialogContent>
                   <DialogContentText>
@@ -167,7 +167,7 @@ export default withStyles(styles)(
                 <DialogActions>
                   <Button onClick={() => this.selectPic(selected)}>YES!</Button>
                   <Button
-                    onClick={() => this.setState({ open: false, selected: "" })}
+                    onClick={() => this.setState({ open: false, selected: '' })}
                   >
                     NO!
                   </Button>
