@@ -35,19 +35,19 @@ class VictoryScreen extends Component {
     };
   }
 
-  componentDidMount() {
-    let { winner, roomNum, game, prompt } = this.props.location.state;
+  async componentDidMount () {
+    let { winner, roomNumber, game, prompt } = this.props.location.state;
     const dbWinner = db
       .collection("games")
       .doc(`${game.name}`)
       .collection("rooms")
-      .doc(`${roomNum}`)
+      .doc(`${roomNumber}`)
       .collection("users")
       .doc(`${winner}`);
-    dbWinner.get().then(snapshot => {
+    await dbWinner.get().then(snapshot => {
       winner = snapshot.data();
     });
-    this.setState({ winner, roomNum, game, prompt });
+    this.setState({ winner, roomNum: roomNumber, game, prompt });
   }
 
   restart = async () => {
@@ -66,9 +66,10 @@ class VictoryScreen extends Component {
       takenArtists: [],
       restart: true
     });
+    console.log(roomNum)
     return this.props.history.push({
       pathname: `/${game.name}/${roomNum}/lobby`,
-      state: { roomNum, game }
+      state: { roomNumber: roomNum, game }
     });
   };
 

@@ -1,7 +1,6 @@
 import React from "react";
 import CanvasDraw from "react-canvas-draw";
 import Button from "@material-ui/core/Button";
-import firebase from "firebase/app";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -30,12 +29,16 @@ class DrawPad extends React.Component {
     this.targetElement = document.querySelector("canvas");
     disableBodyScroll(this.targetElement);
     const { user, roomNum, game } = this.props.location.state;
-    const dbGame = db.collection("games").doc('Like What You See?');
-    const artists = await dbGame.get().then(game => game.data().artists)
-    this.setState({ user, roomNum, game, artists });
+    const dbGame = db.collection("games").doc("Like What You See?");
     const room = dbGame.collection("rooms").doc(`${roomNum}`);
+    room
+      .collection("users")
+      .doc(`${user.name}`)
+      .update({ image: null });
+    const artists = await dbGame.get().then(game => game.data().artists);
+    this.setState({ user, roomNum, game, artists });
     this.timerUnsub = room.onSnapshot(snapshot => {
-      this.setState({ takenArtists: snapshot.data().takenArtists })
+      this.setState({ takenArtists: snapshot.data().takenArtists });
       if (snapshot.data().timesUp) {
         this.handleClick();
       }
@@ -45,22 +48,19 @@ class DrawPad extends React.Component {
     });
   }
 
-  
   handleClick = () => {
     const { user, roomNum, game, artists, takenArtists } = this.state;
-    let numRef = this.randomArtist(artists, takenArtists)
-    takenArtists.push(numRef)
+    let numRef = this.randomArtist(artists, takenArtists);
+    takenArtists.push(numRef);
     const dbRoom = db
-    .collection("games")
-    .doc(`${game.name}`)
-    .collection("rooms")
-    .doc(`${roomNum}`)
-    let dbUser = dbRoom
-      .collection("users")
-      .doc(`${user.name}`);
-      dbRoom.update({
-        takenArtists: takenArtists
-      })
+      .collection("games")
+      .doc(`${game.name}`)
+      .collection("rooms")
+      .doc(`${roomNum}`);
+    let dbUser = dbRoom.collection("users").doc(`${user.name}`);
+    dbRoom.update({
+      takenArtists: takenArtists
+    });
     dbUser.update({
       refNum: numRef,
       image: this.saveableCanvas.getSaveData()
@@ -73,13 +73,13 @@ class DrawPad extends React.Component {
 
   randomArtist = (artists, takenArtists) => {
     let artistIdx = Math.floor(Math.random() * artists.length);
-    let artistRef = artists[artistIdx]
-    if(takenArtists.includes(artistRef)) {
-      return this.randomArtist(artists, takenArtists)
+    let artistRef = artists[artistIdx];
+    if (takenArtists.includes(artistRef)) {
+      return this.randomArtist(artists, takenArtists);
     } else {
-      return artistRef
+      return artistRef;
     }
-  }
+  };
 
   componentWillUnmount() {
     this.timerUnsub();

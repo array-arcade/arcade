@@ -92,12 +92,13 @@ export default withStyles(styles)(
       let winner = users.doc(`${userRef.name}`);
       let judge = users.doc(`${user.name}`);
       judge.update({ isJudge: false });
-      await winner.get().then(snapshot => {
+      await winner.get().then(async snapshot => {
         newScore = snapshot.data().score + 1;
         newJudge = snapshot.data().name;
-        winner.update({ score: newScore, isJudge: true });
+        await winner.update({ score: newScore, isJudge: true });
         if (snapshot.data().score >= 1) {
-          room.update({ winner: snapshot.data() });
+          await room.update({ winner: snapshot.data() });
+          console.log('after winner has been chosen')
           return this.props.history.push({
             pathname: `/winner`,
             state: { winner: snapshot.data() }
@@ -105,6 +106,7 @@ export default withStyles(styles)(
         }
       });
       room.update({ judge: newJudge, judgeChange: true });
+      console.log('after judge update')
       return this.props.history.push({
         pathname: `/${roomNum}/waitingroom`,
         state: { roomNum, currentGame: game, user }

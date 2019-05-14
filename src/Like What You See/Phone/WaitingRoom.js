@@ -23,7 +23,6 @@ export class WaitingRoom extends React.Component {
       rating: 'pg',
     });
     this.setState({ gif: data.image_url });
-    console.log(data);
   };
 
   componentDidMount() {
@@ -44,7 +43,7 @@ export class WaitingRoom extends React.Component {
       let doc = snapshot.data();
       if (doc.judgeChange) {
         this.setState({ pageChange: true });
-        player.update({ image: null, refNum: null });
+        player.update({ refNum: null });
       }
     });
   }

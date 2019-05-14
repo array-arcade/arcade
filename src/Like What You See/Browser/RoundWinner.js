@@ -17,7 +17,7 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     position: 'absolute',
-    top: '60%',
+    top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
   }
