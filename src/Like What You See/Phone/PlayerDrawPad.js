@@ -30,9 +30,18 @@ class DrawPad extends React.Component {
     disableBodyScroll(this.targetElement);
     const { user, roomNum, game } = this.props.location.state;
     const dbGame = db.collection("games").doc("Like What You See?");
+<<<<<<< HEAD
+=======
     const artists = await dbGame.get().then(game => game.data().artists);
     this.setState({ user, roomNum, game, artists });
+>>>>>>> master
     const room = dbGame.collection("rooms").doc(`${roomNum}`);
+    room
+      .collection("users")
+      .doc(`${user.name}`)
+      .update({ image: null });
+    const artists = await dbGame.get().then(game => game.data().artists);
+    this.setState({ user, roomNum, game, artists });
     this.timerUnsub = room.onSnapshot(snapshot => {
       this.setState({ takenArtists: snapshot.data().takenArtists });
       if (snapshot.data().timesUp) {
