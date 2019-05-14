@@ -6,7 +6,6 @@ import {
   Typography,
   CardMedia
 } from "@material-ui/core";
-import FooterScore from "../Browser/ScoreDisplay";
 import CanvasDraw from "react-canvas-draw";
 import { db } from "../../index";
 
@@ -51,7 +50,7 @@ export default withStyles(styles)(
     }
 
     timeout = (players, game, roomNumber, winner) => {
-      const history = this.props.history
+      const history = this.props.history;
       setTimeout(function() {
         return history.push({
           pathname: `/${game.name}/${roomNumber}/prompt`,
