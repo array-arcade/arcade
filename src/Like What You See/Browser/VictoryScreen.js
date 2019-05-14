@@ -66,7 +66,6 @@ class VictoryScreen extends Component {
       takenArtists: [],
       restart: true
     });
-    console.log(roomNum)
     return this.props.history.push({
       pathname: `/${game.name}/${roomNum}/lobby`,
       state: { roomNumber: roomNum, game }
