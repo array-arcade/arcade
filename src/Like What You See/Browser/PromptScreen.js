@@ -8,65 +8,79 @@ import Countdown from 'react-countdown-now';
 import giphyRandom from 'giphy-random';
 import { giphyKey } from '../../secrets';
 
-const beep = require('beepbeep');
+const song = require('../../SpanishFlea.mp3')
+const countdown = require('../../countdown.mp3')
+
+const flea = new Audio(song)
+const beep = new Audio(countdown)
 
 export default class PromptScreen extends Component {
   constructor() {
     super();
     this.state = {
       game: {},
-      roomNumber: '',
-      judge: '',
+      roomNumber: "",
+      judge: "",
       players: [],
       prompt: '',
       gif: '',
-      time: 60000,
+      time: 20000,
     };
   }
 
   async componentDidMount() {
-    const { game, roomNumber, judge, players, gif } = this.props.location.state;
+    const { game, roomNumber, judge, players } = this.props.location.state;
     let { data } = await giphyRandom(giphyKey, {
       tag: 'waiting',
       rating: 'pg',
     });
     this.setState({
       game: game,
-      gif: data.image_url,
+      gif: data.image_url ? data.image_url : null,
       roomNumber: roomNumber,
       judge: judge,
-      players: players,
+      players: players
     });
     const room = db
-      .collection('games')
+      .collection("games")
       .doc(`${game.name}`)
-      .collection('rooms')
+      .collection("rooms")
       .doc(`${roomNumber}`);
     this.unsubscribe = room.onSnapshot(snapshot => {
-      const prompt = snapshot.data().prompt;
-      if (prompt) {
-        this.setState({ prompt });
+      let room = snapshot.data();
+      const prompt = room.prompt;
+      if (room.prompt) {
+        this.setState({ prompt: room.prompt });
+        flea.play()
+      }
+      if (room.submissions === players.length - 1) {
+        return this.props.history.push({
+          pathname: `/Like What You See?/${roomNumber}/choose`,
+          state: { game, roomNumber, players, prompt }
+        });
       }
     });
   }
 
   componentWillUnmount() {
     this.unsubscribe();
+    clearInterval(this.interval)
+    beep.pause()
   }
 
   TimesUp = () => {
     //update room timesup variable here
     const { game, roomNumber, players, prompt } = this.state;
     const room = db
-      .collection('games')
+      .collection("games")
       .doc(`${game.name}`)
-      .collection('rooms')
+      .collection("rooms")
       .doc(`${roomNumber}`);
     room.update({ TimesUp: true });
     //redirect code here
     return this.props.history.push({
       pathname: `/Like What You See?/${roomNumber}/choose`,
-      state: { game, roomNumber, players, prompt },
+      state: { game, roomNumber, players, prompt }
     });
   };
 
@@ -74,7 +88,7 @@ export default class PromptScreen extends Component {
     return (
       <span>
         <h1>
-          {minutes}:{seconds}:{milliseconds}
+          {seconds}
         </h1>
       </span>
     );
@@ -82,15 +96,11 @@ export default class PromptScreen extends Component {
 
   start = () => {
     this.interval = setInterval(() => {
-      // if (this.state.time < 10000) {
-      //   //Beep if there are < 10 seconds left
-      // }
-      // if (this.state.time < 5000) {
-      //   //Beep twice if there < 5 seconds left
-      //   beep();
-      // }
       if (this.state.time <= 0) {
         return clearInterval(this.interval);
+      } else if (this.state.time <= 10000) {
+        flea.pause()
+        beep.play()
       }
       this.setState(prevState => ({ time: prevState.time - 1000 }));
     }, 1000);
@@ -98,7 +108,7 @@ export default class PromptScreen extends Component {
 
   render() {
     const { judge, prompt, players, roomNumber, time, gif } = this.state;
-    if (prompt === '') {
+    if (prompt === "") {
       //remember to reset prompt after round end
       return (
         <div className="App">
@@ -127,7 +137,7 @@ export default class PromptScreen extends Component {
             onComplete={this.TimesUp}
             controlled={true}
           />
-          <div className="GifDiv">{gif ? <img src={gif} /> : null}</div>
+          <div className="GifDiv">{gif ? <img src={gif} alt="waiting gif" /> : null}</div>
           <FooterScore players={players} roomNumber={roomNumber} />
         </div>
       );

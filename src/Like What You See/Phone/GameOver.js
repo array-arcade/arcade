@@ -65,9 +65,9 @@ export default withStyles(styles)(
           <h1>We have a winner!</h1>
           <div className="GifDiv">
             {gif ? (
-              <img src={gif} />
+              <img src={gif} alt="clap gif" />
             ) : (
-              <img src="https://media.giphy.com/media/xUPGcMzwkOY01nj6hi/giphy.gif" />
+              <img src="https://media.giphy.com/media/xUPGcMzwkOY01nj6hi/giphy.gif" alt="clap gif" />
             )}
           </div>
         </div>

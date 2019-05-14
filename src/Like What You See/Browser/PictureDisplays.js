@@ -58,7 +58,7 @@ export default withStyles(styles)(
         .doc(`${game.name}`)
         .collection('rooms')
         .doc(`${roomNumber}`);
-      dbRoom.update({ prompt: '', TimesUp: false });
+      dbRoom.update({ prompt: '', TimesUp: false, submissions: 0 });
       let dbUsers = dbRoom.collection('users');
       let dbPlayers = [];
       await dbUsers.get().then(snapshot => {
