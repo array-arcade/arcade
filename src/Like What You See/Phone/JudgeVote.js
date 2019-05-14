@@ -1,27 +1,39 @@
 //This will be rendered through JudgeWordPick and
 //will redirect to the WaitingRoom
-import React, { Component } from "react";
-import { db } from "../../index";
+import React, { Component } from 'react';
+import { db } from '../../index';
 import {
   Button,
   Grid,
+  Card,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
-  withStyles
-} from "@material-ui/core";
-import classNames from "classnames";
+  withStyles,
+} from '@material-ui/core';
+import classNames from 'classnames';
 
 const styles = theme => ({
   layout: {
-    width: "auto",
+    width: 'auto',
     marginLeft: theme.spacing.unit * 3,
-    marginRight: theme.spacing.unit * 3
+    marginRight: theme.spacing.unit * 3,
   },
   cardGrid: {
-    padding: `${theme.spacing.unit * 5}px 0`
-  }
+    padding: `${theme.spacing.unit * 5}px 0`,
+  },
+  Grid: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignitems: 'center',
+  },
+  Card: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignitems: 'center',
+    padding: '7px',
+  },
 });
 
 export default withStyles(styles)(
@@ -34,25 +46,25 @@ export default withStyles(styles)(
         user: {},
         players: [],
         open: false,
-        selected: ""
+        selected: '',
       };
     }
 
     componentDidMount() {
       const { roomNum, game, user } = this.props.location.state;
       this.setState({ roomNum, game, user });
-      db.collection("games")
+      db.collection('games')
         .doc(`${game.name}`)
-        .collection("rooms")
+        .collection('rooms')
         .doc(`${roomNum}`)
         .update({ previousJudge: user.name });
       let currentPlayers;
       const users = db
-        .collection("games")
+        .collection('games')
         .doc(`${game.name}`)
-        .collection("rooms")
+        .collection('rooms')
         .doc(`${roomNum}`)
-        .collection("users");
+        .collection('users');
       this.unsubscribe = users.onSnapshot(snap => {
         currentPlayers = snap.docs.map(doc => doc.data());
         currentPlayers = this.shuffle(
@@ -75,16 +87,16 @@ export default withStyles(styles)(
       let newScore;
       let newJudge;
       const room = db
-        .collection("games")
+        .collection('games')
         .doc(`${game.name}`)
-        .collection("rooms")
+        .collection('rooms')
         .doc(`${roomNum}`);
       const users = db
-        .collection("games")
+        .collection('games')
         .doc(`${game.name}`)
-        .collection("rooms")
+        .collection('rooms')
         .doc(`${roomNum}`)
-        .collection("users");
+        .collection('users');
       let winner = users.doc(`${userRef.name}`);
       await winner.get().then(snapshot => {
         newScore = snapshot.data().score + 1;
@@ -93,7 +105,7 @@ export default withStyles(styles)(
           room.update({ winner: true });
           return this.props.history.push({
             pathname: `/winner`,
-            state: { winner: snapshot.data() }
+            state: { winner: snapshot.data() },
           });
         }
       });
@@ -103,24 +115,30 @@ export default withStyles(styles)(
       judge.update({ isJudge: false });
       return this.props.history.push({
         pathname: `/${roomNum}/waitingroom`,
-        state: { roomNum, currentGame: game, user }
+        state: { roomNum, currentGame: game, user },
       });
     };
 
     render() {
+      const { classes } = this.props;
       const imageCheck = player => {
         if (player.refNum) {
           return (
             <Grid item key={player.name} sm={6} md={4} lg={3}>
               <Button
-                //add container and color. full length. margin inbetween.
+                variant="contained"
+                color="primary"
+                size="large"
+                fullWidth={true}
+                padding="10px"
+                justifyContent="center"
                 onClick={() => this.setState({ open: true, selected: player })}
               >
                 {player.refNum}
               </Button>
               <Dialog
                 open={open}
-                onClose={() => this.setState({ open: false, selected: "" })}
+                onClose={() => this.setState({ open: false, selected: '' })}
               >
                 <DialogContent>
                   <DialogContentText>
@@ -131,7 +149,7 @@ export default withStyles(styles)(
                 <DialogActions>
                   <Button onClick={() => this.selectPic(selected)}>YES!</Button>
                   <Button
-                    onClick={() => this.setState({ open: false, selected: "" })}
+                    onClick={() => this.setState({ open: false, selected: '' })}
                   >
                     NO!
                   </Button>
@@ -144,15 +162,17 @@ export default withStyles(styles)(
         }
       };
 
-      const { classes } = this.props;
       const { players, open, selected } = this.state;
       return (
         <div className="Mobile">
           <div className={classNames(classes.layout, classes.cardGrid)}>
-            <Grid container spacing={40}>
-              {players.map(player => {
-                return imageCheck(player);
-              })}
+            <h3 className="h3Vote">Pick your favorite drawing!</h3>
+            <Grid className={classes.Grid}>
+              <Card className={classes.card} spacing={6}>
+                {players.map(player => {
+                  return imageCheck(player);
+                })}
+              </Card>
             </Grid>
           </div>
         </div>

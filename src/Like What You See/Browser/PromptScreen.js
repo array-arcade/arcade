@@ -1,22 +1,22 @@
 //This will render after the game has started and will redirect to
 //PictureDisplays after the timer or after pictures have been submitted
 
-import { db } from "../../index";
-import React, { Component } from "react";
-import FooterScore from "../Browser/ScoreDisplay";
-import Countdown, { calcTimeDelta } from "react-countdown-now";
+import { db } from '../../index';
+import React, { Component } from 'react';
+import FooterScore from '../Browser/ScoreDisplay';
+import Countdown, { calcTimeDelta } from 'react-countdown-now';
 
-const beep = require('beepbeep')
+const beep = require('beepbeep');
 
 export default class PromptScreen extends Component {
   constructor() {
     super();
     this.state = {
       game: {},
-      roomNumber: "",
-      judge: "",
+      roomNumber: '',
+      judge: '',
       players: [],
-      prompt: "",
+      prompt: '',
       time: 60000,
     };
   }
@@ -30,9 +30,9 @@ export default class PromptScreen extends Component {
       players: players,
     });
     const room = db
-      .collection("games")
+      .collection('games')
       .doc(`${game.name}`)
-      .collection("rooms")
+      .collection('rooms')
       .doc(`${roomNumber}`);
     this.unsubscribe = room.onSnapshot(snapshot => {
       const prompt = snapshot.data().prompt;
@@ -50,15 +50,15 @@ export default class PromptScreen extends Component {
     //update room timesup variable here
     const { game, roomNumber, players, prompt } = this.state;
     const room = db
-      .collection("games")
+      .collection('games')
       .doc(`${game.name}`)
-      .collection("rooms")
+      .collection('rooms')
       .doc(`${roomNumber}`);
     room.update({ TimesUp: true });
     //redirect code here
     return this.props.history.push({
       pathname: `/Like What You See?/${roomNumber}/choose`,
-      state: { game, roomNumber, players, prompt }
+      state: { game, roomNumber, players, prompt },
     });
   };
 
@@ -81,16 +81,16 @@ export default class PromptScreen extends Component {
       //   //Beep twice if there < 5 seconds left
       //   beep();
       // }
-      if(this.state.time <= 0) {
-        return clearInterval(this.interval)
+      if (this.state.time <= 0) {
+        return clearInterval(this.interval);
       }
       this.setState(prevState => ({ time: prevState.time - 1000 }));
-    }, 1000)
-  }
+    }, 1000);
+  };
 
   render() {
     const { judge, prompt, players, roomNumber, time } = this.state;
-    if (prompt === "") {
+    if (prompt === '') {
       //remember to reset prompt after round end
       return (
         <div className="App">
