@@ -13,8 +13,8 @@ class FooterScore extends React.Component {
   }
 
   async componentDidMount() {
-    let { roomNumber, players } = this.props
-    this.setState({ roomNumber, players })
+    let { roomNumber, players } = this.props;
+    this.setState({ roomNumber, players });
     let db = firebase.firestore();
     let dbName = db
       .collection('games')
@@ -35,6 +35,7 @@ class FooterScore extends React.Component {
     return (
       <div className="Footer">
         <footer>
+          <div>Scores!</div>
           {this.state.players.map(player => {
             // eslint-disable-next-line no-unused-expressions
             return (

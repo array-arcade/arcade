@@ -5,6 +5,8 @@ import { db } from '../../index';
 import React, { Component } from 'react';
 import FooterScore from '../Browser/ScoreDisplay';
 import Countdown, { calcTimeDelta } from 'react-countdown-now';
+import giphyRandom from 'giphy-random';
+import { giphyKey } from '../../secrets';
 
 const beep = require('beepbeep');
 
@@ -17,14 +19,20 @@ export default class PromptScreen extends Component {
       judge: '',
       players: [],
       prompt: '',
+      gif: '',
       time: 60000,
     };
   }
 
-  componentDidMount() {
-    const { game, roomNumber, judge, players } = this.props.location.state;
+  async componentDidMount() {
+    const { game, roomNumber, judge, players, gif } = this.props.location.state;
+    let { data } = await giphyRandom(giphyKey, {
+      tag: 'timer hurry',
+      rating: 'pg',
+    });
     this.setState({
       game: game,
+      gif: data.image_url,
       roomNumber: roomNumber,
       judge: judge,
       players: players,
@@ -89,12 +97,15 @@ export default class PromptScreen extends Component {
   };
 
   render() {
-    const { judge, prompt, players, roomNumber, time } = this.state;
+    const { judge, prompt, players, roomNumber, time, gif } = this.state;
     if (prompt === '') {
       //remember to reset prompt after round end
       return (
         <div className="App">
           <h1>Waiting for {judge} to select a prompt...</h1>
+          <div className="GifDiv">
+            {gif ? <img src={gif} alt="cat gif" /> : null}
+          </div>
           {this.state.roomNumber ? (
             <FooterScore players={players} roomNumber={roomNumber} />
           ) : (
@@ -116,6 +127,7 @@ export default class PromptScreen extends Component {
             onComplete={this.TimesUp}
             controlled={true}
           />
+          <div className="GifDiv">{gif ? <img src={gif} /> : null}</div>
           <FooterScore players={players} roomNumber={roomNumber} />
         </div>
       );
