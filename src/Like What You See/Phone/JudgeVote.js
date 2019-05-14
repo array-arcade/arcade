@@ -47,7 +47,7 @@ export default withStyles(styles)(
         players: [],
         open: false,
         selected: "",
-        disable: true
+        disabled: true
       };
     }
 
@@ -136,6 +136,8 @@ export default withStyles(styles)(
 
     render() {
       const { classes } = this.props;
+      const { players, open, selected, disabled } = this.state;
+
       const imageCheck = player => {
         if (player.refNum) {
           return (
@@ -147,7 +149,7 @@ export default withStyles(styles)(
                 fullWidth={true}
                 padding="10px"
                 justifyContent="center"
-                disabled={this.state.disabled}
+                disabled={disabled}
                 onClick={() => this.setState({ open: true, selected: player })}
               >
                 {player.refNum}
@@ -178,7 +180,6 @@ export default withStyles(styles)(
         }
       };
 
-      const { players, open, selected } = this.state;
       return (
         <div className="Mobile">
           <div className={classNames(classes.layout, classes.cardGrid)}>

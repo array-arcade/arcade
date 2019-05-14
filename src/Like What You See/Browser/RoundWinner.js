@@ -3,10 +3,8 @@ import {
   withStyles,
   Card,
   CardContent,
-  Typography,
-  CardMedia
+  Typography
 } from "@material-ui/core";
-import FooterScore from "../Browser/ScoreDisplay";
 import CanvasDraw from "react-canvas-draw";
 import { db } from "../../index";
 
@@ -81,7 +79,6 @@ export default withStyles(styles)(
                 {winner.name} has won the round, bask in their splendor.
               </Typography>
             </CardContent>
-            <CardMedia>
               <CanvasDraw
                 canvasWidth={600}
                 canvasHeight={550}
@@ -90,7 +87,6 @@ export default withStyles(styles)(
                 saveData={winner.image}
                 immediateLoading={true}
               />
-            </CardMedia>
           </Card>
         </div>
       );

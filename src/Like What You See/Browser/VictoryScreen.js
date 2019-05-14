@@ -61,7 +61,6 @@ class VictoryScreen extends Component {
       .doc(`${game.name}`)
       .collection("rooms")
       .doc(`${roomNum}`);
-    const dbUsers = dbRoom.collection("users");
     dbRoom.set({
       judgeChange: false,
       roomNumber: `${roomNum}`,
@@ -77,7 +76,7 @@ class VictoryScreen extends Component {
   };
 
   exitGame = () => {
-    const { roomNum, game } = this.state;
+    const { roomNum } = this.state;
     let dbRoom = db
       .collection("games")
       .doc("Like What You See?")
@@ -97,7 +96,7 @@ class VictoryScreen extends Component {
   };
 
   render() {
-    const { winner, prompt } = this.state;
+    const { winner } = this.state;
     const { classes } = this.props;
 
     return (

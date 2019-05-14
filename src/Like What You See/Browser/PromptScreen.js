@@ -8,8 +8,6 @@ import Countdown from 'react-countdown-now';
 import giphyRandom from 'giphy-random';
 import { giphyKey } from '../../secrets';
 
-const beep = require("beepbeep");
-
 export default class PromptScreen extends Component {
   constructor() {
     super();
@@ -82,7 +80,7 @@ export default class PromptScreen extends Component {
     return (
       <span>
         <h1>
-          {minutes}:{seconds}:{milliseconds}
+          {seconds}
         </h1>
       </span>
     );
@@ -128,7 +126,7 @@ export default class PromptScreen extends Component {
             onComplete={this.TimesUp}
             controlled={true}
           />
-          <div className="GifDiv">{gif ? <img src={gif} /> : null}</div>
+          <div className="GifDiv">{gif ? <img src={gif} alt="waiting gif" /> : null}</div>
           <FooterScore players={players} roomNumber={roomNumber} />
         </div>
       );
