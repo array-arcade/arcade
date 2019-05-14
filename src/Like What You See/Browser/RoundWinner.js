@@ -24,7 +24,7 @@ const styles = {
 };
 
 export default withStyles(styles)(
-  class Winner extends Component {
+  class RoundWinner extends Component {
     constructor() {
       super();
       this.state = {

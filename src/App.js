@@ -91,7 +91,7 @@ export default withStyles(styles)(
                   <Grid item key={game.name} sm={6} md={4} lg={3}>
                     <Card className={classes.card} raised={true}>
                       {game.name === 'Hot Potato Doodle' ? (
-                        <div class="ribbon ribbon-top-left">
+                        <div className="ribbon ribbon-top-left">
                           <span>coming soon</span>
                         </div>
                       ) : null}

@@ -108,18 +108,19 @@ export default withStyles(styles)(
         newScore = snapshot.data().score + 1;
         newJudge = snapshot.data().name;
         await winner.update({ score: newScore, isJudge: true });
-        if (snapshot.data().score >= 1) {
+        if (snapshot.data().score >= 0) {
           await room.update({ winner: snapshot.data() });
           return this.props.history.push({
             pathname: `/winner`,
-            state: { winner: snapshot.data() },
+            state: { roomNum, game, user },
+          });
+        } else {
+          room.update({ judge: newJudge, judgeChange: true });
+          return this.props.history.push({
+            pathname: `/${roomNum}/waitingroom`,
+            state: { roomNum, currentGame: game, user },
           });
         }
-      });
-      room.update({ judge: newJudge, judgeChange: true });
-      return this.props.history.push({
-        pathname: `/${roomNum}/waitingroom`,
-        state: { roomNum, currentGame: game, user },
       });
     };
 
