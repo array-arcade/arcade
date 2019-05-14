@@ -8,6 +8,8 @@ import Countdown from 'react-countdown-now';
 import giphyRandom from 'giphy-random';
 import { giphyKey } from '../../secrets';
 
+const beep = new Audio('https://www.soundjay.com/button/sounds/beep-10.mp3')
+
 export default class PromptScreen extends Component {
   constructor() {
     super();
@@ -90,6 +92,8 @@ export default class PromptScreen extends Component {
     this.interval = setInterval(() => {
       if (this.state.time <= 0) {
         return clearInterval(this.interval);
+      } else if (this.state.time <= 10000) {
+        beep.play()
       }
       this.setState(prevState => ({ time: prevState.time - 1000 }));
     }, 1000);
