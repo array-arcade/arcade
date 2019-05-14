@@ -1,14 +1,14 @@
-import React from "react";
-import CanvasDraw from "react-canvas-draw";
-import Button from "@material-ui/core/Button";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import DeleteIcon from "@material-ui/icons/Delete";
-import Undo from "@material-ui/icons/Undo";
-import Check from "@material-ui/icons/Check";
-import { disableBodyScroll } from "body-scroll-lock";
-import { db } from "../../index";
+import React from 'react';
+import CanvasDraw from 'react-canvas-draw';
+import Button from '@material-ui/core/Button';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import DeleteIcon from '@material-ui/icons/Delete';
+import Undo from '@material-ui/icons/Undo';
+import Check from '@material-ui/icons/Check';
+import { disableBodyScroll } from 'body-scroll-lock';
+import { db } from '../../index';
 
 class DrawPad extends React.Component {
   targetElement = null;
@@ -21,23 +21,18 @@ class DrawPad extends React.Component {
       game: {},
       prompt: false,
       artists: [],
-      takenArtists: []
+      takenArtists: [],
     };
   }
 
   async componentDidMount() {
-    this.targetElement = document.querySelector("canvas");
+    this.targetElement = document.querySelector('canvas');
     disableBodyScroll(this.targetElement);
     const { user, roomNum, game } = this.props.location.state;
-    const dbGame = db.collection("games").doc("Like What You See?");
-<<<<<<< HEAD
-=======
-    const artists = await dbGame.get().then(game => game.data().artists);
-    this.setState({ user, roomNum, game, artists });
->>>>>>> master
-    const room = dbGame.collection("rooms").doc(`${roomNum}`);
+    const dbGame = db.collection('games').doc('Like What You See?');
+    const room = dbGame.collection('rooms').doc(`${roomNum}`);
     room
-      .collection("users")
+      .collection('users')
       .doc(`${user.name}`)
       .update({ image: null });
     const artists = await dbGame.get().then(game => game.data().artists);
@@ -58,21 +53,21 @@ class DrawPad extends React.Component {
     let numRef = this.randomArtist(artists, takenArtists);
     takenArtists.push(numRef);
     const dbRoom = db
-      .collection("games")
+      .collection('games')
       .doc(`${game.name}`)
-      .collection("rooms")
+      .collection('rooms')
       .doc(`${roomNum}`);
-    let dbUser = dbRoom.collection("users").doc(`${user.name}`);
+    let dbUser = dbRoom.collection('users').doc(`${user.name}`);
     dbRoom.update({
-      takenArtists: takenArtists
+      takenArtists: takenArtists,
     });
     dbUser.update({
       refNum: numRef,
-      image: this.saveableCanvas.getSaveData()
+      image: this.saveableCanvas.getSaveData(),
     });
     return this.props.history.push({
       pathname: `/${roomNum}/waitingroom`,
-      state: { roomNum, currentGame: game, user }
+      state: { roomNum, currentGame: game, user },
     });
   };
 
@@ -110,7 +105,7 @@ class DrawPad extends React.Component {
             brushColor="#000000"
             style={{
               boxShadow:
-                "0 13px 27px -5px rgba(20, 20, 63, 0.1),    0 2px 3px -2px rgba(1, 200, 1, 0.3)"
+                '0 13px 27px -5px rgba(20, 20, 63, 0.1),    0 2px 3px -2px rgba(1, 200, 1, 0.3)',
             }}
           />
         </div>
