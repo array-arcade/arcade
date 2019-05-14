@@ -98,7 +98,7 @@ export default withStyles(styles)(
           judgeChange: true,
           judge: firstJudge,
           players: players.length - 1,
-          submissions: 0
+          submissions: 0,
         },
         { merge: true }
       );
@@ -173,7 +173,7 @@ export default withStyles(styles)(
                     })}
                     <Button
                       onClick={this.startGame}
-                      // disabled={players.length > 2 ? false : true}
+                      disabled={players.length > 2 ? false : true}
                     >
                       Start the Game!
                     </Button>
