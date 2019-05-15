@@ -69,6 +69,25 @@ export default withStyles(styles)(
           'Prison Riot',
           'Angry Old Man',
           'Shame',
+          'Whistle',
+          'Horse',
+          'Key',
+          'Thief',
+          'Cake',
+          'Frog',
+          'Glasses',
+          'Bee',
+          'Eiffel Tower',
+          'Truck',
+          'Olympics',
+          'Piano',
+          'Dragon',
+          'Ferris Wheel',
+          'Pumpkin Pie',
+          'Castle',
+          'Mr. Potato Head',
+          'Zombie',
+          'Leprechaun',
         ],
         displayWords: [],
         open: false,
@@ -92,7 +111,7 @@ export default withStyles(styles)(
 
     wordScramble = () => {
       let displayWords = [];
-      while (displayWords.length < 7) {
+      while (displayWords.length < 6) {
         let randomIdx = Math.floor(Math.random() * this.state.words.length);
         if (!displayWords.includes(this.state.words[randomIdx])) {
           displayWords.push(this.state.words[randomIdx]);
