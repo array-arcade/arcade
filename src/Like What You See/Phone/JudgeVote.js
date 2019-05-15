@@ -76,7 +76,7 @@ export default withStyles(styles)(
       });
       this.roomUnsub = dbRoom.onSnapshot(snapshot => {
         let room = snapshot.data();
-        if (room.submissions === room.players) {
+        if (room.submissions === true) {
           this.setState({ disabled: false });
         }
       });
