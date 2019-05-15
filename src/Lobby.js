@@ -149,7 +149,9 @@ export default withStyles(styles)(
                       </Typography>
                     </CardContent>
                     <Typography align="center">
+                      Go to <b>array-arcade.firebaseapp.com</b> on your mobile device
                       <h2>Enter this code in your phone: {roomNumber}</h2>
+                      Choose <b>{currentGame.name}</b> for the game
                     </Typography>
                     {players.map(player => {
                       return (
