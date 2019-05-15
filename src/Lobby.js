@@ -149,7 +149,7 @@ export default withStyles(styles)(
                       </Typography>
                     </CardContent>
                     <Typography align="center">
-                      <h2>Room Code: {roomNumber}</h2>
+                      <h2>Enter this code in your phone: {roomNumber}</h2>
                     </Typography>
                     {players.map(player => {
                       return (
