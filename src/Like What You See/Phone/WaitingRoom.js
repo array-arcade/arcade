@@ -1,9 +1,9 @@
-import React from "react";
-import { db } from "../../index";
-import Button from "@material-ui/core/Button";
-import ImageSearch from "@material-ui/icons/ImageSearch";
-import giphyRandom from "giphy-random";
-import { giphyKey } from "../../secrets";
+import React from 'react';
+import { db } from '../../index';
+import Button from '@material-ui/core/Button';
+import ImageSearch from '@material-ui/icons/ImageSearch';
+import giphyRandom from 'giphy-random';
+import { giphyKey } from '../../secrets';
 
 export class WaitingRoom extends React.Component {
   constructor() {
@@ -12,15 +12,15 @@ export class WaitingRoom extends React.Component {
       roomNum: 0,
       game: {},
       user: {},
-      gif: "",
-      pageChange: false
+      gif: '',
+      pageChange: false,
     };
   }
 
   handleClick = async () => {
     let { data } = await giphyRandom(giphyKey, {
-      tag: "cats",
-      rating: "pg"
+      tag: 'cats',
+      rating: 'pg',
     });
     this.setState({ gif: data.image_url });
   };
@@ -29,11 +29,11 @@ export class WaitingRoom extends React.Component {
     const { roomNum, currentGame, user } = this.props.location.state;
     let currentPlayer;
     const room = db
-      .collection("games")
+      .collection('games')
       .doc(`${currentGame.name}`)
-      .collection("rooms")
+      .collection('rooms')
       .doc(`${roomNum}`);
-    let player = room.collection("users").doc(`${user.name}`);
+    let player = room.collection('users').doc(`${user.name}`);
     this.playerUnsub = player.onSnapshot(snapshot => {
       currentPlayer = snapshot.data();
       this.setState({ user: currentPlayer });
@@ -47,14 +47,13 @@ export class WaitingRoom extends React.Component {
       }
       if (doc.winner) {
         return this.props.history.push({
-          pathname: "/winner",
-          state: { roomNum, game: currentGame, user: this.state.user }
+          pathname: '/winner',
+          state: { roomNum, game: currentGame, user: this.state.user },
         });
       }
     });
   }
 
-  
   componentWillUnmount() {
     this.playerUnsub();
     this.roomUnsub();
@@ -66,12 +65,12 @@ export class WaitingRoom extends React.Component {
       if (user.isJudge && pageChange) {
         return this.props.history.push({
           pathname: `/word-pick`,
-          state: { roomNum, game, user }
+          state: { roomNum, game, user },
         });
       } else if (pageChange) {
         return this.props.history.push({
           pathname: `/draw`,
-          state: { roomNum, game, user }
+          state: { roomNum, game, user },
         });
       } else {
         return (
