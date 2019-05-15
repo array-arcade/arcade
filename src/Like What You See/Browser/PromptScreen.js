@@ -22,7 +22,7 @@ export default class PromptScreen extends Component {
       players: [],
       prompt: '',
       gif: '',
-      time: 20000,
+      time: 60000,
     };
   }
 
@@ -150,6 +150,7 @@ export default class PromptScreen extends Component {
     } else {
       return (
         <div className="App">
+          <h1 className="h1prompt">Like What You See?</h1>
           <h1 textAlign="center">{prompt}</h1>
           <h3 textAlign="center">Get Drawing!!!</h3>
           <Countdown

@@ -12,15 +12,15 @@ export class WaitingRoom extends React.Component {
       roomNum: 0,
       game: {},
       user: {},
-      gif: "",
-      pageChange: false
+      gif: '',
+      pageChange: false,
     };
   }
 
   handleClick = async () => {
     let { data } = await giphyRandom(giphyKey, {
-      tag: "cats",
-      rating: "pg"
+      tag: 'cats',
+      rating: 'pg',
     });
     this.setState({ gif: data.image_url });
   };
@@ -30,9 +30,9 @@ export class WaitingRoom extends React.Component {
     this.setState({ roomNum, game: currentGame, user });
     let currentPlayer;
     const room = db
-      .collection("games")
+      .collection('games')
       .doc(`${currentGame.name}`)
-      .collection("rooms")
+      .collection('rooms')
       .doc(`${roomNum}`);
     let player = room.collection("users").doc(`${user.name}`);
     await player.get().then(snapshot => {
@@ -50,8 +50,8 @@ export class WaitingRoom extends React.Component {
       }
       if (doc.winner) {
         return this.props.history.push({
-          pathname: "/winner",
-          state: { roomNum, game: currentGame, user: this.state.user }
+          pathname: '/winner',
+          state: { roomNum, game: currentGame, user: this.state.user },
         });
       }
     });
@@ -68,12 +68,12 @@ export class WaitingRoom extends React.Component {
       if (user && user.isJudge && pageChange) {
         return this.props.history.push({
           pathname: `/word-pick`,
-          state: { roomNum, game, user }
+          state: { roomNum, game, user },
         });
       } else if (pageChange) {
         return this.props.history.push({
           pathname: `/draw`,
-          state: { roomNum, game, user }
+          state: { roomNum, game, user },
         });
       } else {
         return (

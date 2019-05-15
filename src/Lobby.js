@@ -173,7 +173,7 @@ export default withStyles(styles)(
                     })}
                     <Button
                       onClick={this.startGame}
-                      // disabled={players.length > 2 ? false : true}
+                      disabled={players.length > 2 ? false : true}
                     >
                       Start the Game!
                     </Button>
