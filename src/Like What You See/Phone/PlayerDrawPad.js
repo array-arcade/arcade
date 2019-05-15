@@ -68,7 +68,8 @@ class DrawPad extends React.Component {
     dbRoom.update({ takenArtists: takenArtists });
     dbUser.update({
       refNum: numRef,
-      image: this.saveableCanvas.getSaveData()
+      image: this.saveableCanvas.getSaveData(),
+      submitted: true
     });
     return this.props.history.push({
       pathname: `/${roomNum}/waitingroom`,

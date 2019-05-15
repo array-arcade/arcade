@@ -46,7 +46,7 @@ export class WaitingRoom extends React.Component {
       let doc = snapshot.data();
       if (doc.judgeChange) {
         this.setState({ pageChange: true });
-        player.update({ refNum: null });
+        player.update({ refNum: null, submitted: false });
       }
       if (doc.winner) {
         return this.props.history.push({
