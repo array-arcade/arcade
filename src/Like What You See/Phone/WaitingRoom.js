@@ -1,6 +1,6 @@
 import React from "react";
 import { db } from "../../index";
-import Button from "@material-ui/core/Button";
+import { Button, Typography, Divider } from "@material-ui/core";
 import ImageSearch from "@material-ui/icons/ImageSearch";
 import giphyRandom from "giphy-random";
 import { giphyKey } from "../../secrets";
@@ -54,7 +54,6 @@ export class WaitingRoom extends React.Component {
     });
   }
 
-  
   componentWillUnmount() {
     this.playerUnsub();
     this.roomUnsub();
@@ -76,7 +75,20 @@ export class WaitingRoom extends React.Component {
       } else {
         return (
           <div className="h1Mobile">
-            <h1>Welcome to the waiting room.</h1>
+            <Typography variant="h3">Like What You See?</Typography>
+            <Typography variant="body1">
+              Artists: The judge will select a prompt which will appear on the
+              browser. As an artist, it is your job to draw that prompt to the
+              best of your abilities within the time frame given. When the timer
+              starts to reach its end, the music will speed up!
+            </Typography>
+            <Divider />
+            <Typography variant="body1">
+              Judge: Pick a prompt for the artists to draw and choose the one
+              that strikes your fancy! Whoever you choose will become the judge
+              for the next round.
+            </Typography>
+            <Divider />
             <div>
               <Button
                 onClick={() => {
