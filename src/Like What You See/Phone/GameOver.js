@@ -39,6 +39,7 @@ export default withStyles(styles)(
             isJudge: false,
             score: 0,
             image: null,
+            submitted: false
           });
           return this.props.history.push({
             pathname: `/${roomNum}/waitingroom`,

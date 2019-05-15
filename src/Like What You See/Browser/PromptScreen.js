@@ -24,7 +24,6 @@ export default class PromptScreen extends Component {
         "https://media.giphy.com/media/MEF1VadKbQBdmd8LCn/giphy.gif",
         "https://media.giphy.com/media/esUOS8Ztwlifu/giphy.gif",
         "https://media.giphy.com/media/oT7ATDykMidsk/giphy.gif",
-        "https://media.giphy.com/media/j9UHmOnjCNrIDZRoTe/giphy.gif",
         "https://media.giphy.com/media/8YvAXzOdUGGk7v6Qdx/giphy.gif",
         "https://media.giphy.com/media/l4HnKwiJJaJQB04Zq/giphy.gif",
         "https://media.giphy.com/media/ZXKZWB13D6gFO/giphy.gif",
