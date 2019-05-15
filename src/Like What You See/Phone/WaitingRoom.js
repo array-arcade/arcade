@@ -1,9 +1,9 @@
-import React from 'react';
-import { db } from '../../index';
-import Button from '@material-ui/core/Button';
-import ImageSearch from '@material-ui/icons/ImageSearch';
-import giphyRandom from 'giphy-random';
-import { giphyKey } from '../../secrets';
+import React from "react";
+import { db } from "../../index";
+import { Button, Typography, Divider } from "@material-ui/core";
+import ImageSearch from "@material-ui/icons/ImageSearch";
+import giphyRandom from "giphy-random";
+import { giphyKey } from "../../secrets";
 
 export class WaitingRoom extends React.Component {
   constructor() {
@@ -25,25 +25,28 @@ export class WaitingRoom extends React.Component {
     this.setState({ gif: data.image_url });
   };
 
-  componentDidMount() {
-    const { roomNum, currentGame, user } = this.props.location.state;
+  async componentDidMount() {
+    let { roomNum, currentGame, user } = this.props.location.state;
+    this.setState({ roomNum, game: currentGame, user });
     let currentPlayer;
     const room = db
       .collection('games')
       .doc(`${currentGame.name}`)
       .collection('rooms')
       .doc(`${roomNum}`);
-    let player = room.collection('users').doc(`${user.name}`);
+    let player = room.collection("users").doc(`${user.name}`);
+    await player.get().then(snapshot => {
+      this.setState({user: snapshot.data()})
+    })
     this.playerUnsub = player.onSnapshot(snapshot => {
       currentPlayer = snapshot.data();
       this.setState({ user: currentPlayer });
     });
-    this.setState({ roomNum, game: currentGame });
     this.roomUnsub = room.onSnapshot(snapshot => {
       let doc = snapshot.data();
       if (doc.judgeChange) {
         this.setState({ pageChange: true });
-        player.update({ refNum: null });
+        player.update({ refNum: null, submitted: false });
       }
       if (doc.winner) {
         return this.props.history.push({
@@ -62,7 +65,7 @@ export class WaitingRoom extends React.Component {
   render() {
     const { roomNum, game, user, pageChange, gif } = this.state;
     const roomRender = () => {
-      if (user.isJudge && pageChange) {
+      if (user && user.isJudge && pageChange) {
         return this.props.history.push({
           pathname: `/word-pick`,
           state: { roomNum, game, user },
@@ -75,7 +78,20 @@ export class WaitingRoom extends React.Component {
       } else {
         return (
           <div className="h1Mobile">
-            <h1>Welcome to the waiting room.</h1>
+            <Typography variant="h3">Like What You See?</Typography>
+            <Typography variant="body1">
+              Artists: The judge will select a prompt which will appear on the
+              browser. As an artist, it is your job to draw that prompt to the
+              best of your abilities within the time frame given. When the timer
+              starts to reach its end, the music will speed up!
+            </Typography>
+            <Divider />
+            <Typography variant="body1">
+              Judge: Pick a prompt for the artists to draw and choose the one
+              that strikes your fancy! Whoever you choose will become the judge
+              for the next round.
+            </Typography>
+            <Divider />
             <div>
               <Button
                 onClick={() => {

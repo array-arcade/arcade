@@ -64,6 +64,7 @@ export default withStyles(styles)(
       this.unsub();
     }
 
+  
     render() {
       const { winner } = this.state;
       const { classes } = this.props;

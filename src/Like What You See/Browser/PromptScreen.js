@@ -28,6 +28,8 @@ export default class PromptScreen extends Component {
 
   async componentDidMount() {
     const { game, roomNumber, judge, players } = this.props.location.state;
+    let submissionCounter = 0
+    let totalPlayers = 0
     let { data } = await giphyRandom(giphyKey, {
       tag: 'waiting',
       rating: 'pg',
@@ -44,7 +46,21 @@ export default class PromptScreen extends Component {
       .doc(`${game.name}`)
       .collection('rooms')
       .doc(`${roomNumber}`);
-    this.unsubscribe = room.onSnapshot(snapshot => {
+    await room.get().then(snapshot => {
+      totalPlayers = snapshot.data().players
+    })
+    const dbUsers = room.collection("users")
+    this.usersUnsub = dbUsers.onSnapshot(snapshot => {
+      snapshot.docs.forEach(user => {
+        if(user.data().submitted) {
+          submissionCounter ++
+          if(submissionCounter === totalPlayers) {
+            room.update({ submissions: true })
+          }
+        }
+      })
+    })
+    this.roomUnsub = room.onSnapshot(snapshot => {
       let room = snapshot.data();
       const prompt = room.prompt;
       if (room.prompt) {
@@ -53,7 +69,7 @@ export default class PromptScreen extends Component {
         flea.loop = true;
         flea.play();
       }
-      if (room.submissions === players.length - 1) {
+      if (room.submissions === true) {
         return this.props.history.push({
           pathname: `/Like What You See?/${roomNumber}/choose`,
           state: { game, roomNumber, players, prompt },
@@ -63,12 +79,13 @@ export default class PromptScreen extends Component {
   }
 
   componentWillUnmount() {
-    this.unsubscribe();
+    this.usersUnsub();
+    this.roomUnsub();
     clearInterval(this.interval);
     flea.pause();
   }
 
-  TimesUp = () => {
+  TimesUp = async () => {
     //update room timesup variable here
     const { game, roomNumber, players, prompt } = this.state;
     const room = db
@@ -78,8 +95,8 @@ export default class PromptScreen extends Component {
       .doc(`${roomNumber}`);
     room.update({ TimesUp: true });
     //redirect code here
-    room.get().then(snapshot => {
-      if (snapshot.data.submissions === players.length - 1) {
+    await room.get().then(snapshot => {
+      if (snapshot.data.submissions === true) {
         return this.props.history.push({
           pathname: `/Like What You See?/${roomNumber}/choose`,
           state: { game, roomNumber, players, prompt },
@@ -91,7 +108,7 @@ export default class PromptScreen extends Component {
   TimerRender = ({ minutes, seconds, milliseconds, completed }) => {
     return (
       <span>
-        <h1>{seconds}</h1>
+        <h1>{minutes}:{seconds}</h1>
       </span>
     );
   };
