@@ -118,7 +118,7 @@ export default withStyles(styles)(
         newJudge = snapshot.data().name;
         await winner.update({ score: newScore, isJudge: true });
         room.update({ judge: newJudge });
-        if (snapshot.data().score >= 0) {
+        if (snapshot.data().score >= 1) {
           await room.update({ winner: snapshot.data() });
           return this.props.history.push({
             pathname: `/winner`,

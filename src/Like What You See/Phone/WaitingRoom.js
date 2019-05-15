@@ -25,8 +25,9 @@ export class WaitingRoom extends React.Component {
     this.setState({ gif: data.image_url });
   };
 
-  componentDidMount() {
-    const { roomNum, currentGame, user } = this.props.location.state;
+  async componentDidMount() {
+    let { roomNum, currentGame, user } = this.props.location.state;
+    this.setState({ roomNum, game: currentGame, user });
     let currentPlayer;
     const room = db
       .collection("games")
@@ -34,11 +35,13 @@ export class WaitingRoom extends React.Component {
       .collection("rooms")
       .doc(`${roomNum}`);
     let player = room.collection("users").doc(`${user.name}`);
+    await player.get().then(snapshot => {
+      this.setState({user: snapshot.data()})
+    })
     this.playerUnsub = player.onSnapshot(snapshot => {
       currentPlayer = snapshot.data();
       this.setState({ user: currentPlayer });
     });
-    this.setState({ roomNum, game: currentGame });
     this.roomUnsub = room.onSnapshot(snapshot => {
       let doc = snapshot.data();
       if (doc.judgeChange) {
@@ -62,7 +65,7 @@ export class WaitingRoom extends React.Component {
   render() {
     const { roomNum, game, user, pageChange, gif } = this.state;
     const roomRender = () => {
-      if (user.isJudge && pageChange) {
+      if (user && user.isJudge && pageChange) {
         return this.props.history.push({
           pathname: `/word-pick`,
           state: { roomNum, game, user }

@@ -74,8 +74,8 @@ export default withStyles(styles)(
     }
 
     startGame = () => {
-      const firstJudge = this.state.players[0].name;
       const { currentGame, roomNumber, players } = this.state;
+      const firstJudge = this.state.players[Math.floor(Math.random() * players.length)].name;
       const room = db
         .collection('games')
         .doc(`${currentGame.name}`)
@@ -98,7 +98,7 @@ export default withStyles(styles)(
           judgeChange: true,
           judge: firstJudge,
           players: players.length - 1,
-          submissions: 0
+          submissions: false
         },
         { merge: true }
       );
