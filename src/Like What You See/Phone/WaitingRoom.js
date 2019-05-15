@@ -1,16 +1,9 @@
-<<<<<<< Updated upstream
-import React from "react";
-import { db } from "../../index";
-import Button from "@material-ui/core/Button";
-import ImageSearch from "@material-ui/icons/ImageSearch";
-import giphyRandom from "giphy-random";
-import { giphyKey } from "../../secrets";
-=======
 import React from 'react';
-import DrawPad from './PlayerDrawPad';
-import WordPick from './JudgeWordPick';
 import { db } from '../../index';
->>>>>>> Stashed changes
+import Button from '@material-ui/core/Button';
+import ImageSearch from '@material-ui/icons/ImageSearch';
+import giphyRandom from 'giphy-random';
+import { giphyKey } from '../../secrets';
 
 export class WaitingRoom extends React.Component {
   constructor() {
@@ -19,19 +12,15 @@ export class WaitingRoom extends React.Component {
       roomNum: 0,
       game: {},
       user: {},
-<<<<<<< Updated upstream
-      gif: "",
-      pageChange: false
-=======
+      gif: '',
       pageChange: false,
->>>>>>> Stashed changes
     };
   }
 
   handleClick = async () => {
     let { data } = await giphyRandom(giphyKey, {
-      tag: "cats",
-      rating: "pg"
+      tag: 'cats',
+      rating: 'pg',
     });
     this.setState({ gif: data.image_url });
   };
@@ -44,21 +33,11 @@ export class WaitingRoom extends React.Component {
       .doc(`${currentGame.name}`)
       .collection('rooms')
       .doc(`${roomNum}`);
-<<<<<<< Updated upstream
-    let player = room.collection("users").doc(`${user.name}`);
+    let player = room.collection('users').doc(`${user.name}`);
     this.playerUnsub = player.onSnapshot(snapshot => {
       currentPlayer = snapshot.data();
       this.setState({ user: currentPlayer });
     });
-=======
-    this.playerUnsub = room
-      .collection('users')
-      .doc(`${user}`)
-      .onSnapshot(snapshot => {
-        currentPlayer = snapshot.data();
-        this.setState({ user: currentPlayer });
-      });
->>>>>>> Stashed changes
     this.setState({ roomNum, game: currentGame });
     this.roomUnsub = room.onSnapshot(snapshot => {
       let doc = snapshot.data();
@@ -68,14 +47,13 @@ export class WaitingRoom extends React.Component {
       }
       if (doc.winner) {
         return this.props.history.push({
-          pathname: "/winner",
-          state: { roomNum, game: currentGame, user: this.state.user }
+          pathname: '/winner',
+          state: { roomNum, game: currentGame, user: this.state.user },
         });
       }
     });
   }
 
-  
   componentWillUnmount() {
     this.playerUnsub();
     this.roomUnsub();
@@ -95,7 +73,6 @@ export class WaitingRoom extends React.Component {
           state: { roomNum, game, user },
         });
       } else {
-<<<<<<< Updated upstream
         return (
           <div className="h1Mobile">
             <h1>Welcome to the waiting room.</h1>
@@ -114,9 +91,6 @@ export class WaitingRoom extends React.Component {
             </div>
           </div>
         );
-=======
-        return <h1 text-align={'center'}>Welcome to the waiting room.</h1>;
->>>>>>> Stashed changes
       }
     };
     return <div>{roomRender()}</div>;

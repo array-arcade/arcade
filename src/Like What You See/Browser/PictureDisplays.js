@@ -93,7 +93,7 @@ export default withStyles(styles)(
       return (
         <div className="App">
           <div>
-            <header>Wow... What artists! Judge choose wisely!</header>
+            <h2>Wow... What artists! Judge choose wisely!</h2>
           </div>
           <div className={classNames(classes.layout, classes.cardGrid)}>
             <Grid container spacing={40} alignContent="space-around">

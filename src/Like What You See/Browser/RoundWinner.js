@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withStyles, Card, CardContent, Typography } from '@material-ui/core';
+import { withStyles, Card, CardMedia } from '@material-ui/core';
 import CanvasDraw from 'react-canvas-draw';
 import { db } from '../../index';
 
@@ -13,6 +13,8 @@ const styles = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
+    justifyContent: 'center',
+    align: 'center',
   },
 };
 
@@ -69,19 +71,20 @@ export default withStyles(styles)(
       return (
         <div className="App">
           <Card className={classes.card} raised={true}>
-            <CardContent>
-              <Typography variant="h3">
-                {winner.name} has won the round, bask in their splendor.
-              </Typography>
-            </CardContent>
-            <CanvasDraw
-              canvasWidth={600}
-              canvasHeight={550}
-              disabled={true}
-              hideGrid={true}
-              saveData={winner.image}
-              immediateLoading={true}
-            />
+            <h2 justifyContent="center" align="center">
+              {' '}
+              {winner.name} has won the round, bask in their splendor.
+            </h2>
+            <CardMedia>
+              <CanvasDraw
+                canvasWidth={600}
+                canvasHeight={550}
+                disabled={true}
+                hideGrid={true}
+                saveData={winner.image}
+                immediateLoading={true}
+              />
+            </CardMedia>
           </Card>
         </div>
       );

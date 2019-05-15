@@ -2,30 +2,30 @@
 //Can redirect either to the Lobby or the browser home depending
 //on if the game is restarted or the room is destroyed
 
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import {
   Button,
-  Typography,
   Card,
-  CardContent,
   CardMedia,
   withStyles,
-  CardActions
-} from "@material-ui/core";
-import { db } from "../../index";
-import CanvasDraw from "react-canvas-draw";
+  CardActions,
+} from '@material-ui/core';
+import { db } from '../../index';
+import CanvasDraw from 'react-canvas-draw';
 
 const styles = {
   card: {
-    height: "650px",
-    width: "650px",
-    display: "flex",
-    flexDirection: "column",
+    height: 'auto',
+    width: '650px',
+    display: 'flex',
+    flexDirection: 'column',
     position: 'absolute',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-  }
+    justifyContent: 'center',
+    align: 'center',
+  },
 };
 
 class VictoryScreen extends Component {
@@ -35,18 +35,18 @@ class VictoryScreen extends Component {
       winner: {},
       roomNum: 0,
       game: {},
-      prompt: ""
+      prompt: '',
     };
   }
 
-  async componentDidMount () {
+  async componentDidMount() {
     let { winner, roomNumber, game, prompt } = this.props.location.state;
     const dbWinner = db
-      .collection("games")
+      .collection('games')
       .doc(`${game.name}`)
-      .collection("rooms")
+      .collection('rooms')
       .doc(`${roomNumber}`)
-      .collection("users")
+      .collection('users')
       .doc(`${winner}`);
     await dbWinner.get().then(snapshot => {
       winner = snapshot.data();
@@ -57,34 +57,34 @@ class VictoryScreen extends Component {
   restart = async () => {
     const { roomNum, game } = this.state;
     const dbRoom = db
-      .collection("games")
+      .collection('games')
       .doc(`${game.name}`)
-      .collection("rooms")
+      .collection('rooms')
       .doc(`${roomNum}`);
     dbRoom.set({
       judgeChange: false,
       roomNumber: `${roomNum}`,
       timesUp: false,
-      prompt: "",
+      prompt: '',
       takenArtists: [],
-      restart: true
+      restart: true,
     });
     return this.props.history.push({
       pathname: `/${game.name}/${roomNum}/lobby`,
-      state: { roomNumber: roomNum, game }
+      state: { roomNumber: roomNum, game },
     });
   };
 
   exitGame = () => {
     const { roomNum } = this.state;
     let dbRoom = db
-      .collection("games")
-      .doc("Like What You See?")
-      .collection("rooms")
+      .collection('games')
+      .doc('Like What You See?')
+      .collection('rooms')
       .doc(`${roomNum}`);
     dbRoom.update({ gameOver: true });
     dbRoom
-      .collection("users")
+      .collection('users')
       .get()
       .then(snapshot => {
         snapshot.forEach(doc => {
@@ -102,12 +102,9 @@ class VictoryScreen extends Component {
     return (
       <div className="App">
         <Card className={classes.card} raised={true}>
-          <CardContent>
-            <Typography>
-              {winner.name} has won the game! Gaze upon their latest
-              masterpiece!
-            </Typography>
-          </CardContent>
+          <h2>
+            {winner.name} has won the game! Gaze upon their latest masterpiece!
+          </h2>
           <CardMedia>
             <CanvasDraw
               canvasWidth={600}

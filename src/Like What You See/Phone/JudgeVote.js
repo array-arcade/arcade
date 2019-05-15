@@ -165,12 +165,12 @@ export default withStyles(styles)(
                   </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                  <Button onClick={() => this.selectPic(selected)}>YES!</Button>
                   <Button
                     onClick={() => this.setState({ open: false, selected: '' })}
                   >
                     NO!
                   </Button>
+                  <Button onClick={() => this.selectPic(selected)}>YES!</Button>
                 </DialogActions>
               </Dialog>
             </Grid>
