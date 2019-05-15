@@ -139,7 +139,7 @@ export default withStyles(styles)(
                     />
                     <CardContent>
                       <Typography variant="h6" align="center">
-                        {currentGame.name}
+                        <b>{currentGame.name}</b>
                       </Typography>
                       <Typography variant="body1" align="center" gutterBottom>
                         {currentGame.description}
