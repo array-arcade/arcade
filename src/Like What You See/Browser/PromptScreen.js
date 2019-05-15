@@ -1,14 +1,12 @@
 //This will render after the game has started and will redirect to
 //PictureDisplays after the timer or after pictures have been submitted
 
-import { db } from '../../index';
-import React, { Component } from 'react';
-import FooterScore from '../Browser/ScoreDisplay';
-import Countdown from 'react-countdown-now';
-import giphyRandom from 'giphy-random';
-import { giphyKey } from '../../secrets';
+import { db } from "../../index";
+import React, { Component } from "react";
+import FooterScore from "../Browser/ScoreDisplay";
+import Countdown from "react-countdown-now";
 
-const song = require('../../SpanishFlea.mp3');
+const song = require("../../SpanishFlea.mp3");
 
 const flea = new Audio(song);
 
@@ -17,49 +15,60 @@ export default class PromptScreen extends Component {
     super();
     this.state = {
       game: {},
-      roomNumber: '',
-      judge: '',
+      roomNumber: "",
+      judge: "",
       players: [],
-      prompt: '',
-      gif: '',
-      time: 60000,
+      prompt: "",
+      gifs: [
+        "https://media.giphy.com/media/QvRwnp6tLmVk1A0jhM/giphy.gif",
+        "https://media.giphy.com/media/MEF1VadKbQBdmd8LCn/giphy.gif",
+        "https://media.giphy.com/media/esUOS8Ztwlifu/giphy.gif",
+        "https://media.giphy.com/media/oT7ATDykMidsk/giphy.gif",
+        "https://media.giphy.com/media/j9UHmOnjCNrIDZRoTe/giphy.gif",
+        "https://media.giphy.com/media/8YvAXzOdUGGk7v6Qdx/giphy.gif",
+        "https://media.giphy.com/media/l4HnKwiJJaJQB04Zq/giphy.gif",
+        "https://media.giphy.com/media/ZXKZWB13D6gFO/giphy.gif",
+        "https://media.giphy.com/media/jL43fSL8Zh5Vm/giphy.gif",
+        "https://media.giphy.com/media/tGuD6xQ5K9spa/giphy.gif"
+      ],
+      gif: "",
+      time: 60000
     };
   }
 
   async componentDidMount() {
     const { game, roomNumber, judge, players } = this.props.location.state;
-    let submissionCounter = 0
-    let totalPlayers = 0
-    let { data } = await giphyRandom(giphyKey, {
-      tag: 'waiting',
-      rating: 'pg',
-    });
+    let submissionCounter = 0;
+    let totalPlayers = 0;
+    const randomGif = this.state.gifs[
+      Math.floor(Math.random() * this.state.gifs.length)
+    ];
     this.setState({
       game: game,
-      gif: data.image_url ? data.image_url : null,
+      gif: randomGif,
       roomNumber: roomNumber,
       judge: judge,
-      players: players,
+      players: players
     });
     const room = db
-      .collection('games')
+      .collection("games")
       .doc(`${game.name}`)
-      .collection('rooms')
+      .collection("rooms")
       .doc(`${roomNumber}`);
     await room.get().then(snapshot => {
-      totalPlayers = snapshot.data().players
-    })
-    const dbUsers = room.collection("users")
+      totalPlayers = snapshot.data().players;
+    });
+    const dbUsers = room.collection("users");
     this.usersUnsub = dbUsers.onSnapshot(snapshot => {
       snapshot.docs.forEach(user => {
-        if(user.data().submitted) {
-          submissionCounter ++
-          if(submissionCounter === totalPlayers) {
-            room.update({ submissions: true })
+        if (user.data().submitted) {
+          submissionCounter++;
+          if (submissionCounter === totalPlayers) {
+            room.update({ submissions: true });
           }
         }
-      })
-    })
+      });
+    });
     this.roomUnsub = room.onSnapshot(snapshot => {
       let room = snapshot.data();
       const prompt = room.prompt;
@@ -72,7 +81,7 @@ export default class PromptScreen extends Component {
       if (room.submissions === true) {
         return this.props.history.push({
           pathname: `/Like What You See?/${roomNumber}/choose`,
-          state: { game, roomNumber, players, prompt },
+          state: { game, roomNumber, players, prompt }
         });
       }
     });
@@ -89,9 +98,9 @@ export default class PromptScreen extends Component {
     //update room timesup variable here
     const { game, roomNumber, players, prompt } = this.state;
     const room = db
-      .collection('games')
+      .collection("games")
       .doc(`${game.name}`)
-      .collection('rooms')
+      .collection("rooms")
       .doc(`${roomNumber}`);
     room.update({ TimesUp: true });
     //redirect code here
@@ -99,7 +108,7 @@ export default class PromptScreen extends Component {
       if (snapshot.data.submissions === true) {
         return this.props.history.push({
           pathname: `/Like What You See?/${roomNumber}/choose`,
-          state: { game, roomNumber, players, prompt },
+          state: { game, roomNumber, players, prompt }
         });
       }
     });
@@ -108,7 +117,9 @@ export default class PromptScreen extends Component {
   TimerRender = ({ minutes, seconds, milliseconds, completed }) => {
     return (
       <span>
-        <h1>{minutes}:{seconds}</h1>
+        <h1>
+          {minutes}:{seconds}
+        </h1>
       </span>
     );
   };
@@ -132,7 +143,7 @@ export default class PromptScreen extends Component {
 
   render() {
     const { judge, prompt, players, roomNumber, time, gif } = this.state;
-    if (prompt === '') {
+    if (prompt === "") {
       //remember to reset prompt after round end
       return (
         <div className="App">
