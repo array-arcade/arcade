@@ -64,7 +64,7 @@ export default withStyles(styles)(
         .doc(`${roomNumber}`)
         .set({
           roomNumber: `${roomNumber}`,
-          timesUp: false,
+          TimesUp: false,
           judgeChange: false,
           prompt: '',
           takenArtists: [],

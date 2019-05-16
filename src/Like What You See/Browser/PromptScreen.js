@@ -89,6 +89,9 @@ export default class PromptScreen extends Component {
   componentWillUnmount() {
     this.usersUnsub();
     this.roomUnsub();
+    if (this.timerUnsub) {
+      this.timerUnsub();
+    }
     clearInterval(this.interval);
     flea.pause();
   }
@@ -103,8 +106,8 @@ export default class PromptScreen extends Component {
       .doc(`${roomNumber}`);
     room.update({ TimesUp: true });
     //redirect code here
-    await room.get().then(snapshot => {
-      if (snapshot.data.submissions === true) {
+    this.timerUnsub = room.onSnapshot(snapshot => {
+      if (snapshot.data().submissions === true) {
         return this.props.history.push({
           pathname: `/Like What You See?/${roomNumber}/choose`,
           state: { game, roomNumber, players, prompt }

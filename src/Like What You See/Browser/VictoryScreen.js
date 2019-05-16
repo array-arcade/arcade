@@ -64,7 +64,7 @@ class VictoryScreen extends Component {
     dbRoom.set({
       judgeChange: false,
       roomNumber: `${roomNum}`,
-      timesUp: false,
+      TimesUp: false,
       prompt: '',
       takenArtists: [],
       restart: true,
