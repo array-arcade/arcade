@@ -21,13 +21,13 @@ export default class PromptScreen extends Component {
       prompt: "",
       gifs: [
         // "https://media.giphy.com/media/QvRwnp6tLmVk1A0jhM/giphy.gif",
-        // "https://media.giphy.com/media/MEF1VadKbQBdmd8LCn/giphy.gif",
+        "https://media.giphy.com/media/MEF1VadKbQBdmd8LCn/giphy.gif",
         // "https://media.giphy.com/media/esUOS8Ztwlifu/giphy.gif",
         // "https://media.giphy.com/media/oT7ATDykMidsk/giphy.gif",
         // "https://media.giphy.com/media/8YvAXzOdUGGk7v6Qdx/giphy.gif",
         "https://media.giphy.com/media/l4HnKwiJJaJQB04Zq/giphy.gif",
-        // "https://media.giphy.com/media/ZXKZWB13D6gFO/giphy.gif",
-        "https://media.giphy.com/media/jL43fSL8Zh5Vm/giphy.gif",
+        "https://media.giphy.com/media/ZXKZWB13D6gFO/giphy.gif",
+        // "https://media.giphy.com/media/jL43fSL8Zh5Vm/giphy.gif",
         // "https://media.giphy.com/media/tGuD6xQ5K9spa/giphy.gif"
       ],
       gif: "",
