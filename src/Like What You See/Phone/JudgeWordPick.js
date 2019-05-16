@@ -105,8 +105,8 @@ export default withStyles(styles)(
         .collection("games")
         .doc(`${game.name}`)
         .collection("rooms")
-        .doc(`${roomNum}`)
-        .update({ judgeChange: false });
+        .doc(`${roomNum}`);
+      dbRoom.update({ judgeChange: false });
       this.wordScramble();
       dbRoom
         .collection("users")
