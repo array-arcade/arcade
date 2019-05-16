@@ -59,8 +59,8 @@ export default class PromptScreen extends Component {
     console.log(totalPlayers)
     const dbUsers = room.collection("users");
     this.usersUnsub = dbUsers.onSnapshot(snapshot => {
+      let submissionCounter = 0;
       snapshot.docs.forEach(user => {
-        let submissionCounter = 0;
         if (user.data().submitted) {
           submissionCounter++;
           console.log(submissionCounter)
