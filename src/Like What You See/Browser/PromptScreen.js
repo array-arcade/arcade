@@ -57,11 +57,13 @@ export default class PromptScreen extends Component {
     await room.get().then(snapshot => {
       totalPlayers = snapshot.data().players;
     });
+    console.log(totalPlayers)
     const dbUsers = room.collection("users");
     this.usersUnsub = dbUsers.onSnapshot(snapshot => {
       snapshot.docs.forEach(user => {
         if (user.data().submitted) {
           submissionCounter++;
+          console.log(submissionCounter)
           if (submissionCounter === totalPlayers) {
             room.update({ submissions: true });
           }
