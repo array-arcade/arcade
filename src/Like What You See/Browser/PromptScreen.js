@@ -37,7 +37,6 @@ export default class PromptScreen extends Component {
 
   async componentDidMount() {
     const { game, roomNumber, judge, players } = this.props.location.state;
-    let submissionCounter = 0;
     let totalPlayers = 0;
     const randomGif = this.state.gifs[
       Math.floor(Math.random() * this.state.gifs.length)
@@ -61,7 +60,8 @@ export default class PromptScreen extends Component {
     const dbUsers = room.collection("users");
     this.usersUnsub = dbUsers.onSnapshot(snapshot => {
       snapshot.docs.forEach(user => {
-        if (user.data().submitted) {
+        let submissionCounter = 0;
+        if (user.data().submitted && !user.data().refNum) {
           submissionCounter++;
           console.log(submissionCounter)
           if (submissionCounter === totalPlayers) {
