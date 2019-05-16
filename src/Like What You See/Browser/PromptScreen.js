@@ -20,15 +20,15 @@ export default class PromptScreen extends Component {
       players: [],
       prompt: "",
       gifs: [
-        "https://media.giphy.com/media/QvRwnp6tLmVk1A0jhM/giphy.gif",
-        "https://media.giphy.com/media/MEF1VadKbQBdmd8LCn/giphy.gif",
-        "https://media.giphy.com/media/esUOS8Ztwlifu/giphy.gif",
-        "https://media.giphy.com/media/oT7ATDykMidsk/giphy.gif",
-        "https://media.giphy.com/media/8YvAXzOdUGGk7v6Qdx/giphy.gif",
+        // "https://media.giphy.com/media/QvRwnp6tLmVk1A0jhM/giphy.gif",
+        // "https://media.giphy.com/media/MEF1VadKbQBdmd8LCn/giphy.gif",
+        // "https://media.giphy.com/media/esUOS8Ztwlifu/giphy.gif",
+        // "https://media.giphy.com/media/oT7ATDykMidsk/giphy.gif",
+        // "https://media.giphy.com/media/8YvAXzOdUGGk7v6Qdx/giphy.gif",
         "https://media.giphy.com/media/l4HnKwiJJaJQB04Zq/giphy.gif",
-        "https://media.giphy.com/media/ZXKZWB13D6gFO/giphy.gif",
+        // "https://media.giphy.com/media/ZXKZWB13D6gFO/giphy.gif",
         "https://media.giphy.com/media/jL43fSL8Zh5Vm/giphy.gif",
-        "https://media.giphy.com/media/tGuD6xQ5K9spa/giphy.gif"
+        // "https://media.giphy.com/media/tGuD6xQ5K9spa/giphy.gif"
       ],
       gif: "",
       time: 60000
@@ -37,7 +37,6 @@ export default class PromptScreen extends Component {
 
   async componentDidMount() {
     const { game, roomNumber, judge, players } = this.props.location.state;
-    let submissionCounter = 0;
     let totalPlayers = 0;
     const randomGif = this.state.gifs[
       Math.floor(Math.random() * this.state.gifs.length)
@@ -59,6 +58,7 @@ export default class PromptScreen extends Component {
     });
     const dbUsers = room.collection("users");
     this.usersUnsub = dbUsers.onSnapshot(snapshot => {
+      let submissionCounter = 0;
       snapshot.docs.forEach(user => {
         if (user.data().submitted) {
           submissionCounter++;
@@ -89,6 +89,9 @@ export default class PromptScreen extends Component {
   componentWillUnmount() {
     this.usersUnsub();
     this.roomUnsub();
+    if (this.timerUnsub) {
+      this.timerUnsub();
+    }
     clearInterval(this.interval);
     flea.pause();
   }
@@ -103,8 +106,8 @@ export default class PromptScreen extends Component {
       .doc(`${roomNumber}`);
     room.update({ TimesUp: true });
     //redirect code here
-    await room.get().then(snapshot => {
-      if (snapshot.data.submissions === true) {
+    this.timerUnsub = room.onSnapshot(snapshot => {
+      if (snapshot.data().submissions === true) {
         return this.props.history.push({
           pathname: `/Like What You See?/${roomNumber}/choose`,
           state: { game, roomNumber, players, prompt }

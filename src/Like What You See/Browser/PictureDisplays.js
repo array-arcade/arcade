@@ -2,39 +2,39 @@
 //Rendered by PromptScreen after timer is up or pictures are all submitted
 //Will redirect to either the prompt or victory screen
 
-import React, { Component } from 'react';
-import classNames from 'classnames';
+import React, { Component } from "react";
+import classNames from "classnames";
 import {
   Card,
   Grid,
   CardContent,
   Typography,
-  withStyles,
-} from '@material-ui/core';
-import CanvasDraw from 'react-canvas-draw';
-import FooterScore from '../Browser/ScoreDisplay';
-import { db } from '../../index';
+  withStyles
+} from "@material-ui/core";
+import CanvasDraw from "react-canvas-draw";
+import FooterScore from "../Browser/ScoreDisplay";
+import { db } from "../../index";
 
 const styles = theme => ({
   layout: {
-    width: 'auto',
+    width: "auto",
     marginLeft: theme.spacing.unit * 3,
-    marginRight: theme.spacing.unit * 3,
+    marginRight: theme.spacing.unit * 3
   },
   cardGrid: {
-    padding: `${theme.spacing.unit * 8}px 0`,
+    padding: `${theme.spacing.unit * 8}px 0`
   },
   card: {
-    height: '425px',
-    width: '450px',
-    display: 'flex',
-    flexDirection: 'column',
+    height: "425px",
+    width: "450px",
+    display: "flex",
+    flexDirection: "column"
   },
   cardMedia: {
-    marginTop: '30px',
-    paddingTop: '50%',
-    height: '100%',
-  },
+    marginTop: "30px",
+    paddingTop: "50%",
+    height: "100%"
+  }
 });
 
 export default withStyles(styles)(
@@ -46,7 +46,7 @@ export default withStyles(styles)(
         roomNumber: null,
         game: {},
         players: [],
-        judge: {},
+        judge: {}
       };
     }
 
@@ -54,29 +54,26 @@ export default withStyles(styles)(
       const { game, roomNumber, players, prompt } = this.props.location.state;
       this.setState({ game, roomNumber });
       const dbRoom = db
-        .collection('games')
+        .collection("games")
         .doc(`${game.name}`)
-        .collection('rooms')
+        .collection("rooms")
         .doc(`${roomNumber}`);
-      dbRoom.update({ prompt: '', TimesUp: false, submissions: false });
-      let dbUsers = dbRoom.collection('users');
-      let dbPlayers = [];
-      await dbUsers.get().then(snapshot => {
-        snapshot.forEach(player => {
-          dbPlayers.push(player.data());
-        });
+      dbRoom.update({ prompt: "", TimesUp: false, submissions: false });
+      let dbUsers = dbRoom.collection("users");
+      this.usersUnsub = dbUsers.onSnapshot(snapshot => {
+        let dbPlayers = snapshot.docs.map(doc => doc.data());
+        this.setState({ players: dbPlayers.filter(player => !player.isJudge) });
       });
-      this.setState({ players: dbPlayers.filter(player => !player.isJudge) });
       this.roomUnsub = dbRoom.onSnapshot(snapshot => {
         if (snapshot.data().judgeChange) {
           return this.props.history.push({
             pathname: `/${game.name}/${roomNumber}/winner`,
-            state: { winner: snapshot.data().judge, players, roomNumber, game },
+            state: { winner: snapshot.data().judge, players, roomNumber, game }
           });
         } else if (snapshot.data().winner) {
           return this.props.history.push({
             pathname: `/${game.name}/${roomNumber}/victory`,
-            state: { winner: snapshot.data().judge, roomNumber, game, prompt },
+            state: { winner: snapshot.data().judge, roomNumber, game, prompt }
           });
         }
       });
@@ -84,6 +81,7 @@ export default withStyles(styles)(
 
     componentWillUnmount() {
       this.roomUnsub();
+      this.usersUnsub();
     }
 
     render() {
@@ -121,7 +119,7 @@ export default withStyles(styles)(
             <FooterScore players={players} roomNumber={roomNumber} />
           ) : (
             <h1>No state</h1>
-          )}{' '}
+          )}{" "}
         </div>
       );
     }

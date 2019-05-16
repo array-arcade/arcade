@@ -35,6 +35,7 @@ export default withStyles(styles)(
         .collection('rooms')
         .doc(`${roomNumber}`);
       const dbWinner = dbRoom.collection('users').doc(`${winner}`);
+      dbRoom.update({ takenArtists: [] })
       await dbWinner.get().then(snapshot => {
         this.setState({ winner: snapshot.data() });
       });
