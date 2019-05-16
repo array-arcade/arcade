@@ -61,7 +61,7 @@ export default class PromptScreen extends Component {
     this.usersUnsub = dbUsers.onSnapshot(snapshot => {
       snapshot.docs.forEach(user => {
         let submissionCounter = 0;
-        if (user.data().submitted && !user.data().refNum) {
+        if (user.data().submitted) {
           submissionCounter++;
           console.log(submissionCounter)
           if (submissionCounter === totalPlayers) {
