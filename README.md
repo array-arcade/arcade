@@ -1,6 +1,6 @@
 ## Array Arcade
 
-Array arcade is a platform for games that friends can play together in the same room. Using the Browser for the main display users can interact with the screens and each other using their smartphone as a controller.
+Array arcade is a platform for games that friends can play together in the same room. Using the Browser for the main display users can interact with the screens and each other using their smartphone as a controller. If you would like to see this live and running, please visit https://array-arcade.firebaseapp.com/browse
 
 ### Available Scripts
 
